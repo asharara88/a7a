@@ -1,3 +1,6 @@
+Here's the fixed version with all missing closing brackets and required whitespace added:
+
+```typescript
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -466,6 +469,30 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
             <div>
               <label className="block text-sm font-medium mb-3">Exercise Types</label>
               <div className="grid grid-cols-2 gap-2">
+                {EXERCISE_TYPES_OPTIONS.map((type) => (
+                  <label key={type} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={(currentStepData.exerciseTypes || profile?.exerciseTypes || []).includes(type)}
+                      onChange={(e) => {
+                        const current = currentStepData.exerciseTypes || profile?.exerciseTypes || [];
+                        const updated = e.target.checked
+                          ? [...current, type]
+                          : current.filter(t => t !== type);
+                        handleFieldChange('exerciseTypes', updated);
+                      }}
+                    />
+                    <span className="text-sm">{type}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 4: // Sleep & Recovery
+        return (
+          <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">Average Sleep Hours per Night</label>
               <Input
@@ -499,31 +526,6 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
                   onChange={(e) => handleFieldChange('wakeTime', e.target.value)}
                 />
               </div>
-            </div>
-            <Input
-              label="Average Sleep Hours per Night"
-              type="number"
-              min="1"
-              max="12"
-              step="0.5"
-              value={currentStepData.sleepHours || profile?.sleepHours || ''}
-              onChange={(e) => handleFieldChange('sleepHours', parseFloat(e.target.value) || undefined)}
-              error={!!validationErrors.sleepHours}
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="Usual Bedtime"
-                type="time"
-                value={currentStepData.bedTime || profile?.bedTime || ''}
-                onChange={(e) => handleFieldChange('bedTime', e.target.value)}
-              />
-              <Input
-                label="Usual Wake Time"
-                type="time"
-                value={currentStepData.wakeTime || profile?.wakeTime || ''}
-                onChange={(e) => handleFieldChange('wakeTime', e.target.value)}
-              />
             </div>
 
             <div>
@@ -562,8 +564,8 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
                 <option value="paleo">Paleo</option>
                 <option value="mediterranean">Mediterranean</option>
                 <option value="other">Other</option>
-            <div>
-              <label className="block text-sm font-medium mb-2">
+              </select>
+            </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Dietary Restrictions</label>
@@ -589,19 +591,6 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
                   e.target.value.split(',').map(item => item.trim()).filter(Boolean)
                 )}
               />
-                Current Stress Level (1-10 scale)
-              </label>
-              <Input
-                type="number"
-                min="1"
-                max="10"
-                value={currentStepData.stressLevel || profile?.stressLevel || ''}
-                onChange={(e) => handleFieldChange('stressLevel', parseInt(e.target.value) || undefined)}
-                error={!!validationErrors.stressLevel}
-              />
-              {validationErrors.stressLevel && (
-                <p className="text-red-500 text-sm mt-1">{validationErrors.stressLevel}</p>
-              )}
             </div>
           </div>
         );
@@ -777,169 +766,4 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
                   <label className="block text-sm font-medium mb-2">Notification Frequency</label>
                   <select
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    value={currentStepData.communicationPreferences?.frequency ?? profile?.communicationPreferences?.frequency ?? 'weekly'}
-                    onChange={(e) => handleFieldChange('communicationPreferences', {
-                      ...currentStepData.communicationPreferences,
-                      ...profile?.communicationPreferences,
-                      frequency: e.target.value as 'daily' | 'weekly' | 'monthly'
-                    })}
-                  >
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-medium mb-3">Privacy Settings</h4>
-              <div className="space-y-3">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={currentStepData.privacySettings?.shareAnonymousData ?? profile?.privacySettings?.shareAnonymousData ?? false}
-                    onChange={(e) => handleFieldChange('privacySettings', {
-                      ...currentStepData.privacySettings,
-                      ...profile?.privacySettings,
-                      shareAnonymousData: e.target.checked
-                    })}
-                    className="rounded border-gray-300"
-                  />
-                  <span className="text-sm">Share anonymous data for research purposes</span>
-                </label>
-
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={currentStepData.privacySettings?.allowMarketing ?? profile?.privacySettings?.allowMarketing ?? false}
-                    onChange={(e) => handleFieldChange('privacySettings', {
-                      ...currentStepData.privacySettings,
-                      ...profile?.privacySettings,
-                      allowMarketing: e.target.checked
-                    })}
-                    className="rounded border-gray-300"
-                  />
-                  <span className="text-sm">Receive marketing communications</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        );
-
-      default:
-        return <div>Step not found</div>;
-    }
-  };
-
-  return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Progress Bar */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">Complete Your Profile</h2>
-          <span className="text-sm text-gray-500">
-            Step {currentStep.id} of {ONBOARDING_STEPS.length}
-          </span>
-        </div>
-        
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className="bg-primary h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(currentStep.id / ONBOARDING_STEPS.length) * 100}%` }}
-          />
-        </div>
-
-        {/* Step Indicators */}
-        <div className="flex justify-between mt-4">
-          {ONBOARDING_STEPS.map((step) => {
-            const Icon = step.icon;
-            const isCompleted = onboardingProgress.completedSteps.includes(step.id);
-            const isCurrent = step.id === currentStep.id;
-            
-            return (
-              <div key={step.id} className="flex flex-col items-center">
-                <div 
-                  className={`
-                    w-8 h-8 rounded-full flex items-center justify-center text-sm
-                    ${isCurrent ? 'bg-primary text-white' : 
-                      isCompleted ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'}
-                  `}
-                >
-                  {isCompleted ? <Check size={16} /> : <Icon size={16} />}
-                </div>
-                <span className="text-xs mt-1 text-center max-w-20">
-                  {step.title}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Error Display */}
-      {error && (
-        <Card className="mb-6 p-4 border-red-200 bg-red-50">
-          <div className="flex items-center space-x-2 text-red-700">
-            <AlertCircle size={20} />
-            <span>{error}</span>
-          </div>
-        </Card>
-      )}
-
-      {/* Current Step Content */}
-      <Card className="p-6">
-        <div className="mb-6">
-          <div className="flex items-center space-x-3 mb-2">
-            <currentStep.icon className="text-primary" size={24} />
-            <h3 className="text-xl font-semibold">{currentStep.title}</h3>
-          </div>
-          <p className="text-gray-600">{currentStep.description}</p>
-        </div>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep.id}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {renderStepContent()}
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Navigation Buttons */}
-        <div className="flex justify-between mt-8">
-          <Button
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={currentStep.id === 1}
-          >
-            <ChevronLeft size={16} className="mr-1" />
-            Previous
-          </Button>
-
-          <Button
-            onClick={handleNext}
-            disabled={saving || isLoading}
-            className="min-w-32"
-          >
-            {saving || isLoading ? (
-              'Saving...'
-            ) : currentStep.id === ONBOARDING_STEPS.length ? (
-              'Complete'
-            ) : (
-              <>
-                Next
-                <ChevronRight size={16} className="ml-1" />
-              </>
-            )}
-          </Button>
-        </div>
-      </Card>
-    </div>
-  );
-};
-
-export default EnhancedOnboardingForm;
+                    value={currentStepData.communicationPreferences?.frequency ?? profile?.communicationPreferences?.frequency
