@@ -1,6 +1,3 @@
-Here's the fixed version with all missing closing brackets and required whitespace added:
-
-```typescript
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -372,7 +369,12 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
                 ))}
               </div>
             </div>
+          </div>
+        );
 
+      case 3: // Physical Profile
+        return (
+          <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">Height</label>
               <div className="flex space-x-2">
@@ -761,9 +763,132 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
                   />
                   <span className="text-sm">SMS notifications</span>
                 </label>
+              </div>
+            </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-2">Notification Frequency</label>
-                  <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    value={currentStepData.communicationPreferences?.frequency ?? profile?.communicationPreferences?.frequency
+            <div>
+              <h4 className="text-lg font-medium mb-3">Privacy Settings</h4>
+              <div className="space-y-3">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={currentStepData.privacySettings?.dataSharing ?? profile?.privacySettings?.dataSharing ?? false}
+                    onChange={(e) => handleFieldChange('privacySettings', {
+                      ...currentStepData.privacySettings,
+                      ...profile?.privacySettings,
+                      dataSharing: e.target.checked
+                    })}
+                    className="rounded border-gray-300"
+                  />
+                  <span className="text-sm">Allow data sharing for research purposes</span>
+                </label>
+
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={currentStepData.privacySettings?.analytics ?? profile?.privacySettings?.analytics ?? true}
+                    onChange={(e) => handleFieldChange('privacySettings', {
+                      ...currentStepData.privacySettings,
+                      ...profile?.privacySettings,
+                      analytics: e.target.checked
+                    })}
+                    className="rounded border-gray-300"
+                  />
+                  <span className="text-sm">Allow analytics to improve the service</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return <div>Step not found</div>;
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      {/* Progress indicator */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold">Complete Your Profile</h2>
+          <span className="text-sm text-gray-500">
+            Step {currentStep.id} of {ONBOARDING_STEPS.length}
+          </span>
+        </div>
+        
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="bg-primary h-2 rounded-full transition-all duration-300"
+            style={{ width: `${(currentStep.id / ONBOARDING_STEPS.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Step content */}
+      <Card className="p-8">
+        <div className="flex items-center mb-6">
+          <div className="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mr-4">
+            <currentStep.icon className="w-6 h-6 text-primary" />
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold">{currentStep.title}</h3>
+            <p className="text-gray-600">{currentStep.description}</p>
+          </div>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md flex items-center">
+            <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
+            <span className="text-red-700">{error}</span>
+          </div>
+        )}
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep.id}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {renderStepContent()}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation buttons */}
+        <div className="flex justify-between mt-8">
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={currentStep.id === 1}
+            className="flex items-center"
+          >
+            <ChevronLeft className="w-4 h-4 mr-2" />
+            Previous
+          </Button>
+
+          <Button
+            onClick={handleNext}
+            disabled={saving || isLoading}
+            className="flex items-center"
+          >
+            {currentStep.id === ONBOARDING_STEPS.length ? (
+              <>
+                {saving ? 'Completing...' : 'Complete'}
+                <Check className="w-4 h-4 ml-2" />
+              </>
+            ) : (
+              <>
+                Next
+                <ChevronRight className="w-4 h-4 ml-2" />
+              </>
+            )}
+          </Button>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default EnhancedOnboardingForm;
