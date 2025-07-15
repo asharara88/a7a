@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Primary colors */
+  --color-primary: 221deg 83% 53%;
+  --color-primary-light: 217deg 91% 60%;
+  --color-primary-dark: 224deg 76% 48%;
+  
+  /* Secondary colors */
+  --color-secondary: 262deg 83% 58%;
+  --color-secondary-light: 263deg 90% 80%;
+  --color-secondary-dark: 262deg 83% 48%;
+  
+  /* Status colors */
+  --color-success: 142deg 76% 36%;
+  --color-warning: 38deg 92% 50%;
+  --color-error: 0deg 84% 60%;
+  
+  /* Text colors */
+  --color-text: 222deg 47% 11%;
+  --color-text-light: 215deg 14% 34%;
+  --color-text-disabled: 220deg 9% 46%;
+  
+  /* Background colors */
+  --color-background: 0deg 0% 100%;
+  --color-background-alt: 210deg 20% 98%;
+  
+  /* Surface colors */
+  --color-surface-1: 0deg 0% 100%;
+  --color-surface-2: 220deg 14% 96%;
+  --color-surface-3: 220deg 13% 91%;
+}
+
+.dark {
+  /* Primary colors */
+  --color-primary: 217deg 91% 60%;
+  --color-primary-light: 213deg 94% 68%;
+  --color-primary-dark: 224deg 76% 48%;
+  
+  /* Secondary colors */
+  --color-secondary: 263deg 85% 60%;
+  --color-secondary-light: 263deg 90% 80%;
+  --color-secondary-dark: 262deg 83% 48%;
+  
+  /* Status colors */
+  --color-success: 142deg 71% 45%;
+  --color-warning: 38deg 92% 50%;
+  --color-error: 0deg 84% 60%;
+  
+  /* Text colors */
+  --color-text: 210deg 20% 98%;
+  --color-text-light: 215deg 16% 74%;
+  --color-text-disabled: 215deg 14% 34%;
+  
+  /* Background colors */
+  --color-background: 222deg 47% 11%;
+  --color-background-alt: 223deg 47% 14%;
+  
+  /* Surface colors */
+  --color-surface-1: 222deg 47% 11%;
+  --color-surface-2: 223deg 47% 14%;
+  --color-surface-3: 223deg 47% 18%;
+}
+
+@layer base {
+  html {
+    font-family: 'Inter Variable', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-background text-text;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+}
+
+@layer components {
+  .container {
+    @apply px-4 mx-auto max-w-7xl;
+  }
+  
+  .card {
+    @apply bg-surface-1 rounded-lg shadow-md overflow-hidden;
+  }
+  
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-colors;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-white hover:bg-secondary-dark;
+  }
+  
+  .btn-outline {
+    @apply border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--color-surface-3));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--color-text-disabled));
+}
