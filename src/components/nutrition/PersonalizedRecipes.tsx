@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
 import { recipeApi, Recipe, RecipeSearchParams } from '../../api/recipeApi';
 import RecipeCard from './RecipeCard';
 import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
-import { Card } from '../ui/Card';
+import RecipeFilters from './RecipeFilters';
+import { Link } from 'react-router-dom';
 
 const PersonalizedRecipes: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -92,100 +92,25 @@ const PersonalizedRecipes: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Personalized Recipes</h2>
-        <Button
-          onClick={() => setShowFilters(!showFilters)}
-          variant="outline"
-          className="flex items-center"
-        >
-          <Filter className="w-4 h-4 mr-2" />
-          Filters
-          {showFilters ? (
-            <ChevronUp className="w-4 h-4 ml-2" />
-          ) : (
-            <ChevronDown className="w-4 h-4 ml-2" />
-          )}
-        </Button>
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Personalized Recipes</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Recipes tailored to your preferences and health goals
+          </p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Link to="/saved-recipes" className="text-primary hover:text-primary-dark text-sm font-medium">
+            Saved Recipes
+          </Link>
+          <RecipeFilters 
+            initialFilters={searchParams}
+            onApplyFilters={(filters) => {
+              setSearchParams(filters);
+              loadRecipes();
+            }}
+          />
+        </div>
       </div>
-
-      {/* Filters */}
-      {showFilters && (
-        <Card className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Diet</label>
-              <select
-                value={searchParams.diet}
-                onChange={(e) => handleSearchParamChange('diet', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-              >
-                {dietOptions.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Intolerances</label>
-              <Input
-                type="text"
-                placeholder="e.g., dairy, gluten"
-                value={searchParams.intolerances || ''}
-                onChange={(e) => handleSearchParamChange('intolerances', e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Max Ready Time (min)</label>
-              <Input
-                type="number"
-                min={10}
-                max={120}
-                value={searchParams.maxReadyTime || 60}
-                onChange={(e) => handleSearchParamChange('maxReadyTime', parseInt(e.target.value))}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Max Calories</label>
-              <Input
-                type="number"
-                min={100}
-                max={1500}
-                value={searchParams.maxCalories || 800}
-                onChange={(e) => handleSearchParamChange('maxCalories', parseInt(e.target.value))}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Include Ingredients</label>
-              <Input
-                type="text"
-                placeholder="e.g., chicken, broccoli"
-                value={searchParams.includeIngredients || ''}
-                onChange={(e) => handleSearchParamChange('includeIngredients', e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Exclude Ingredients</label>
-              <Input
-                type="text"
-                placeholder="e.g., peanuts, shellfish"
-                value={searchParams.excludeIngredients || ''}
-                onChange={(e) => handleSearchParamChange('excludeIngredients', e.target.value)}
-              />
-            </div>
-          </div>
-          
-          <div className="mt-4 flex justify-end">
-            <Button onClick={handleSearch} className="flex items-center">
-              <Search className="w-4 h-4 mr-2" />
-              Search Recipes
-            </Button>
-          </div>
-        </Card>
-      )}
 
       {/* Recipes Grid */}
       {isLoading ? (
@@ -204,6 +129,8 @@ const PersonalizedRecipes: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {recipes.map((recipe) => (
             <RecipeCard
+              as={Link}
+              to={`/recipes/${recipe.id}`}
               key={recipe.id}
               recipe={recipe}
               onSave={() => handleSaveRecipe(recipe)}

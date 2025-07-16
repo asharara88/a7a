@@ -2,14 +2,17 @@ import React from 'react';
 import { Clock, Users, Heart, Award } from 'lucide-react';
 import { Recipe } from '../../api/recipeApi';
 import { Card } from '../ui/Card';
+import { Link } from 'react-router-dom';
 
 interface RecipeCardProps {
   recipe: Recipe;
   onSave?: () => void;
   isSaved?: boolean;
+  as?: typeof Link;
+  to?: string;
 }
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSave, isSaved = false }) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSave, isSaved = false, as, to }) => {
   // Function to truncate summary and remove HTML tags
   const cleanSummary = (summary: string) => {
     const withoutTags = summary.replace(/<\/?[^>]+(>|$)/g, "");
@@ -17,7 +20,11 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSave, isSaved = false
   };
 
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
+    <Card 
+      className="overflow-hidden transition-all duration-300 hover:shadow-lg"
+      as={as}
+      to={to}
+    >
       <div className="relative">
         <img 
           src={recipe.image} 
@@ -27,7 +34,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSave, isSaved = false
         <div className="absolute top-2 right-2">
           <button 
             onClick={onSave}
-            className={`p-2 rounded-full ${isSaved ? 'bg-primary text-white' : 'bg-white/80 text-gray-700'} hover:bg-primary hover:text-white transition-colors`}
+            className={`p-2 rounded-full ${isSaved ? 'bg-primary text-white' : 'bg-white/80 text-gray-700'} hover:bg-primary hover:text-white transition-colors z-10`}
             aria-label={isSaved ? "Remove from saved recipes" : "Save recipe"}
           >
             <Heart className={`w-5 h-5 ${isSaved ? 'fill-current' : ''}`} />
