@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Utensils, TrendingUp, Apple, Salad } from 'lucide-react';
+import { Utensils, TrendingUp, Apple, Salad, Clock } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Doughnut } from 'react-chartjs-2';
@@ -34,11 +34,13 @@ const NutritionDashboard: React.FC = () => {
     datasets: [
       {
         data: [dailyIntake.protein * 4, dailyIntake.carbs * 4, dailyIntake.fat * 9],
+        backgroundColor: [
           'hsl(169deg 100% 35% / 0.8)', // Primary (teal)
           'hsl(190deg 100% 40% / 0.8)', // Secondary (blue)
           'hsl(183deg 100% 38% / 0.8)', // Tertiary (turquoise)
           'hsl(169deg 100% 45% / 0.8)'  // Primary light
         ],
+        borderColor: [
           'hsl(169deg 100% 35%)', // Primary (teal)
           'hsl(190deg 100% 40%)', // Secondary (blue)
           'hsl(183deg 100% 38%)', // Tertiary (turquoise)
@@ -73,7 +75,7 @@ const NutritionDashboard: React.FC = () => {
             <div className="p-3 rounded-full bg-primary/10 dark:bg-primary/20 mb-3 shadow-sm">
               <Utensils className="w-5 h-5 text-primary dark:text-primary-light" />
             </div>
-              <p className="text-xl font-bold text-primary dark:text-primary-light">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Calories</p>
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.calories}</p>
               <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.calorieGoal}</p>
@@ -86,7 +88,7 @@ const NutritionDashboard: React.FC = () => {
             <div className="p-3 rounded-full bg-secondary/10 dark:bg-secondary/20 mb-3 shadow-sm">
               <TrendingUp className="w-5 h-5 text-secondary dark:text-secondary-light" />
             </div>
-              <p className="text-xl font-bold text-secondary dark:text-secondary-light">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Protein</p>
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.protein}g</p>
               <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.proteinGoal}g</p>
@@ -99,7 +101,7 @@ const NutritionDashboard: React.FC = () => {
             <div className="p-3 rounded-full bg-tertiary/10 dark:bg-tertiary/20 mb-3 shadow-sm">
               <Apple className="w-5 h-5 text-tertiary dark:text-tertiary-light" />
             </div>
-              <p className="text-xl font-bold text-tertiary dark:text-tertiary-light">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Carbs</p>
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.carbs}g</p>
               <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.carbsGoal}g</p>
@@ -114,7 +116,7 @@ const NutritionDashboard: React.FC = () => {
             </div>
             <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Fat</p>
             <div className="flex items-baseline">
-              <p className="text-xl font-bold text-primary-light dark:text-primary-light">
+              <p className="text-xl font-bold text-primary-light dark:text-primary-light">{dailyIntake.fat}g</p>
               <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.fatGoal}g</p>
             </div>
           </div>
