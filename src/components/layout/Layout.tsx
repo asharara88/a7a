@@ -124,7 +124,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 )}
                 aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
               >
-                {darkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+                {darkMode ? <Sun className="w-6 h-6" /> : <img src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/stack%20dash%20metalic%20favicon.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9zdGFjayBkYXNoIG1ldGFsaWMgZmF2aWNvbi5zdmciLCJpYXQiOjE3NTI2ODA1MzEsImV4cCI6MTc4NDIxNjUzMX0.hO0sJD4Y2r1tzCqdp5V6g_b4pql7w031aOpIuNWM_NY" className="w-6 h-6 dark:invert" alt="Theme toggle" />}
               </button>
 
               {/* Mobile menu button */}
@@ -135,7 +135,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   darkMode ? "text-white" : "text-gray-900"
                 )}
               >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {isMenuOpen ? <X className="w-6 h-6" /> : <img src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/stack%20dash%20metalic%20favicon.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9zdGFjayBkYXNoIG1ldGFsaWMgZmF2aWNvbi5zdmciLCJpYXQiOjE3NTI2ODA1MzEsImV4cCI6MTc4NDIxNjUzMX0.hO0sJD4Y2r1tzCqdp5V6g_b4pql7w031aOpIuNWM_NY" className="w-6 h-6 dark:invert" alt="Menu toggle" />}
               </button>
             </div>
           </div>
