@@ -70,8 +70,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link 
                   key={item.name}
                   className={cn(
-                    "md:hidden p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800",
-                    "text-gray-900 dark:text-white"
+                    "text-gray-900 dark:text-white",
                     location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href))
                       ? "text-primary bg-gradient-to-r from-primary/10 via-tertiary/10 to-secondary/10 dark:from-primary/20 dark:via-tertiary/20 dark:to-secondary/20 shadow-sm"
                       : "hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -87,7 +86,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="flex items-center space-x-3">
               <Link
                 to="/cart"
-                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className={cn(
                   "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
                   darkMode ? "text-white" : "text-gray-900"
                 )}
@@ -97,7 +96,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </Link>
               <Link
                 to="/dashboard"
-                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className={cn(
                   "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
                   darkMode ? "text-white" : "text-gray-900",
                   location.pathname === '/dashboard' ? "text-primary bg-gradient-to-r from-primary/10 via-tertiary/10 to-secondary/10 shadow-sm" : ""
@@ -108,7 +107,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </Link>
               <Link
                 to="/login"
-                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className={cn(
                   "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
                   darkMode ? "text-white" : "text-gray-900"
                 )}
@@ -118,7 +117,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </Link>
               <button
                 onClick={toggleDarkMode}
-                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className={cn(
                   "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
                   darkMode ? "text-white" : "text-gray-900"
                 )}
@@ -130,7 +129,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className={cn(
                   "md:hidden p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
                   darkMode ? "text-white" : "text-gray-900"
                 )}
@@ -155,7 +154,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href))
                         ? "text-primary bg-gradient-to-r from-primary/10 via-tertiary/10 to-secondary/10 dark:from-primary/20 dark:via-tertiary/20 dark:to-secondary/20 shadow-sm"
                         : "hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800"
-                      )}
+                    )}
                   >
                     {item.name}
                   </Link>
