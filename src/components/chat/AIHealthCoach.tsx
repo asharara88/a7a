@@ -132,12 +132,12 @@ const AIHealthCoach: React.FC = () => {
   return (
     <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-200">
       {/* Header */}
-      <div className="bg-gray-900 text-white p-4 flex items-center justify-between rounded-t-lg">
+      <div className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white p-4 flex items-center justify-between rounded-t-lg">
         <div className="flex items-center">
           <img
             src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
             alt="Biowell Logo" 
-            className="h-6 w-auto mr-3" 
+            className="h-8 w-auto mr-3" 
           />
           <h2 className="text-lg font-semibold">AI Health Coach</h2>
         </div>

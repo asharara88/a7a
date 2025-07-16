@@ -6,14 +6,19 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: 'hsl(var(--color-primary))',
+          DEFAULT: 'hsl(var(--color-primary))', /* Teal from logo */
           light: 'hsl(var(--color-primary-light))',
           dark: 'hsl(var(--color-primary-dark))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--color-secondary))',
+          DEFAULT: 'hsl(var(--color-secondary))', /* Blue from logo */
           light: 'hsl(var(--color-secondary-light))',
           dark: 'hsl(var(--color-secondary-dark))',
+        },
+        tertiary: {
+          DEFAULT: 'hsl(var(--color-tertiary))', /* Turquoise from logo */
+          light: 'hsl(var(--color-tertiary-light))',
+          dark: 'hsl(var(--color-tertiary-dark))',
         },
         success: {
           DEFAULT: 'hsl(var(--color-success))',

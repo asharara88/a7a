@@ -52,7 +52,31 @@ const AboutPage: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16 md:py-24">
+      <section className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white py-16 md:py-24 relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div 
+          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-tertiary opacity-10"
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: 0.1,
+            scale: [1, 1.2, 1],
+            x: [0, 20, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-primary opacity-10"
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: 0.1,
+            scale: [1, 1.3, 1],
+            x: [0, -30, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{ duration: 7, repeat: Infinity, delay: 1 }}
+        />
+        
         <div className="mobile-container">
           <div className="max-w-3xl mx-auto text-center">
             <motion.h1 
@@ -76,7 +100,11 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* Our Mission */}
-      <section className="py-16 bg-white dark:bg-gray-900">
+      <section className="py-16 bg-white dark:bg-gray-900 relative overflow-hidden">
+        {/* Background accent */}
+        <div className="absolute top-0 right-0 w-1/4 h-1/4 bg-gradient-to-bl from-primary/5 to-tertiary/5 rounded-bl-full"></div>
+        <div className="absolute bottom-0 left-0 w-1/5 h-1/5 bg-gradient-to-tr from-secondary/5 to-tertiary/5 rounded-tr-full"></div>
+        
         <div className="mobile-container">
           <div className="max-w-3xl mx-auto">
             <motion.div
@@ -106,7 +134,11 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* Core Values */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800">
+      <section className="py-16 bg-gray-50 dark:bg-gray-800 relative overflow-hidden">
+        {/* Background accent */}
+        <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-tertiary/5 to-secondary/5 rounded-br-full"></div>
+        <div className="absolute bottom-0 right-0 w-1/4 h-1/4 bg-gradient-to-tl from-primary/5 to-tertiary/5 rounded-tl-full"></div>
+        
         <div className="mobile-container">
           <motion.h2 
             className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-12 text-center"
@@ -127,10 +159,14 @@ const AboutPage: React.FC = () => {
             {coreValues.map((value, index) => (
               <motion.div 
                 key={index} 
-                className="feature-card"
+                className={`feature-card ${
+                  index % 3 === 0 ? 'bg-gradient-to-br from-primary-dark to-primary' : 
+                  index % 3 === 1 ? 'bg-gradient-to-br from-secondary-dark to-secondary' : 
+                  'bg-gradient-to-br from-tertiary-dark to-tertiary'
+                }`}
                 variants={itemVariants}
               >
-                <div className="feature-icon-container">
+                <div className="p-3 rounded-full bg-white/20 inline-flex mb-4">
                   {value.icon}
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">
@@ -146,7 +182,11 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* Our Approach */}
-      <section className="py-16 bg-white dark:bg-gray-900">
+      <section className="py-16 bg-white dark:bg-gray-900 relative overflow-hidden">
+        {/* Background accent */}
+        <div className="absolute top-0 left-0 w-1/4 h-1/4 bg-gradient-to-br from-secondary/5 to-primary/5 rounded-br-full"></div>
+        <div className="absolute bottom-0 right-0 w-1/5 h-1/5 bg-gradient-to-tl from-tertiary/5 to-secondary/5 rounded-tl-full"></div>
+        
         <div className="mobile-container">
           <div className="max-w-3xl mx-auto">
             <motion.div
@@ -186,7 +226,31 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-primary to-secondary text-white">
+      <section className="py-16 bg-gradient-to-r from-primary via-tertiary to-secondary text-white relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div 
+          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-tertiary opacity-10"
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: 0.1,
+            scale: [1, 1.2, 1],
+            x: [0, -30, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-primary opacity-10"
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: 0.1,
+            scale: [1, 1.3, 1],
+            x: [0, 20, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity, delay: 0.5 }}
+        />
+        
         <div className="mobile-container text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -201,7 +265,7 @@ const AboutPage: React.FC = () => {
             </p>
             <a
               href="/signup"
-              className="inline-flex items-center bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center bg-white text-tertiary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Get Started
               <ArrowRight className="ml-2 w-5 h-5" />

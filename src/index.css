@@ -4,14 +4,19 @@
 
 :root {
   /* Primary colors */
-  --color-primary: 174deg 100% 42%;
-  --color-primary-light: 174deg 100% 50%;
-  --color-primary-dark: 174deg 100% 35%;
+  --color-primary: 169deg 100% 45%;
+  --color-primary-light: 169deg 100% 55%;
+  --color-primary-dark: 169deg 100% 35%;
   
   /* Secondary colors */
-  --color-secondary: 187deg 100% 42%;
-  --color-secondary-light: 187deg 100% 50%;
-  --color-secondary-dark: 187deg 100% 35%;
+  --color-secondary: 190deg 100% 50%;
+  --color-secondary-light: 190deg 100% 60%;
+  --color-secondary-dark: 190deg 100% 40%;
+
+  /* Tertiary color (third color from logo) */
+  --color-tertiary: 183deg 100% 47%;
+  --color-tertiary-light: 183deg 100% 57%;
+  --color-tertiary-dark: 183deg 100% 37%;
   
   /* Status colors */
   --color-success: 142deg 76% 36%;
@@ -35,14 +40,19 @@
 
 .dark {
   /* Primary colors */
-  --color-primary: 174deg 100% 50%;
-  --color-primary-light: 174deg 100% 60%;
-  --color-primary-dark: 174deg 100% 40%;
+  --color-primary: 169deg 100% 55%;
+  --color-primary-light: 169deg 100% 65%;
+  --color-primary-dark: 169deg 100% 45%;
   
   /* Secondary colors */
-  --color-secondary: 187deg 100% 50%;
-  --color-secondary-light: 187deg 100% 60%;
-  --color-secondary-dark: 187deg 100% 40%;
+  --color-secondary: 190deg 100% 60%;
+  --color-secondary-light: 190deg 100% 70%;
+  --color-secondary-dark: 190deg 100% 50%;
+
+  /* Tertiary color (third color from logo) */
+  --color-tertiary: 183deg 100% 57%;
+  --color-tertiary-light: 183deg 100% 67%;
+  --color-tertiary-dark: 183deg 100% 47%;
   
   /* Status colors */
   --color-success: 142deg 71% 45%;
@@ -109,6 +119,10 @@
   
   .btn-secondary {
     @apply bg-secondary text-white hover:bg-secondary-dark shadow-md hover:shadow-lg;
+  }
+
+  .btn-tertiary {
+    @apply bg-gradient-to-r from-tertiary to-primary text-white hover:opacity-90 shadow-md hover:shadow-lg;
   }
   
   .btn-outline {
