@@ -4,14 +4,14 @@
 
 :root {
   /* Primary colors */
-  --color-primary: 187deg 100% 42%;
-  --color-primary-light: 187deg 100% 50%;
-  --color-primary-dark: 187deg 100% 35%;
+  --color-primary: 174deg 100% 42%;
+  --color-primary-light: 174deg 100% 50%;
+  --color-primary-dark: 174deg 100% 35%;
   
   /* Secondary colors */
-  --color-secondary: 174deg 100% 29%;
-  --color-secondary-light: 174deg 100% 35%;
-  --color-secondary-dark: 174deg 100% 25%;
+  --color-secondary: 187deg 100% 42%;
+  --color-secondary-light: 187deg 100% 50%;
+  --color-secondary-dark: 187deg 100% 35%;
   
   /* Status colors */
   --color-success: 142deg 76% 36%;
@@ -35,14 +35,14 @@
 
 .dark {
   /* Primary colors */
-  --color-primary: 187deg 100% 50%;
-  --color-primary-light: 187deg 100% 60%;
-  --color-primary-dark: 187deg 100% 40%;
+  --color-primary: 174deg 100% 50%;
+  --color-primary-light: 174deg 100% 60%;
+  --color-primary-dark: 174deg 100% 40%;
   
   /* Secondary colors */
-  --color-secondary: 174deg 100% 35%;
-  --color-secondary-light: 174deg 100% 45%;
-  --color-secondary-dark: 174deg 100% 30%;
+  --color-secondary: 187deg 100% 50%;
+  --color-secondary-light: 187deg 100% 60%;
+  --color-secondary-dark: 187deg 100% 40%;
   
   /* Status colors */
   --color-success: 142deg 71% 45%;
@@ -90,13 +90,21 @@
   .card-hover {
     @apply hover:shadow-lg hover:scale-[1.01];
   }
+
+  .feature-card {
+    @apply bg-gray-900 text-center p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300;
+  }
+
+  .feature-icon-container {
+    @apply p-3 rounded-full bg-gray-800 inline-flex mb-4;
+  }
   
   .btn {
     @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200;
   }
   
   .btn-primary {
-    @apply bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg;
+    @apply bg-gradient-to-r from-primary to-secondary text-white hover:opacity-90 shadow-md hover:shadow-lg;
   }
   
   .btn-secondary {

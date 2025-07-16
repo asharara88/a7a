@@ -1,24 +1,29 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Heart, Shield, Zap } from 'lucide-react'
+import { ArrowRight, Heart, Shield, Zap, Brain } from 'lucide-react'
 
 // Features data
 const HomePage: React.FC = () => {
   const features = [
     {
-      icon: <Heart className="w-8 h-8 text-red-500" />,
+      icon: <Heart className="w-10 h-10 text-primary" />,
       title: 'Personalized Health',
       description: 'Get customized supplement recommendations based on your unique health profile.'
     },
     {
-      icon: <Shield className="w-8 h-8 text-green-500" />,
+      icon: <Shield className="w-10 h-10 text-green-400" />,
       title: 'Science-Backed',
       description: 'All recommendations are based on the latest scientific research and clinical studies.'
     },
     {
-      icon: <Zap className="w-8 h-8 text-yellow-500" />,
+      icon: <Zap className="w-10 h-10 text-yellow-400" />,
       title: 'Optimize Performance',
       description: 'Enhance your energy, focus, and overall well-being with targeted nutrition.'
+    },
+    {
+      icon: <Brain className="w-10 h-10 text-purple-400" />,
+      title: 'AI-Powered Coach',
+      description: 'Get personalized guidance from our AI health coach to help you reach your wellness goals.'
     }
   ]
 
@@ -67,14 +72,16 @@ const HomePage: React.FC = () => {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="text-center p-5 sm:p-6 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-md card-hover transition-all duration-200">
-                <div className="flex justify-center mb-3 sm:mb-4">
-                  {feature.icon}
+              <div key={index} className="text-center p-6 rounded-lg bg-gray-900 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="flex justify-center mb-4">
+                  <div className="p-3 rounded-full bg-gray-800 inline-flex">
+                    {feature.icon}
+                  </div>
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-xl font-bold text-white mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-400 text-sm">
                   {feature.description}
                 </p>
               </div>
@@ -84,17 +91,17 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-gray-800 transition-all duration-200">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-primary to-secondary text-white transition-all duration-200">
         <div className="mobile-container text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
             Ready to optimize your health?
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-6 sm:mb-8">
+          <p className="text-lg sm:text-xl text-white/80 mb-6 sm:mb-8">
             Join thousands of users who have transformed their wellness journey
           </p>
           <Link
             to="/onboarding"
-            className="bg-gradient-to-r from-primary to-secondary text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
+            className="bg-white text-primary px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
           >
             Start Your Journey
             <ArrowRight className="ml-2 w-5 h-5" />

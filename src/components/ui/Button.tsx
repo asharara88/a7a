@@ -7,10 +7,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-primary to-secondary text-white hover:opacity-90 shadow-sm hover:shadow",
+        default: "bg-gradient-to-r from-primary to-secondary text-white hover:opacity-90 shadow-md hover:shadow-lg",
         destructive: "bg-error text-white hover:bg-red-700 shadow-sm hover:shadow",
         outline: "border border-gray-300 dark:border-gray-700 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300",
-        secondary: "bg-gradient-to-r from-secondary to-primary text-white hover:opacity-90 shadow-sm hover:shadow",
+        secondary: "bg-gradient-to-r from-secondary to-primary text-white hover:opacity-90 shadow-md hover:shadow-lg",
         ghost: "hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50 text-gray-700 dark:text-gray-300",
         link: "text-primary underline-offset-4 hover:underline hover:text-primary-dark",
       },

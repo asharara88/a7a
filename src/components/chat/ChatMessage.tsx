@@ -25,7 +25,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isLoading = false })
           <div className={cn(
             "w-8 h-8 rounded-full flex items-center justify-center",
             isUser 
-              ? "bg-gradient-to-r from-primary to-secondary text-white" 
+              ? "bg-gray-900 text-white" 
               : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
           )}>
             {isUser ? <User size={16} /> : <Bot size={16} />}
