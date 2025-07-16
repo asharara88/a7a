@@ -4,14 +4,14 @@
 
 :root {
   /* Primary colors */
-  --color-primary: 195deg 83% 45%;
-  --color-primary-light: 195deg 90% 55%;
-  --color-primary-dark: 195deg 85% 35%;
+  --color-primary: 187deg 100% 42%;
+  --color-primary-light: 187deg 100% 50%;
+  --color-primary-dark: 187deg 100% 35%;
   
   /* Secondary colors */
-  --color-secondary: 165deg 84% 39%;
-  --color-secondary-light: 165deg 90% 50%;
-  --color-secondary-dark: 165deg 84% 30%;
+  --color-secondary: 174deg 100% 29%;
+  --color-secondary-light: 174deg 100% 35%;
+  --color-secondary-dark: 174deg 100% 25%;
   
   /* Status colors */
   --color-success: 142deg 76% 36%;
@@ -35,14 +35,14 @@
 
 .dark {
   /* Primary colors */
-  --color-primary: 195deg 90% 50%;
-  --color-primary-light: 195deg 95% 60%;
-  --color-primary-dark: 195deg 85% 40%;
+  --color-primary: 187deg 100% 50%;
+  --color-primary-light: 187deg 100% 60%;
+  --color-primary-dark: 187deg 100% 40%;
   
   /* Secondary colors */
-  --color-secondary: 165deg 85% 45%;
-  --color-secondary-light: 165deg 90% 55%;
-  --color-secondary-dark: 165deg 80% 35%;
+  --color-secondary: 174deg 100% 35%;
+  --color-secondary-light: 174deg 100% 45%;
+  --color-secondary-dark: 174deg 100% 30%;
   
   /* Status colors */
   --color-success: 142deg 71% 45%;
@@ -80,35 +80,35 @@
 
 @layer components {
   .container {
-    @apply px-4 mx-auto max-w-7xl;
+    @apply px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl;
   }
   
   .card {
-    @apply bg-surface-1 rounded-lg shadow-md overflow-hidden;
+    @apply bg-surface-1 rounded-lg shadow-md overflow-hidden transition-all duration-200;
   }
 
   .card-hover {
-    @apply transition-all duration-200 hover:shadow-lg hover:scale-[1.01];
+    @apply hover:shadow-lg hover:scale-[1.01];
   }
   
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-colors;
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200;
   }
   
   .btn-primary {
-    @apply bg-primary text-white hover:bg-primary-dark;
+    @apply bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg;
   }
   
   .btn-secondary {
-    @apply bg-secondary text-white hover:bg-secondary-dark;
+    @apply bg-secondary text-white hover:bg-secondary-dark shadow-md hover:shadow-lg;
   }
   
   .btn-outline {
-    @apply border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800;
+    @apply border-2 border-white text-white hover:bg-white hover:text-primary;
   }
 
   .mobile-container {
-    @apply px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto;
+    @apply px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto transition-all duration-200;
   }
 }
 

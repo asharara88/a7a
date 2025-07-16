@@ -32,7 +32,7 @@ const DashboardPage: React.FC = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 sm:py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 sm:py-8 transition-all duration-200">
       <div className="mobile-container">
         <div className="mb-6 sm:mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
@@ -42,7 +42,7 @@ const DashboardPage: React.FC = () => {
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {metrics.map((metric, index) => (
-            <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 card-hover">
+            <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 card-hover transition-all duration-200">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{metric.title}</p>
@@ -59,7 +59,7 @@ const DashboardPage: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recent Activity */}
-          <div className="lg:col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow card-hover">
+          <div className="lg:col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow card-hover transition-all duration-200">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-medium text-gray-900 dark:text-white">Recent Activity</h2>
             </div>

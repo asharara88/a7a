@@ -130,9 +130,9 @@ const AIHealthCoach: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-200">
       {/* Header */}
-      <div className="bg-primary text-white p-4 flex items-center justify-between rounded-t-lg">
+      <div className="bg-gradient-to-r from-primary to-secondary text-white p-4 flex items-center justify-between rounded-t-lg">
         <div className="flex items-center">
           <img
             src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
@@ -156,7 +156,7 @@ const AIHealthCoach: React.FC = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900 transition-all duration-200">
         {messages.map((message) => (
           <ChatMessage
             key={message.id}
@@ -179,7 +179,7 @@ const AIHealthCoach: React.FC = () => {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800">
+      <form onSubmit={handleSubmit} className="border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800 transition-all duration-200">
         <div className="flex items-end space-x-2">
           <div className="flex-1 relative">
             <textarea
@@ -188,7 +188,7 @@ const AIHealthCoach: React.FC = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask about your health, supplements, or wellness goals..."
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
               rows={2}
               disabled={isLoading}
             />
@@ -196,7 +196,7 @@ const AIHealthCoach: React.FC = () => {
           <Button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="h-10 w-10 p-0 flex items-center justify-center rounded-full"
+            className="h-10 w-10 p-0 flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-secondary"
           >
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -205,7 +205,7 @@ const AIHealthCoach: React.FC = () => {
             )}
           </Button>
         </div>
-        <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 transition-all duration-200">
           <p>Your AI coach provides general wellness guidance based on your inputs. Not medical advice.</p>
         </div>
       </form>

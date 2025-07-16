@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section with responsive padding */}
-      <section className="bg-gradient-to-br from-primary to-secondary text-white py-12 sm:py-16 md:py-20">
+      <section className="bg-gradient-to-r from-primary to-secondary text-white py-12 sm:py-16 md:py-20">
         <div className="mobile-container">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
@@ -37,14 +37,14 @@ const HomePage: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Link
                 to="/signup"
-                className="bg-white text-primary px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-200 inline-flex items-center justify-center shadow-lg hover:shadow-xl"
+                className="bg-white text-primary px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl"
               >
                 Get Started
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
               <Link
                 to="/about"
-                className="border-2 border-white text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all duration-200"
+                className="border-2 border-white text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all duration-300"
               >
                 Learn More
               </Link>
@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Features Section with responsive spacing */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-gray-900">
+      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-gray-900 transition-all duration-200">
         <div className="mobile-container">
           <div className="text-center mb-10 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
@@ -67,7 +67,7 @@ const HomePage: React.FC = () => {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="text-center p-5 sm:p-6 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-md card-hover">
+              <div key={index} className="text-center p-5 sm:p-6 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-md card-hover transition-all duration-200">
                 <div className="flex justify-center mb-3 sm:mb-4">
                   {feature.icon}
                 </div>
@@ -84,7 +84,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-gray-800">
+      <section className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-gray-800 transition-all duration-200">
         <div className="mobile-container text-center">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
             Ready to optimize your health?
@@ -94,7 +94,7 @@ const HomePage: React.FC = () => {
           </p>
           <Link
             to="/onboarding"
-            className="bg-primary text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-all duration-200 inline-flex items-center shadow-lg hover:shadow-xl"
+            className="bg-gradient-to-r from-primary to-secondary text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
           >
             Start Your Journey
             <ArrowRight className="ml-2 w-5 h-5" />
