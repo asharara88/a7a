@@ -49,7 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className={`min-h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header - consistent shadow and transition */}
-      <header className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-white'} shadow-lg transition-all duration-200 sticky top-0 z-50`}>
+      <header className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo with responsive sizing */}
@@ -70,8 +70,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link 
                   key={item.name}
                   className={cn(
-                    "px-3 py-2 rounded-md text-sm font-semibold transition-all duration-200",
-                    darkMode ? "text-white" : "text-gray-900",
+                    "md:hidden p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800",
+                    "text-gray-900 dark:text-white"
                     location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href))
                       ? "text-primary bg-gradient-to-r from-primary/10 via-tertiary/10 to-secondary/10 dark:from-primary/20 dark:via-tertiary/20 dark:to-secondary/20 shadow-sm"
                       : "hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -142,7 +142,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700 animate-fadeIn">
+            <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-800 animate-fadeIn">
               <nav className="flex flex-col space-y-3">
                 {navigation.map((item) => (
                   <Link
