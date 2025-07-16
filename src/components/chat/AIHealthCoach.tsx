@@ -130,7 +130,7 @@ const AIHealthCoach: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-200">
+    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transition-all duration-200">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white p-4 flex items-center justify-between rounded-t-lg">
         <div className="flex items-center">
@@ -156,7 +156,7 @@ const AIHealthCoach: React.FC = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100 dark:bg-gray-900 transition-all duration-200">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-800 transition-all duration-200">
         {messages.map((message) => (
           <ChatMessage
             key={message.id}
@@ -165,7 +165,7 @@ const AIHealthCoach: React.FC = () => {
           />
         ))}
         {isLoading && (
-          <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 p-2 bg-gray-100 dark:bg-gray-800 rounded-lg w-fit">
+          <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg w-fit shadow-sm">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span>Biowell AI is thinking...</span>
           </div>
@@ -179,7 +179,7 @@ const AIHealthCoach: React.FC = () => {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800 transition-all duration-200">
+      <form onSubmit={handleSubmit} className="border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-900 transition-all duration-200">
         <div className="flex items-end space-x-2">
           <div className="flex-1 relative">
             <textarea
@@ -188,7 +188,7 @@ const AIHealthCoach: React.FC = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask about your health, supplements, or wellness goals..."
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-300 transition-all duration-200 shadow-inner"
               rows={2}
               disabled={isLoading}
             />

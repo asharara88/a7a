@@ -3,17 +3,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none shadow-sm",
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-primary via-tertiary to-secondary text-white hover:opacity-90 shadow-md hover:shadow-lg",
-        destructive: "bg-error text-white hover:bg-red-700 shadow-sm hover:shadow",
-        outline: "border border-gray-300 dark:border-gray-700 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300",
-        secondary: "bg-gradient-to-r from-secondary via-tertiary to-primary text-white hover:opacity-90 shadow-md hover:shadow-lg",
-        tertiary: "bg-gradient-to-r from-tertiary to-primary text-white hover:opacity-90 shadow-md hover:shadow-lg",
-        ghost: "hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50 text-gray-700 dark:text-gray-300",
-        link: "text-primary underline-offset-4 hover:underline hover:text-primary-dark",
+        default: "bg-gradient-to-r from-primary via-tertiary to-secondary text-white hover:opacity-90 shadow-md hover:shadow-lg font-semibold",
+        destructive: "bg-error text-white hover:bg-red-700 shadow-md hover:shadow-lg font-semibold",
+        outline: "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white",
+        secondary: "bg-gradient-to-r from-secondary via-tertiary to-primary text-white hover:opacity-90 shadow-md hover:shadow-lg font-semibold",
+        tertiary: "bg-gradient-to-r from-tertiary to-primary text-white hover:opacity-90 shadow-md hover:shadow-lg font-semibold",
+        ghost: "hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white text-gray-800 dark:text-white",
+        link: "text-primary underline-offset-4 hover:underline hover:text-primary-dark font-medium",
       },
       size: {
         default: "h-10 py-2 px-4",

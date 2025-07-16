@@ -4,19 +4,19 @@
 
 :root {
   /* Primary colors */
-  --color-primary: 169deg 100% 45%;
-  --color-primary-light: 169deg 100% 55%;
-  --color-primary-dark: 169deg 100% 35%;
+  --color-primary: 169deg 100% 40%;
+  --color-primary-light: 169deg 100% 50%;
+  --color-primary-dark: 169deg 100% 30%;
   
   /* Secondary colors */
-  --color-secondary: 190deg 100% 50%;
-  --color-secondary-light: 190deg 100% 60%;
-  --color-secondary-dark: 190deg 100% 40%;
+  --color-secondary: 190deg 100% 45%;
+  --color-secondary-light: 190deg 100% 55%;
+  --color-secondary-dark: 190deg 100% 35%;
 
   /* Tertiary color (third color from logo) */
-  --color-tertiary: 183deg 100% 47%;
-  --color-tertiary-light: 183deg 100% 57%;
-  --color-tertiary-dark: 183deg 100% 37%;
+  --color-tertiary: 183deg 100% 42%;
+  --color-tertiary-light: 183deg 100% 52%;
+  --color-tertiary-dark: 183deg 100% 32%;
   
   /* Status colors */
   --color-success: 142deg 76% 36%;
@@ -24,35 +24,35 @@
   --color-error: 0deg 84% 60%;
   
   /* Text colors */
-  --color-text: 222deg 47% 11%;
-  --color-text-light: 215deg 14% 34%;
+  --color-text: 222deg 47% 8%;
+  --color-text-light: 215deg 14% 30%;
   --color-text-disabled: 220deg 9% 46%;
   
   /* Background colors */
   --color-background: 0deg 0% 100%;
-  --color-background-alt: 210deg 20% 98%;
+  --color-background-alt: 210deg 20% 96%;
   
   /* Surface colors */
   --color-surface-1: 0deg 0% 100%;
-  --color-surface-2: 220deg 14% 96%;
-  --color-surface-3: 220deg 13% 91%;
+  --color-surface-2: 220deg 14% 94%;
+  --color-surface-3: 220deg 13% 88%;
 }
 
 .dark {
   /* Primary colors */
-  --color-primary: 169deg 100% 55%;
-  --color-primary-light: 169deg 100% 65%;
-  --color-primary-dark: 169deg 100% 45%;
+  --color-primary: 169deg 100% 60%;
+  --color-primary-light: 169deg 100% 70%;
+  --color-primary-dark: 169deg 100% 50%;
   
   /* Secondary colors */
-  --color-secondary: 190deg 100% 60%;
-  --color-secondary-light: 190deg 100% 70%;
-  --color-secondary-dark: 190deg 100% 50%;
+  --color-secondary: 190deg 100% 65%;
+  --color-secondary-light: 190deg 100% 75%;
+  --color-secondary-dark: 190deg 100% 55%;
 
   /* Tertiary color (third color from logo) */
-  --color-tertiary: 183deg 100% 57%;
-  --color-tertiary-light: 183deg 100% 67%;
-  --color-tertiary-dark: 183deg 100% 47%;
+  --color-tertiary: 183deg 100% 62%;
+  --color-tertiary-light: 183deg 100% 72%;
+  --color-tertiary-dark: 183deg 100% 52%;
   
   /* Status colors */
   --color-success: 142deg 71% 45%;
@@ -60,18 +60,18 @@
   --color-error: 0deg 84% 60%;
   
   /* Text colors */
-  --color-text: 210deg 20% 98%;
-  --color-text-light: 215deg 16% 74%;
-  --color-text-disabled: 215deg 14% 34%;
+  --color-text: 210deg 20% 100%;
+  --color-text-light: 215deg 16% 85%;
+  --color-text-disabled: 215deg 14% 50%;
   
   /* Background colors */
-  --color-background: 222deg 47% 11%;
-  --color-background-alt: 223deg 47% 14%;
+  --color-background: 222deg 47% 8%;
+  --color-background-alt: 223deg 47% 11%;
   
   /* Surface colors */
-  --color-surface-1: 222deg 47% 11%;
-  --color-surface-2: 223deg 47% 14%;
-  --color-surface-3: 223deg 47% 18%;
+  --color-surface-1: 222deg 47% 10%;
+  --color-surface-2: 223deg 47% 13%;
+  --color-surface-3: 223deg 47% 16%;
 }
 
 @layer base {
