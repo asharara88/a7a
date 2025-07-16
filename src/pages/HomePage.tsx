@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Heart, Shield, Zap, Brain } from 'lucide-react'
+import { ArrowRight, Heart, Shield, Zap, Brain, ChevronDown } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 // Features data
 const HomePage: React.FC = () => {
@@ -29,83 +30,201 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with responsive padding */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-12 sm:py-16 md:py-20">
+      {/* Hero Section with animated elements */}
+      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16 sm:py-20 md:py-24 relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div 
+          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-white opacity-5"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            x: [0, 20, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-white opacity-5"
+          animate={{ 
+            scale: [1, 1.3, 1],
+            x: [0, -30, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{ duration: 7, repeat: Infinity, delay: 1 }}
+        />
+        
         <div className="mobile-container">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
+          <motion.div 
+            className="text-center max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 sm:mb-8 text-shadow-sm">
               Your Digital Wellness Coach
             </h1>
-            <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-primary-light/90">
+            <p className="text-xl sm:text-2xl md:text-3xl mb-8 sm:mb-10 text-white/90">
               Personalized supplement recommendations powered by science
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Link
-                to="/signup"
-                className="bg-white text-primary px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl"
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to="/signup"
+                  className="bg-white text-primary px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
+                >
+                  Get Started
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to="/about"
+                  className="border-2 border-white text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all duration-300 text-lg"
+                >
+                  Learn More
+                </Link>
+              </motion.div>
+            </motion.div>
+            
+            {/* Scroll indicator */}
+            <motion.div 
+              className="mt-16 hidden md:flex justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 1 }}
+            >
+              <motion.div 
+                animate={{ y: [0, 10, 0] }} 
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="cursor-pointer"
+                onClick={() => window.scrollTo({
+                  top: window.innerHeight,
+                  behavior: 'smooth'
+                })}
               >
-                Get Started
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-              <Link
-                to="/about"
-                className="border-2 border-white text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all duration-300"
-              >
-                Learn More
-              </Link>
-            </div>
-          </div>
+                <ChevronDown className="w-8 h-8 text-white/70" />
+              </motion.div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* Features Section with responsive spacing */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-gray-900 transition-all duration-200">
+      <section className="py-16 sm:py-20 md:py-24 bg-white dark:bg-gray-900 transition-all duration-200">
         <div className="mobile-container">
-          <div className="text-center mb-10 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
+          <motion.div 
+            className="text-center mb-12 sm:mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
               Why Choose Biowell?
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400">
+            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Experience the future of personalized wellness
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <motion.div 
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ staggerChildren: 0.1, delayChildren: 0.2 }}
+          >
             {features.map((feature, index) => (
-              <div key={index} className="text-center p-6 rounded-lg bg-gray-900 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 rounded-full bg-gray-800 inline-flex">
+              <motion.div 
+                key={index} 
+                className="text-center p-8 rounded-xl bg-gray-900 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="flex justify-center mb-6">
+                  <div className="p-4 rounded-full bg-gray-800 inline-flex">
                     {feature.icon}
                   </div>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">
+                <h3 className="text-2xl font-bold text-white mb-4">
                   {feature.title}
                 </h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400 text-base">
                   {feature.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-primary to-secondary text-white transition-all duration-200">
+      <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-r from-primary to-secondary text-white transition-all duration-200 relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div 
+          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white opacity-5"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            x: [0, -30, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-white opacity-5"
+          animate={{ 
+            scale: [1, 1.3, 1],
+            x: [0, 20, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity, delay: 0.5 }}
+        />
+        
         <div className="mobile-container text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
-            Ready to optimize your health?
-          </h2>
-          <p className="text-lg sm:text-xl text-white/80 mb-6 sm:mb-8">
-            Join thousands of users who have transformed their wellness journey
-          </p>
-          <Link
-            to="/onboarding"
-            className="bg-white text-primary px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
+          <motion.h2 
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 sm:mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
           >
-            Start Your Journey
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Link>
+            Ready to optimize your health?
+          </motion.h2>
+          <motion.p 
+            className="text-xl sm:text-2xl text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Join thousands of users who have transformed their wellness journey
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Link
+              to="/onboarding"
+              className="bg-white text-primary px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl text-lg"
+            >
+              Start Your Journey
+              <ArrowRight className="ml-2 w-6 h-6" />
+            </Link>
+          </motion.div>
         </div>
       </section>
     </div>
