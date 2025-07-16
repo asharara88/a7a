@@ -34,6 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Nutrition', href: '/nutrition' },
+    { name: 'Recipes', href: '/recipes' },
     { name: 'Fitness', href: '/fitness' },
     { name: 'Supplements', href: '/supplements' },
     { name: 'Dashboard', href: '/dashboard' },

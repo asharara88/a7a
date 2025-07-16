@@ -11,6 +11,7 @@ const OnboardingPage = React.lazy(() => import('./pages/auth/OnboardingPage'))
 const DashboardPage = React.lazy(() => import('./pages/DashboardPage'))
 const NutritionPage = React.lazy(() => import('./pages/NutritionPage'))
 const FitnessPage = React.lazy(() => import('./pages/FitnessPage'))
+const RecipesPage = React.lazy(() => import('./pages/RecipesPage'))
 const SupplementsPage = React.lazy(() => import('./pages/SupplementsPage'))
 const SupplementDetailPage = React.lazy(() => import('./pages/SupplementDetailPage'))
 const CartPage = React.lazy(() => import('./pages/CartPage'))
@@ -29,6 +30,7 @@ const App: React.FC = () => {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/nutrition" element={<NutritionPage />} />
           <Route path="/fitness" element={<FitnessPage />} />
+          <Route path="/recipes" element={<RecipesPage />} />
           <Route path="/supplements" element={<SupplementsPage />} />
           <Route path="/supplements/:id" element={<SupplementDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
