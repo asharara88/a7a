@@ -3,28 +3,6 @@ import { Shield, Zap, Heart, Brain, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 const AboutPage: React.FC = () => {
-  // Team members data
-  const teamMembers = [
-    {
-      name: 'Dr. Sarah Chen',
-      role: 'Chief Medical Officer',
-      bio: 'Board-certified in internal medicine with a focus on preventive health and nutrition.',
-      image: 'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=300'
-    },
-    {
-      name: 'Michael Rodriguez',
-      role: 'Head of Research',
-      bio: 'PhD in Nutritional Biochemistry with 15+ years researching supplement efficacy and safety.',
-      image: 'https://images.pexels.com/photos/5327656/pexels-photo-5327656.jpeg?auto=compress&cs=tinysrgb&w=300'
-    },
-    {
-      name: 'Aisha Patel',
-      role: 'AI Development Lead',
-      bio: 'Machine learning specialist focused on health data analysis and personalization algorithms.',
-      image: 'https://images.pexels.com/photos/5327616/pexels-photo-5327616.jpeg?auto=compress&cs=tinysrgb&w=300'
-    }
-  ]
-
   // Core values data
   const coreValues = [
     {
@@ -204,47 +182,6 @@ const AboutPage: React.FC = () => {
               </div>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Meet Our Team */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800">
-        <div className="mobile-container">
-          <motion.h2 
-            className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-12 text-center"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            Meet Our Team
-          </motion.h2>
-          
-          <motion.div 
-            className="grid md:grid-cols-3 gap-8"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {teamMembers.map((member, index) => (
-              <motion.div 
-                key={index} 
-                className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden card-hover"
-                variants={itemVariants}
-              >
-                <img 
-                  src={member.image} 
-                  alt={member.name} 
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{member.name}</h3>
-                  <p className="text-primary font-medium mb-3">{member.role}</p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">{member.bio}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
         </div>
       </section>
 
