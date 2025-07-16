@@ -4,14 +4,14 @@
 
 :root {
   /* Primary colors */
-  --color-primary: 200deg 83% 45%;
-  --color-primary-light: 200deg 90% 55%;
-  --color-primary-dark: 200deg 85% 35%;
+  --color-primary: 195deg 83% 45%;
+  --color-primary-light: 195deg 90% 55%;
+  --color-primary-dark: 195deg 85% 35%;
   
   /* Secondary colors */
-  --color-secondary: 160deg 84% 39%;
-  --color-secondary-light: 160deg 90% 50%;
-  --color-secondary-dark: 160deg 84% 30%;
+  --color-secondary: 165deg 84% 39%;
+  --color-secondary-light: 165deg 90% 50%;
+  --color-secondary-dark: 165deg 84% 30%;
   
   /* Status colors */
   --color-success: 142deg 76% 36%;
@@ -35,14 +35,14 @@
 
 .dark {
   /* Primary colors */
-  --color-primary: 200deg 90% 50%;
-  --color-primary-light: 200deg 95% 60%;
-  --color-primary-dark: 200deg 85% 40%;
+  --color-primary: 195deg 90% 50%;
+  --color-primary-light: 195deg 95% 60%;
+  --color-primary-dark: 195deg 85% 40%;
   
   /* Secondary colors */
-  --color-secondary: 160deg 85% 45%;
-  --color-secondary-light: 160deg 90% 55%;
-  --color-secondary-dark: 160deg 80% 35%;
+  --color-secondary: 165deg 85% 45%;
+  --color-secondary-light: 165deg 90% 55%;
+  --color-secondary-dark: 165deg 80% 35%;
   
   /* Status colors */
   --color-success: 142deg 71% 45%;
@@ -86,6 +86,10 @@
   .card {
     @apply bg-surface-1 rounded-lg shadow-md overflow-hidden;
   }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:scale-[1.01];
+  }
   
   .btn {
     @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-colors;
@@ -101,6 +105,10 @@
   
   .btn-outline {
     @apply border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800;
+  }
+
+  .mobile-container {
+    @apply px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto;
   }
 }
 
