@@ -128,15 +128,15 @@ const NutritionDashboard: React.FC = () => {
           </div>
           <div className="grid grid-cols-3 gap-2 mt-4 text-center">
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Protein</p>
+              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">Protein</p>
               <p className="font-medium">{Math.round(dailyIntake.protein / dailyIntake.proteinGoal * 100)}%</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Carbs</p>
+              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">Carbs</p>
               <p className="font-medium">{Math.round(dailyIntake.carbs / dailyIntake.carbsGoal * 100)}%</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Fat</p>
+              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">Fat</p>
               <p className="font-medium">{Math.round(dailyIntake.fat / dailyIntake.fatGoal * 100)}%</p>
             </div>
           </div>
@@ -191,10 +191,10 @@ const NutritionDashboard: React.FC = () => {
               <div className="h-32 bg-gray-200 dark:bg-gray-700"></div>
               <div className="p-3">
                 <h4 className="font-medium text-sm">Recommended Recipe {i + 1}</h4>
-                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">Calories</p>
                   <span>30 min</span>
                   <span>400 cal</span>
-                </div>
+                <p className="text-xs text-gray-700 dark:text-gray-300 ml-1">/ {dailyIntake.fatGoal}g</p>
               </div>
             </div>
           ))}

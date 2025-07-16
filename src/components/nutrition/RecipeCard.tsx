@@ -57,16 +57,16 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSave, isSaved = false
         </div>
       </div>
       
-      <div className="p-4">
+      <div className="p-5">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
           {recipe.title}
         </h3>
         
-        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+        <p className="text-sm text-gray-800 dark:text-gray-200 mb-4 line-clamp-3">
           {cleanSummary(recipe.summary)}
         </p>
         
-        <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300 font-medium">
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-1" />
             <span>{recipe.readyInMinutes} min</span>
@@ -81,19 +81,19 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSave, isSaved = false
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="grid grid-cols-4 gap-2 text-center">
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Calories</p>
+                <p className="text-xs text-gray-700 dark:text-gray-300 font-medium">Calories</p>
                 <p className="font-semibold text-gray-900 dark:text-white">{Math.round(recipe.nutrition.calories)}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Protein</p>
+                <p className="text-xs text-gray-700 dark:text-gray-300 font-medium">Protein</p>
                 <p className="font-semibold text-gray-900 dark:text-white">{Math.round(recipe.nutrition.protein)}g</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Carbs</p>
+                <p className="text-xs text-gray-700 dark:text-gray-300 font-medium">Carbs</p>
                 <p className="font-semibold text-gray-900 dark:text-white">{Math.round(recipe.nutrition.carbs)}g</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Fat</p>
+                <p className="text-xs text-gray-700 dark:text-gray-300 font-medium">Fat</p>
                 <p className="font-semibold text-gray-900 dark:text-white">{Math.round(recipe.nutrition.fat)}g</p>
               </div>
             </div>

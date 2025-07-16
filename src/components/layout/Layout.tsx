@@ -68,7 +68,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               {navigation.map((item) => (
                 <Link
                   key={item.name}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${darkMode ? 'text-white' : 'text-gray-900'} ${
+                  className={`px-3 py-2 rounded-md text-sm font-semibold transition-all duration-200 ${darkMode ? 'text-white' : 'text-gray-900'} ${
                     location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href))
                       ? 'text-primary bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 font-semibold'
                       : 'hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800 font-medium'
@@ -83,28 +83,28 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="flex items-center space-x-4">
               <Link
                 to="/cart"
-                className={`p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-800'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200`}
+                className={`p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-900'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200`}
                 aria-label="Shopping Cart"
               >
                 <ShoppingCart className="w-6 h-6" />
               </Link>
               <Link
                 to="/dashboard"
-                className={`p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-800'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 ${location.pathname === '/dashboard' ? 'text-primary bg-gradient-to-r from-primary/10 to-secondary/10' : ''}`}
+                className={`p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-900'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 ${location.pathname === '/dashboard' ? 'text-primary bg-gradient-to-r from-primary/10 to-secondary/10' : ''}`}
                 aria-label="AI Coach"
               >
                 <MessageSquare className="w-6 h-6" />
               </Link>
               <Link
                 to="/login"
-                className={`p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-800'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200`}
+                className={`p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-900'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200`}
                 aria-label="User Account"
               >
                 <User className="w-6 h-6" />
               </Link>
               <button
                 onClick={toggleDarkMode}
-                className={`p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-800'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200`}
+                className={`p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-900'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200`}
                 aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
               >
                 {darkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
@@ -113,7 +113,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className={`md:hidden p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-800'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200`}
+                className={`md:hidden p-2 rounded-full ${darkMode ? 'text-white' : 'text-gray-900'} hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200`}
               >
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -129,7 +129,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     key={item.name}
                     to={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${darkMode ? 'text-white' : 'text-gray-900'} ${
+                    className={`px-3 py-2 rounded-md text-sm font-semibold transition-all duration-200 ${darkMode ? 'text-white' : 'text-gray-900'} ${
                       location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href))
                         ? 'text-primary bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20'
                         : 'hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800'

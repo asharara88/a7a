@@ -36,14 +36,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isLoading = false })
           "rounded-lg p-3 shadow-sm",
           isUser 
             ? "bg-gradient-to-r from-primary to-secondary text-white shadow-md" 
-            : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white shadow-md"
+            : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-md"
         )}>
           <div className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</div>
           <div className={cn(
             "text-xs mt-1",
             isUser 
               ? "text-white/80" 
-              : "text-gray-600 dark:text-gray-300"
+              : "text-gray-700 dark:text-white/80"
           )}>
             {format(new Date(message.timestamp), 'h:mm a')}
           </div>
