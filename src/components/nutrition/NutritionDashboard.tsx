@@ -5,6 +5,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { cn } from '../../utils/cn';
 
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -33,15 +34,15 @@ const NutritionDashboard: React.FC = () => {
     datasets: [
       {
         data: [dailyIntake.protein * 4, dailyIntake.carbs * 4, dailyIntake.fat * 9],
-        backgroundColor: [
-          'rgba(54, 162, 235, 0.8)',
-          'rgba(75, 192, 192, 0.8)',
-          'rgba(255, 99, 132, 0.8)'
+          'hsl(169deg 100% 35% / 0.8)', // Primary (teal)
+          'hsl(190deg 100% 40% / 0.8)', // Secondary (blue)
+          'hsl(183deg 100% 38% / 0.8)', // Tertiary (turquoise)
+          'hsl(169deg 100% 45% / 0.8)'  // Primary light
         ],
-        borderColor: [
-          'rgba(54, 162, 235, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(255, 99, 132, 1)'
+          'hsl(169deg 100% 35%)', // Primary (teal)
+          'hsl(190deg 100% 40%)', // Secondary (blue)
+          'hsl(183deg 100% 38%)', // Tertiary (turquoise)
+          'hsl(169deg 100% 45%)'  // Primary light
         ],
         borderWidth: 1
       }
@@ -55,7 +56,8 @@ const NutritionDashboard: React.FC = () => {
         position: 'bottom' as const,
         labels: {
           padding: 20,
-          usePointStyle: true
+          usePointStyle: true,
+          color: '#4B5563' // text-gray-600
         }
       }
     },
@@ -65,100 +67,100 @@ const NutritionDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Quick stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-4">
-          <div className="flex flex-col items-center">
-            <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900 mb-2">
-              <Utensils className="w-5 h-5 text-blue-500 dark:text-blue-300" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <Card className="p-4 sm:p-5">
+          <div className="flex flex-col items-center text-center">
+            <div className="p-3 rounded-full bg-primary/10 dark:bg-primary/20 mb-3 shadow-sm">
+              <Utensils className="w-5 h-5 text-primary dark:text-primary-light" />
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Calories</p>
+              <p className="text-xl font-bold text-primary dark:text-primary-light">
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.calories}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 ml-1">/ {dailyIntake.calorieGoal}</p>
+              <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.calorieGoal}</p>
             </div>
           </div>
         </Card>
         
-        <Card className="p-4">
-          <div className="flex flex-col items-center">
-            <div className="p-2 rounded-full bg-red-100 dark:bg-red-900 mb-2">
-              <TrendingUp className="w-5 h-5 text-red-500 dark:text-red-300" />
+        <Card className="p-4 sm:p-5">
+          <div className="flex flex-col items-center text-center">
+            <div className="p-3 rounded-full bg-secondary/10 dark:bg-secondary/20 mb-3 shadow-sm">
+              <TrendingUp className="w-5 h-5 text-secondary dark:text-secondary-light" />
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Protein</p>
+              <p className="text-xl font-bold text-secondary dark:text-secondary-light">
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.protein}g</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 ml-1">/ {dailyIntake.proteinGoal}g</p>
+              <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.proteinGoal}g</p>
             </div>
           </div>
         </Card>
         
-        <Card className="p-4">
-          <div className="flex flex-col items-center">
-            <div className="p-2 rounded-full bg-green-100 dark:bg-green-900 mb-2">
-              <Apple className="w-5 h-5 text-green-500 dark:text-green-300" />
+        <Card className="p-4 sm:p-5">
+          <div className="flex flex-col items-center text-center">
+            <div className="p-3 rounded-full bg-tertiary/10 dark:bg-tertiary/20 mb-3 shadow-sm">
+              <Apple className="w-5 h-5 text-tertiary dark:text-tertiary-light" />
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Carbs</p>
+              <p className="text-xl font-bold text-tertiary dark:text-tertiary-light">
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.carbs}g</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 ml-1">/ {dailyIntake.carbsGoal}g</p>
+              <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.carbsGoal}g</p>
             </div>
           </div>
         </Card>
         
-        <Card className="p-4">
-          <div className="flex flex-col items-center">
-            <div className="p-2 rounded-full bg-yellow-100 dark:bg-yellow-900 mb-2">
-              <Salad className="w-5 h-5 text-yellow-500 dark:text-yellow-300" />
+        <Card className="p-4 sm:p-5">
+          <div className="flex flex-col items-center text-center">
+            <div className="p-3 rounded-full bg-primary-light/10 dark:bg-primary-light/20 mb-3 shadow-sm">
+              <Salad className="w-5 h-5 text-primary-light dark:text-primary-light" />
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Fat</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Fat</p>
             <div className="flex items-baseline">
-              <p className="text-xl font-bold">{dailyIntake.fat}g</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 ml-1">/ {dailyIntake.fatGoal}g</p>
+              <p className="text-xl font-bold text-primary-light dark:text-primary-light">
+              <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.fatGoal}g</p>
             </div>
           </div>
         </Card>
       </div>
       
       {/* Macro breakdown and recent meals */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Macro Breakdown</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        <Card className="p-6 sm:p-8">
+          <h3 className="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Macro Breakdown</h3>
           <div className="h-64 flex items-center justify-center">
             <Doughnut data={macroChartData} options={chartOptions} />
           </div>
-          <div className="grid grid-cols-3 gap-2 mt-4 text-center">
+          <div className="grid grid-cols-3 gap-4 mt-6 text-center">
             <div>
-              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">Protein</p>
-              <p className="font-medium">{Math.round(dailyIntake.protein / dailyIntake.proteinGoal * 100)}%</p>
+              <p className="text-sm text-gray-800 dark:text-gray-100 font-medium mb-1">Protein</p>
+              <p className="font-bold text-secondary dark:text-secondary-light">{Math.round(dailyIntake.protein / dailyIntake.proteinGoal * 100)}%</p>
             </div>
             <div>
-              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">Carbs</p>
-              <p className="font-medium">{Math.round(dailyIntake.carbs / dailyIntake.carbsGoal * 100)}%</p>
+              <p className="text-sm text-gray-800 dark:text-gray-100 font-medium mb-1">Carbs</p>
+              <p className="font-bold text-tertiary dark:text-tertiary-light">{Math.round(dailyIntake.carbs / dailyIntake.carbsGoal * 100)}%</p>
             </div>
             <div>
-              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">Fat</p>
-              <p className="font-medium">{Math.round(dailyIntake.fat / dailyIntake.fatGoal * 100)}%</p>
+              <p className="text-sm text-gray-800 dark:text-gray-100 font-medium mb-1">Fat</p>
+              <p className="font-bold text-primary dark:text-primary-light">{Math.round(dailyIntake.fat / dailyIntake.fatGoal * 100)}%</p>
             </div>
           </div>
         </Card>
         
-        <Card className="p-6">
+        <Card className="p-6 sm:p-8">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Today's Meals</h3>
-            <Link to="/nutrition" className="text-primary hover:text-primary-dark text-sm font-medium">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Today's Meals</h3>
+            <Link to="/nutrition" className="text-primary hover:text-primary-dark text-sm font-semibold">
               View All
             </Link>
           </div>
           
           <div className="space-y-4">
             {recentMeals.map(meal => (
-              <div key={meal.id} className="flex justify-between items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div key={meal.id} className="flex justify-between items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 shadow-sm">
                 <div>
-                  <p className="font-medium">{meal.name}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{meal.time}</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{meal.name}</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">{meal.time}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">{meal.calories} cal</p>
+                  <p className="font-bold text-primary dark:text-primary-light">{meal.calories} cal</p>
                 </div>
               </div>
             ))}
@@ -167,7 +169,7 @@ const NutritionDashboard: React.FC = () => {
               as={Link}
               to="/nutrition"
               variant="outline"
-              className="w-full mt-2"
+              className="w-full mt-4"
             >
               Log a Meal
             </Button>
@@ -176,25 +178,31 @@ const NutritionDashboard: React.FC = () => {
       </div>
       
       {/* Recipe recommendations */}
-      <Card className="p-6">
+      <Card className="p-6 sm:p-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Recommended Recipes</h3>
-          <Link to="/recipes" className="text-primary hover:text-primary-dark text-sm font-medium">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recommended Recipes</h3>
+          <Link to="/recipes" className="text-primary hover:text-primary-dark text-sm font-semibold">
             View All
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Mock recipe recommendations */}
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-              <div className="h-32 bg-gray-200 dark:bg-gray-700"></div>
-              <div className="p-3">
-                <h4 className="font-medium text-sm">Recommended Recipe {i + 1}</h4>
-              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">Calories</p>
-                  <span>30 min</span>
-                  <span>400 cal</span>
-                <p className="text-xs text-gray-700 dark:text-gray-300 ml-1">/ {dailyIntake.fatGoal}g</p>
+            <div key={i} className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-all duration-200 bg-white dark:bg-gray-800">
+              <div className="h-32 bg-gradient-to-r from-primary/20 via-tertiary/20 to-secondary/20 dark:from-primary/30 dark:via-tertiary/30 dark:to-secondary/30"></div>
+              <div className="p-4">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Recommended Recipe {i + 1}</h4>
+                <div className="flex justify-between text-sm text-gray-800 dark:text-gray-200 font-medium">
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-1 text-primary" />
+                    <span>30 min</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Utensils className="w-4 h-4 mr-1 text-secondary" />
+                    <span>400 cal</span>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
