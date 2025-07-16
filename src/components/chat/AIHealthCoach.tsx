@@ -133,12 +133,12 @@ const AIHealthCoach: React.FC = () => {
       {/* Header */}
       <div className="bg-primary text-white p-4 flex items-center justify-between">
         <div className="flex items-center">
-          <img 
-            src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/favicon.svg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2UyYTcyNGEyLTZkNTctNDk4YS04ZGU1LWY2Y2Q4MjAyNjA3YiJ9.eyJ1cmwiOiJsb2dvcy9mYXZpY29uLnN2ZyIsImlhdCI6MTc0NzI5OTE1NywiZXhwIjoxNzc4ODM1MTU3fQ.rOddcgsmXrPC8bqm0vvWl_3VWveHtI2ybGSLS1tpxJg" 
+          <img
+            src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
             alt="Biowell Logo" 
             className="h-6 w-auto mr-2" 
           />
-          <h2 className="text-lg font-semibold">Biowell Health Coach</h2>
+          <h2 className="text-lg font-semibold">Health Coach</h2>
         </div>
         <button
           onClick={() => setVoiceEnabled(!voiceEnabled)}
