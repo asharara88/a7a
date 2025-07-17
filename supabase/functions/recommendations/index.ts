@@ -60,8 +60,25 @@ Deno.serve(async (req) => {
     // Initialize Supabase client
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Get request body
-    const { userId } = await req.json();
+    // Get request body with proper error handling
+    const bodyText = await req.text();
+    let requestBody: { userId?: string } = {};
+    
+    if (bodyText && bodyText.trim() !== '') {
+      try {
+        requestBody = JSON.parse(bodyText);
+      } catch (parseError) {
+        return new Response(
+          JSON.stringify({ error: "Invalid JSON in request body" }),
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, "Content-Type": "application/json" } 
+          }
+        );
+      }
+    }
+    
+    const { userId } = requestBody;
     
     if (!userId) {
       return new Response(
