@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Moon, Bell, Lock, Info, User } from 'lucide-react';
+import { Table as Tabs, Moon, Bell, Lock, Info, User } from 'lucide-react';
 import ThemeSettings from '../components/settings/ThemeSettings';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
