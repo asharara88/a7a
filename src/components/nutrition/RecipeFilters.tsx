@@ -162,9 +162,9 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({ initialFilters, onApplyFi
                 Reset
               </Button>
               <Button onClick={handleApply}>
+                <Check className="w-4 h-4 mr-1.5" />
                 Apply Filters
-              <Check className="w-4 h-4 mr-1.5" />
-              Apply
+              </Button>
             </div>
           </Card>
         </div>

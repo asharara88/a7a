@@ -1,25 +1,18 @@
 import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { ShoppingCart, User, Menu, X, Sparkles, Moon, Sun } from 'lucide-react'
+import { ShoppingCart, User, Menu, X, Sparkles } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
 import MinimalNav from './MinimalNav'
 import MobileNav from '../ui/MobileNav'
 import { createClient } from '@supabase/supabase-js'
+import { useTheme } from '../../hooks/useTheme'
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Get initial dark mode preference from system or localStorage
-const getInitialDarkMode = () => {
-  const savedMode = localStorage.getItem('darkMode');
-  if (savedMode !== null) {
-    return savedMode === 'true';
-  }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
-};
 
 interface LayoutProps {
   children: React.ReactNode
@@ -27,20 +20,11 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-  const [darkMode, setDarkMode] = React.useState(getInitialDarkMode)
+  const { effectiveTheme } = useTheme()
   const [user, setUser] = React.useState<any>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const location = useLocation()
   const navigate = useNavigate()
-
-  React.useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('darkMode', darkMode.toString());
-  }, [darkMode]);
 
   // Check for user session on mount
   React.useEffect(() => {
@@ -97,7 +81,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen ${effectiveTheme === 'dark' ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header with consistent styling */}
       <MinimalNav />
       {/* Mobile Navigation */}
@@ -119,7 +103,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex flex-col md:flex-row justify-between items-start">
             <div className="flex items-center mb-5 md:mb-0 text-left">
               <img 
-                src={darkMode 
+                src={effectiveTheme === 'dark' 
                   ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
                   : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
                 }

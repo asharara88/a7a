@@ -140,7 +140,6 @@ const MinimalNav: React.FC = () => {
           
           {/* Main Navigation Icons */}
           <div className="flex items-center space-x-1">
-            {/* Pre-sign in navigation */}
             {!user && (
               <>
                 <Link to="/about" className="relative px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-primary font-medium">
@@ -166,7 +165,6 @@ const MinimalNav: React.FC = () => {
               </>
             )}
             
-            {/* Post-sign in navigation */}
             {user && (
               <>
                 <Link 
@@ -249,7 +247,7 @@ const MinimalNav: React.FC = () => {
                             
                             <Link to="/metabolism" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                               <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
-                                <Activity size={18} className="text-green-600 dark:text-green-400" />
+                                <Gauge size={18} className="text-green-600 dark:text-green-400" />
                               </div>
                               <div className="flex-1">
                                 <span className="font-medium text-gray-900 dark:text-white">Metabolism</span>
@@ -468,22 +466,22 @@ const MinimalNav: React.FC = () => {
         <div className="h-10 bg-gray-50 dark:bg-gray-850 border-b border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 h-full flex items-center">
             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-              {breadcrumbs.map((crumb, index) => (
-                <React.Fragment key={crumb.path}>
-                  {index > 0 && (
-                    <ChevronRight size={16} className="mx-2 text-gray-400" />
+            {breadcrumbs.map((crumb, index) => (
+              <React.Fragment key={crumb.path}>
+                {index > 0 && (
+                  <ChevronRight size={16} className="mx-2 text-gray-400" />
+                )}
+                <Link 
+                  to={crumb.path}
+                  className={cn(
+                    "hover:text-gray-900 dark:hover:text-white transition-colors",
+                    index === breadcrumbs.length - 1 && "font-medium text-gray-900 dark:text-white"
                   )}
-                  <Link 
-                    to={crumb.path}
-                    className={cn(
-                      "hover:text-gray-900 dark:hover:text-white transition-colors",
-                      index === breadcrumbs.length - 1 && "font-medium text-gray-900 dark:text-white"
-                    )}
-                  >
-                    {crumb.name}
-                  </Link>
-                </React.Fragment>
-              ))}
+                >
+                  {crumb.name}
+                </Link>
+              </React.Fragment>
+            ))}
             </div>
           </div>
         </div>
