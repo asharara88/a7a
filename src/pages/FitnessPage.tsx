@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import FitnessTracker from '../components/fitness/FitnessTracker';
+import FitnessRoutines from '../components/fitness/FitnessRoutines';
+import FitnessGoals from '../components/fitness/FitnessGoals';
 import ActivityCalorieTracker from '../components/fitness/ActivityCalorieTracker';
 import { ArrowRight } from 'lucide-react';
 import { Card } from '../components/ui/Card';
@@ -44,7 +46,12 @@ const FitnessPage: React.FC = () => {
           <ActivityCalorieTracker userId={userId} />
         </div>
         
-        <FitnessTracker />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <FitnessTracker />
+          <FitnessRoutines />
+        </div>
+        
+        <FitnessGoals />
         
         {/* Related Wellness Features */}
         <div className="mt-10 mb-6">
@@ -80,10 +87,10 @@ const FitnessPage: React.FC = () => {
                 Find supplements to support your fitness and recovery goals.
               </p>
               <Link 
-                to="/recommendations" 
+                to="/supplements" 
                 className="text-primary hover:text-primary-dark flex items-center text-sm font-medium"
               >
-                View Recommendations <ArrowRight className="w-4 h-4 ml-1" />
+                View Supplements <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </Card>
           </div>

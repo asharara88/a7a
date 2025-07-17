@@ -217,7 +217,7 @@ Keep responses conversational, helpful, and under 200 words unless more detail i
       
       if (apiError) {
         let errorMessage = 'AI service is currently unavailable. This may be due to configuration issues. Please contact support.';
-        let errorCode = '';
+        let errorCode = 'UNKNOWN_ERROR';
         
         console.error('API Error from openai-proxy:', apiError);
         
