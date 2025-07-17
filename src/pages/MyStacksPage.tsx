@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Package, Edit, Trash2 } from 'lucide-react';
+import { supplementApi } from '../api/supplementApi';
+import StackBuilderModal from '../components/supplements/StackBuilderModal';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Link } from 'react-router-dom';
@@ -20,6 +22,8 @@ interface SupplementStack {
 const MyStacksPage: React.FC = () => {
   const [stacks, setStacks] = useState<SupplementStack[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showStackBuilder, setShowStackBuilder] = useState(false);
+  const [selectedSupplementId, setSelectedSupplementId] = useState<string | null>(null);
 
   useEffect(() => {
     // Simulate loading stacks from API
@@ -77,6 +81,35 @@ const MyStacksPage: React.FC = () => {
     ));
   };
 
+  const handleCreateStack = () => {
+    setSelectedSupplementId(null);
+    setShowStackBuilder(true);
+  };
+
+  const handleSaveStack = async (stackData: any) => {
+    try {
+      await supplementApi.createSupplementStack(stackData);
+      // Refresh stacks after saving
+      // In a real app, you would call an API to get the updated stacks
+      const newStack = {
+        id: Date.now().toString(),
+        name: stackData.name,
+        description: stackData.description,
+        supplements: stackData.components.map((component: any) => ({
+          name: component.name,
+          dosage: component.dosage,
+          timing: component.timing,
+          price: component.price
+        })),
+        totalPrice: stackData.total_price,
+        isActive: stackData.is_active
+      };
+      setStacks([newStack, ...stacks]);
+    } catch (error) {
+      console.error('Error saving stack:', error);
+      throw error;
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 sm:py-8 transition-all duration-200">
       <div className="mobile-container">
@@ -85,7 +118,7 @@ const MyStacksPage: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Supplement Stacks</h1>
             <p className="text-gray-600 dark:text-gray-400">Manage your personalized supplement stacks</p>
           </div>
-          <Button className="flex items-center">
+          <Button className="flex items-center" onClick={handleCreateStack}>
             <Plus className="w-4 h-4 mr-2" />
             Create New Stack
           </Button>
@@ -180,6 +213,14 @@ const MyStacksPage: React.FC = () => {
             ))}
           </div>
         )}
+        
+        {/* Stack Builder Modal */}
+        <StackBuilderModal
+          isOpen={showStackBuilder}
+          onClose={() => setShowStackBuilder(false)}
+          initialSupplementId={selectedSupplementId || undefined}
+          onSaveStack={handleSaveStack}
+        />
       </div>
     </div>
   );

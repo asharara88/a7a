@@ -90,7 +90,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
       stopAudio();
       
       // Generate test audio
-      const testText = "Hello, I'm your MyCoach health assistant. How can I help you today?";
+      const testText = "Hello, I'm your Biowell health assistant. How can I help you today?";
       const audioData = await elevenlabsApi.textToSpeech(
         testText,
         selectedVoice,
