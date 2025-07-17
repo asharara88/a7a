@@ -10,7 +10,8 @@ import {
   AlertCircle, 
   Utensils, 
   Apple, 
-  Coffee 
+  Coffee,
+  ArrowRight
 } from 'lucide-react';
 import { format, subDays, startOfDay, endOfDay } from 'date-fns';
 
@@ -556,7 +557,7 @@ const MetabolismPage: React.FC = () => {
         </Card>
         
         {/* Recommended Actions */}
-        <Card className="p-6">
+        <Card className="p-6 mb-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recommended Actions</h2>
           
           <div className="space-y-4">
@@ -579,6 +580,22 @@ const MetabolismPage: React.FC = () => {
                 View Meal Plans
               </Button>
             </div>
+          </div>
+        </Card>
+
+        {/* BioClock Link */}
+        <Card className="p-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Try BioClock™</h2>
+              <p className="text-gray-600 dark:text-gray-400">Track your circadian rhythm, fasting windows, and light exposure for optimized health</p>
+            </div>
+            <Link 
+              to="/bioclock" 
+              className="flex items-center text-primary hover:text-primary-dark font-medium"
+            >
+              View BioClock <ArrowRight className="w-4 h-4 ml-1" />
+            </Link>
           </div>
         </Card>
       </div>

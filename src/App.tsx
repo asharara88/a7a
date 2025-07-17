@@ -63,6 +63,7 @@ const ParticipationSelectionPage = React.lazy(() => import('./pages/Participatio
 const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage'))
 const ResetPasswordPage = React.lazy(() => import('./pages/ResetPasswordPage'))
 const ProfileExportPage = React.lazy(() => import('./pages/ProfileExportPage'))
+const BioClockPage = React.lazy(() => import('./pages/BioClockPage'))
 
 const App: React.FC = () => {
   return (
@@ -92,6 +93,7 @@ const App: React.FC = () => {
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/metabolism" element={<ProtectedRoute><MetabolismPage /></ProtectedRoute>} />
+         <Route path="/bioclock" element={<ProtectedRoute><BioClockPage /></ProtectedRoute>} />
           <Route path="/fertility/partner" element={<ProtectedRoute><FertilityPartnerPage /></ProtectedRoute>} />
           <Route path="/export" element={<ProtectedRoute><ProfileExportPage /></ProtectedRoute>} />
           <Route path="/participation" element={<ProtectedRoute><ParticipationSelectionPage /></ProtectedRoute>} />
