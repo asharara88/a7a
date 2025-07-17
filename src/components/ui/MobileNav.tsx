@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { X, ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from '../../utils/cn';
-import Navigation from './Navigation';
+import Navigation from '../layout/Navigation';
 
 interface MobileNavProps {
   isOpen: boolean;
