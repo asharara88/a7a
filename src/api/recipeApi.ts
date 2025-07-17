@@ -79,6 +79,13 @@ export const recipeApi = {
       });
       
       if (error) throw new Error(error.message);
+      
+      // Check if recipe was found
+      if (!data.recipes || data.recipes.length === 0) {
+        console.warn('No recipe found with ID:', recipeId);
+        return null;
+      }
+      
       return data.recipes[0] || null;
     } catch (error) {
       console.error('Error getting recipe details:', error);
@@ -92,6 +99,38 @@ export const recipeApi = {
   // Save a recipe to user's favorites
   saveRecipe: async (userId: string, recipe: Recipe, isFavorite: boolean = false): Promise<SavedRecipe> => {
     try {
+      // Check if recipe is already saved
+      const { data: existingRecipes, error: checkError } = await supabase
+        .from('saved_recipes')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('recipe_id', recipe.id)
+        .maybeSingle();
+      
+      if (checkError) throw checkError;
+      
+      // If recipe is already saved, just update the is_favorite status
+      if (existingRecipes) {
+        const { data, error } = await supabase
+          .from('saved_recipes')
+          .update({ is_favorite: isFavorite })
+          .eq('id', existingRecipes.id)
+          .select()
+          .single();
+        
+        if (error) throw error;
+        
+        return {
+          id: data.id,
+          userId: data.user_id,
+          recipeId: data.recipe_id,
+          title: data.title,
+          image: data.image,
+          savedAt: data.saved_at,
+          isFavorite: data.is_favorite
+        };
+      }
+
       const { data, error } = await supabase
         .from('saved_recipes')
         .upsert({
@@ -118,6 +157,24 @@ export const recipeApi = {
       };
     } catch (error) {
       console.error('Error saving recipe:', error);
+      throw error;
+    }
+  },
+  
+  // Unsave a recipe
+  unsaveRecipe: async (userId: string, recipeId: number): Promise<boolean> => {
+    try {
+      const { error } = await supabase
+        .from('saved_recipes')
+        .delete()
+        .eq('user_id', userId)
+        .eq('recipe_id', recipeId);
+      
+      if (error) throw error;
+      
+      return true;
+    } catch (error) {
+      console.error('Error unsaving recipe:', error);
       throw error;
     }
   },

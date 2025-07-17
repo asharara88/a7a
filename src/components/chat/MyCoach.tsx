@@ -128,16 +128,25 @@ const MyCoach: React.FC = () => {
   // Add initial greeting message
   useEffect(() => {
     if (messages.length === 0) {
+      // Include system message with context for better responses
+      const systemContext = {
+        username: profile?.firstName || "there",
+        primaryGoal: healthContext.primaryGoal,
+        sleepAverage: healthContext.sleepAverage,
+        stressLevel: healthContext.stressLevel,
+        evidenceStandard: "We only recommend green (strong evidence) and yellow (moderate evidence) tier supplements"
+      };
+      
       setMessages([
         {
           id: 'welcome',
           role: 'assistant',
-          content: "Hi there! I'm your MyCoach™ health assistant. How can I help you optimize your wellness today?",
+          content: `Hi ${systemContext.username}! I'm your MyCoach™ health assistant. I see your primary goal is ${systemContext.primaryGoal} with an average of ${systemContext.sleepAverage} of sleep. How can I help you optimize your wellness today?`,
           timestamp: new Date()
         }
       ]);
     }
-  }, [messages.length]);
+  }, [messages.length, profile?.firstName]);
 
   // Clean up audio on unmount
   useEffect(() => {
@@ -173,6 +182,7 @@ const MyCoach: React.FC = () => {
     if (!questionText) setInput('');
     setIsLoading(true);
     setError(null);
+    // Mark that we're actively fetching a response
     setIsFetching(true);
     
     // Start typing animation
@@ -182,12 +192,16 @@ const MyCoach: React.FC = () => {
       // Call OpenAI proxy function
       const { data, error: apiError } = await supabase.functions.invoke('openai-proxy', {
         body: {
+          // Include user context in the messages to OpenAI
           messages: [ 
-            // Add system message for context
-            { 
-              role: 'system', 
-              content: `You are Biowell's Digital Wellness Coach — a science-driven assistant focused on helping users optimize their health. Primary health goal: ${healthContext.primaryGoal}. Average sleep: ${healthContext.sleepAverage}. Stress level: ${healthContext.stressLevel}.` 
-            },
+            // Include a system message with health context for better personalization
+            { role: 'system', content: `You are Biowell's Digital Wellness Coach, focusing on evidence-based health advice. 
+              The user's primary health goal is ${healthContext.primaryGoal}. 
+              They average ${healthContext.sleepAverage} of sleep per night.
+              Their stress level is ${healthContext.stressLevel}.
+              Keep responses concise and actionable. 
+              When discussing supplements, only recommend green tier (strong evidence) or yellow tier (moderate evidence) options.
+              Always emphasize that supplements should complement, not replace, a healthy lifestyle.` },
             ...messages.map(m => ({ role: m.role, content: m.content })),
             { role: 'user', content: messageText }
           ]
@@ -553,9 +567,13 @@ const MyCoach: React.FC = () => {
         )}
         
         {isPlayingAudio && (
-          <div className="fixed bottom-24 right-5 bg-primary text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center space-x-3">
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-            <span className="tracking-wide">Speaking...</span>
+          <div className="fixed bottom-24 right-5 bg-primary text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center space-x-3 z-30">
+            <div className="flex space-x-1">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '300ms' }}></div>
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '600ms' }}></div>
+            </div>
+            <span className="tracking-wide ml-1">AI Speaking...</span>
             <button
               onClick={stopAudio}
               className="ml-2 p-1.5 hover:bg-primary-dark rounded-full"

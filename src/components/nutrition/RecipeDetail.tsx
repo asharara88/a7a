@@ -17,7 +17,10 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe, onSave, isSaved = f
   
   // Function to clean HTML from summary
   const cleanHtml = (html: string) => {
-    return html.replace(/<\/?[^>]+(>|$)/g, "");
+    // First strip tags but preserve line breaks
+    const withoutTags = html.replace(/<\/?[^>]+(>|$)/g, "");
+    // Fix double spaces and trim
+    return withoutTags.replace(/\s\s+/g, ' ').trim();
   };
 
   return (
@@ -74,6 +77,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe, onSave, isSaved = f
         <Button
           onClick={onSave}
           className={`flex items-center ${isSaved ? 'bg-primary' : ''}`}
+          aria-label={isSaved ? "Remove from saved recipes" : "Save recipe"}
         >
           <Heart className={`w-4 h-4 mr-2 ${isSaved ? 'fill-current' : ''}`} />
           {isSaved ? 'Saved' : 'Save'}
@@ -96,8 +100,23 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe, onSave, isSaved = f
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4">About this Recipe</h2>
         <p className="text-gray-700 dark:text-gray-300">
-          {cleanHtml(recipe.summary)}
+          {recipe.summary ? cleanHtml(recipe.summary) : "No description available for this recipe."}
         </p>
+        {recipe.healthScore && (
+          <div className="mt-4 bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+            <div className="flex items-center">
+              <Award className="w-5 h-5 text-green-600 dark:text-green-400 mr-2" />
+              <span className="font-medium text-green-700 dark:text-green-300">Health Score: {recipe.healthScore}/100</span>
+            </div>
+            <p className="mt-2 text-sm text-green-600 dark:text-green-400">
+              {recipe.healthScore >= 80 ? 
+                "This recipe is exceptionally healthy with a great nutritional profile." :
+                recipe.healthScore >= 60 ?
+                "This recipe has good nutritional value." :
+                "This recipe provides moderate nutritional value."}
+            </p>
+          </div>
+        )}
       </Card>
       
       {/* Tabs */}

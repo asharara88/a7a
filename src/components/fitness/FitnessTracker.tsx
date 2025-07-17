@@ -20,7 +20,8 @@ const FitnessTracker: React.FC = () => {
     workoutType: 'Strength Training',
     duration: 45,
     caloriesBurned: 300,
-    notes: ''
+    notes: '',
+    exercises: [{ name: '', sets: 3, reps: 10, weight: 0 }]
   });
 
   // Mock user ID for demo purposes
@@ -343,13 +344,88 @@ const FitnessTracker: React.FC = () => {
                 </div>
                 
                 <div className="flex justify-end space-x-2 mt-6">
+                 <span className="text-xs text-gray-500">How did you feel? Any PRs?</span>
+                 </div>
+                 <div className="flex items-center justify-between">
                   <Button variant="outline" onClick={() => setShowAddWorkout(false)}>
                     Cancel
                   </Button>
                   <Button onClick={handleAddWorkout}>
                     Save Workout
+                   placeholder="I felt great today! Hit a new PR on bench press."
                   </Button>
                 </div>
+               
+               {newWorkout.workoutType === 'Strength Training' && (
+                 <div>
+                   <label className="block text-sm font-medium mb-2">Exercises</label>
+                   <div className="space-y-3 max-h-40 overflow-y-auto pr-1">
+                     {newWorkout.exercises.map((exercise, index) => (
+                       <div key={index} className="grid grid-cols-5 gap-2 items-center">
+                         <input 
+                           type="text" 
+                           placeholder="Exercise"
+                           value={exercise.name}
+                           onChange={(e) => {
+                             const updated = [...newWorkout.exercises];
+                             updated[index].name = e.target.value;
+                             setNewWorkout({...newWorkout, exercises: updated});
+                           }}
+                           className="col-span-2 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                         />
+                         <input 
+                           type="number" 
+                           placeholder="Sets"
+                           value={exercise.sets}
+                           onChange={(e) => {
+                             const updated = [...newWorkout.exercises];
+                             updated[index].sets = parseInt(e.target.value) || 0;
+                             setNewWorkout({...newWorkout, exercises: updated});
+                           }}
+                           className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                         />
+                         <input 
+                           type="number" 
+                           placeholder="Reps"
+                           value={exercise.reps}
+                           onChange={(e) => {
+                             const updated = [...newWorkout.exercises];
+                             updated[index].reps = parseInt(e.target.value) || 0;
+                             setNewWorkout({...newWorkout, exercises: updated});
+                           }}
+                           className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                         />
+                         <input 
+                           type="number" 
+                           placeholder="Weight"
+                           value={exercise.weight}
+                           onChange={(e) => {
+                             const updated = [...newWorkout.exercises];
+                             updated[index].weight = parseInt(e.target.value) || 0;
+                             setNewWorkout({...newWorkout, exercises: updated});
+                           }}
+                           className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                         />
+                       </div>
+                     ))}
+                   </div>
+                   <button
+                     type="button"
+                     onClick={() => {
+                       setNewWorkout({
+                         ...newWorkout,
+                         exercises: [
+                           ...newWorkout.exercises,
+                           { name: '', sets: 3, reps: 10, weight: 0 }
+                         ]
+                       });
+                     }}
+                     className="mt-2 text-sm text-primary hover:text-primary-dark font-medium"
+                   >
+                     + Add Exercise
+                   </button>
+                 </div>
+               )}
               </Card>
             </div>
           )}
