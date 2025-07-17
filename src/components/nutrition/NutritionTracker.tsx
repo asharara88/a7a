@@ -352,11 +352,13 @@ const NutritionTracker: React.FC = () => {
                         </div>
                       ))}
                     </div>
+                  </div>
                 )}
                 
                 <div className="flex justify-end space-x-2 mt-4">
                   <Button variant="outline" onClick={() => setShowAddMeal(false)}>
                     Cancel
+                  </Button>
                   <Button onClick={handleSearch} disabled={!searchQuery.trim() || isSearching}>
                     Search
                   </Button>
