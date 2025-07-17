@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Heart, Shield, Zap, Brain, CheckCircle } from 'lucide-react'
+import EvidenceBasedHealthOptimization from '../components/health/EvidenceBasedHealthOptimization'
 import { motion } from 'framer-motion'
 
 // Features data
@@ -159,6 +160,9 @@ const HomePage: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Evidence-Based Health Optimization Section */}
+      <EvidenceBasedHealthOptimization />
 
       {/* CTA Section */}
       <section className="py-16 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white transition-all duration-200 relative overflow-hidden">
