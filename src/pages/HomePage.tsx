@@ -30,11 +30,11 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with animated elements */}
-      <section className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white py-16 sm:py-20 md:py-24 relative overflow-hidden">
+      {/* Hero Section with consistent styling */}
+      <section className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white py-16 sm:py-20 md:py-24 relative overflow-hidden">
         {/* Animated background elements */}
         <motion.div 
-          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-tertiary opacity-10"
+          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-primary opacity-10"
           animate={{ 
             scale: [1, 1.2, 1],
             x: [0, 20, 0],
@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
           transition={{ duration: 8, repeat: Infinity }}
         />
         <motion.div 
-          className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-primary opacity-10"
+          className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-secondary opacity-10"
           animate={{ 
             scale: [1, 1.3, 1],
             x: [0, -30, 0],
@@ -74,7 +74,7 @@ const HomePage: React.FC = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/signup"
-                  className="bg-white text-tertiary px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
+                  className="bg-primary text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
                 >
                   Get Started
                   <ArrowRight className="ml-2 w-5 h-5" />
@@ -83,7 +83,7 @@ const HomePage: React.FC = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/about"
-                  className="border-2 border-white text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all duration-300 text-lg"
+                  className="border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-black hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white px-8 sm:px-10 py-4 rounded-lg font-semibold transition-all duration-300 text-lg"
                 >
                   Learn More
                 </Link>
@@ -177,10 +177,10 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-r from-primary via-tertiary to-secondary text-white transition-all duration-200 relative overflow-hidden">
+      <section className="py-16 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white transition-all duration-200 relative overflow-hidden">
         {/* Animated background elements */}
         <motion.div 
-          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-tertiary opacity-10"
+          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary opacity-10"
           animate={{ 
             scale: [1, 1.2, 1],
             x: [0, -30, 0],
@@ -189,7 +189,7 @@ const HomePage: React.FC = () => {
           transition={{ duration: 10, repeat: Infinity }}
         />
         <motion.div 
-          className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-primary opacity-10"
+          className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-secondary opacity-10"
           animate={{ 
             scale: [1, 1.3, 1],
             x: [0, 20, 0],
@@ -200,7 +200,7 @@ const HomePage: React.FC = () => {
         
         <div className="mobile-container text-center">
           <motion.h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 sm:mb-8"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -209,7 +209,7 @@ const HomePage: React.FC = () => {
             Ready to optimize your health?
           </motion.h2>
           <motion.p 
-            className="text-xl sm:text-2xl text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto"
+            className="text-xl sm:text-2xl text-gray-700 dark:text-gray-300 mb-8 sm:mb-10 max-w-3xl mx-auto"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -227,7 +227,7 @@ const HomePage: React.FC = () => {
           >
             <Link
               to="/onboarding"
-              className="bg-white text-tertiary px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl text-lg"
+              className="bg-primary text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl text-lg"
             >
               Start Your Journey
               <ArrowRight className="ml-2 w-6 h-6" />

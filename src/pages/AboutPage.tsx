@@ -51,11 +51,11 @@ const AboutPage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white py-16 md:py-24 relative overflow-hidden">
+      {/* Hero Section with consistent styling */}
+      <section className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white py-16 md:py-24 relative overflow-hidden">
         {/* Animated background elements */}
         <motion.div 
-          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-tertiary opacity-10"
+          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-primary opacity-10"
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: 0.1,
@@ -66,7 +66,7 @@ const AboutPage: React.FC = () => {
           transition={{ duration: 8, repeat: Infinity }}
         />
         <motion.div 
-          className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-primary opacity-10"
+          className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-secondary opacity-10"
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: 0.1,
@@ -226,10 +226,10 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-primary via-tertiary to-secondary text-white relative overflow-hidden">
+      <section className="py-16 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white relative overflow-hidden">
         {/* Animated background elements */}
         <motion.div 
-          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-tertiary opacity-10"
+          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary opacity-10"
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: 0.1,
@@ -240,7 +240,7 @@ const AboutPage: React.FC = () => {
           transition={{ duration: 10, repeat: Infinity }}
         />
         <motion.div 
-          className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-primary opacity-10"
+          className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-secondary opacity-10"
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: 0.1,
@@ -265,7 +265,7 @@ const AboutPage: React.FC = () => {
             </p>
             <a
               href="/signup"
-              className="inline-flex items-center bg-white text-tertiary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Get Started
               <ArrowRight className="ml-2 w-5 h-5" />
