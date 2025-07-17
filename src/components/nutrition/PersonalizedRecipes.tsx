@@ -70,9 +70,6 @@ const PersonalizedRecipes: React.FC = () => {
     }
   };
 
-  const handleSearchParamChange = (key: keyof RecipeSearchParams, value: any) => {
-    setSearchParams(prev => ({ ...prev, [key]: value }));
-  };
 
   const handleSearch = () => {
     loadRecipes();
