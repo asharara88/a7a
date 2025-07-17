@@ -170,66 +170,138 @@ const MyCoach: React.FC = () => {
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      role: 'user',
-      // Add health context for better personalized responses
-      content: `${messageText}${messageText.endsWith('?') ? '' : '?'}`,
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    if (!questionText) setInput('');
-    setIsLoading(true);
-    setError(null);
-    // Mark that we're actively fetching a response
-    setIsFetching(true);
-    
-    // Start typing animation
-    startTypingAnimation();
-
-    try {
-      // Call OpenAI proxy function
-      // Limit messages to prevent large payloads - send only last 10 messages plus system message
-      const recentMessages = messages.slice(-10);
-      
-      console.log('Sending request to OpenAI proxy...')
-      const { data, error: apiError } = await supabase.functions.invoke('openai-proxy', {
-        body: {
-          // Include user context in the messages to OpenAI
-          messages: [ 
-            // Include a system message with health context for better personalization
-            { role: 'system', content: `You are Biowell's Digital Wellness Coach, focusing on evidence-based health advice. 
-              The user's primary health goal is ${healthContext.primaryGoal}. 
-              They average ${healthContext.sleepAverage} of sleep per night.
-          else if (apiError.message) {
-            errorMessage = apiError.message;
-          }
+            ...recentMessages.map(m => ({ 
+              role: m.role, 
+              content: m.content 
+            })),
+            { 
+              role: userMessage.role, 
+              content: userMessage.content 
+            }
+          ]
         }
+      });
+      
+      if (apiError) {
+        let errorMessage = 'AI service is currently unavailable. This may be due to configuration issues. Please contact support.';
+        let errorCode = '';
         
-        // Handle specific error codes from Edge Function
-        if (errorCode === 'MISSING_API_KEY') {
-          errorMessage = 'AI service is not configured. Please follow these steps:\n\n1. supabase link --project-ref YOUR_PROJECT_REF\n2. supabase secrets set OPENAI_API_KEY=your-actual-openai-api-key\n3. supabase functions deploy openai-proxy\n\nVerify with: supabase secrets list';
-        } else if (errorCode === 'INVALID_API_KEY') {
-          errorMessage = 'Invalid OpenAI API key. Please verify your API key and run:\n1. supabase secrets set OPENAI_API_KEY=your-valid-key\n2. supabase functions deploy openai-proxy';
-        } else if (errorCode === 'RATE_LIMIT') {
-          errorMessage = 'OpenAI API rate limit exceeded or insufficient credits. Please check your OpenAI account at https://platform.openai.com/usage';
-        } else if (errorCode === 'OPENAI_ERROR' || errorCode === 'NO_CONTENT') {
-          errorMessage = `OpenAI service error: ${errorMessage}`;
-        } else if (errorCode === 'EMPTY_BODY' || errorCode === 'INVALID_JSON' || errorCode === 'INVALID_MESSAGES') {
-          errorMessage = `Request format error: ${errorMessage}`;
-        } else if (errorCode === 'INTERNAL_ERROR' || errorCode === 'INIT_ERROR') {
-          errorMessage = `Internal server error: ${errorMessage}`;
-        } else if (errorMessage.includes('Edge Function returned a non-2xx status code')) {
+        console.error('API Error from openai-proxy:', apiError);
+        
+        if (apiError.message && apiError.message.includes('Edge Function returned a non-2xx status code')) {
           errorMessage = 'AI service configuration error. Please check that your OpenAI API key is set with: supabase secrets list, and redeploy with: supabase functions deploy openai-proxy';
+        } else if (apiError.message) {
+          errorMessage = apiError.message;
         }
         
         throw new Error(errorMessage);
+      }
+
+      // Check if we got a valid response
+      if (!data || !data.result) {
+        console.error('Invalid response from OpenAI proxy:', data);
+        throw new Error('Invalid response from AI service. This may indicate a configuration issue. Please ensure your OpenAI API key is properly set and the Edge Function is deployed.');
+      }
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: data.result,
+        // Include metadata about the response for rendering
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+
+      // Save to chat history
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
         
-        // Handle specific error codes from the response
-        if (data.code === 'MISSING_API_KEY') {
-          throw new Error('AI service is not configured. Please follow these steps:\n\n1. supabase link --project-ref YOUR_PROJECT_REF\n2. supabase secrets set OPENAI_API_KEY=your-actual-openai-api-key\n3. supabase functions deploy openai-proxy\n\nVerify with: supabase secrets list');
-        } else if (data.code === 'INVALID_API_KEY') {
-          throw new Error('Invalid OpenAI API key. Please verify your API key and run:\n1. supabase secrets set OPENAI_API_KEY=your-valid-key\n2. supabase functions deploy openai-proxy');
-        } else if (data.code === 'RATE_LIMIT') {
+        if (user) {
+          await supabase.from('chat_history').insert([
+            {
+              user_id: user.id,
+              message: messageText,
+              response: data.result,
+              role: 'user',
+              timestamp: new Date().toISOString()
+            }
+          ]);
+        } else {
+          console.log('User not authenticated, skipping chat history save');
+        }
+      } catch (chatError) {
+        console.error('Error saving chat history:', chatError);
+        // Continue even if saving chat history fails
+      }
+
+      // If voice is enabled, convert response to speech
+      if (voiceSettings.enabled) {
+        playTextToSpeech(data.result);
+      }
+      
+      // Stop typing animation
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        setTypingTimeout(null);
+      }
+      setTypingText('');
+      
+      // Update question set after each response
+      setCurrentQuestionSetIndex((prevIndex) => 
+        (prevIndex + 1) % QUESTION_SETS.length
+      );
+      
+    } catch (err) {
+      console.error('Error sending message:', err);
+      
+      // Use the error message from the thrown error (which was parsed from apiError)
+      let errorMessage = 'Failed to get a response from AI service.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
+      // Stop typing animation
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        setTypingTimeout(null);
+      }
+      setTypingText('');
+      setIsFetching(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const startTypingAnimation = () => {
+    const texts = [
+      "Thinking",
+      "Analyzing your question",
+      "Checking health data",
+      "Researching evidence",
+      "Formulating response"
+    ];
+    
+    let index = 0;
+    
+    const updateTypingText = () => {
+      setTypingText(texts[index % texts.length]);
+      index++;
+      
+      const timeout = setTimeout(updateTypingText, 3000);
+      setTypingTimeout(timeout);
+    };
+    
+    updateTypingText();
+
+    // Return cleanup function
+    return () => {
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+    };
+  };
           throw new Error('OpenAI API rate limit exceeded or insufficient credits. Please check your OpenAI account at https://platform.openai.com/usage');
         } else if (data.code === 'OPENAI_ERROR' || data.code === 'NO_CONTENT') {
           throw new Error(`OpenAI service error: ${data.error}`);
