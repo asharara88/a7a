@@ -142,6 +142,16 @@ const MinimalNav: React.FC = () => {
           <div className="flex items-center space-x-1">
             {!user && (
               <>
+                <Link to="/login" className="relative px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-primary font-medium">
+                  Sign In
+                  {isActive('/login') && (
+                    <motion.div 
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                      layoutId="activeIndicator"
+                      transition={{ duration: 0.15 }}
+                    />
+                  )}
+                </Link>
                 <Link to="/about" className="relative px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-primary font-medium">
                   About
                   {isActive('/about') && (

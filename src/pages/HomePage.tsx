@@ -64,18 +64,10 @@ const HomePage: React.FC = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                  to="/onboarding"
-                  className="bg-blue-700 dark:bg-blue-600 text-white px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg min-w-[200px] tracking-wide"
+                  className="bg-blue-700 dark:bg-blue-600 text-white px-11 sm:px-14 py-5 rounded-xl font-bold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-xl min-w-[250px] tracking-wide"
                 >
                  Get Started
                   <ArrowRight className="ml-3 w-5 h-5" />
-                </Link>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                 to="/login"
-                  className="bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 border border-gray-200 dark:border-gray-700 px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg min-w-[200px] tracking-wide"
-                >
-             Sign In
                 </Link>
               </motion.div>
             </motion.div>
