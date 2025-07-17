@@ -5,13 +5,7 @@ import RecipeCard from './RecipeCard';
 import { Button } from '../ui/Button';
 import RecipeFilters from './RecipeFilters';
 import { Link } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
 import { Card } from '../ui/Card';
-
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const PersonalizedRecipes: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
