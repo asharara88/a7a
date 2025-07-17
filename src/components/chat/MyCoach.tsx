@@ -160,15 +160,26 @@ const MyCoach: React.FC = () => {
       setMessages(prev => [...prev, assistantMessage]);
 
       // Save to chat history
-      await supabase.from('chat_history').insert([
-        {
-          user_id: (await supabase.auth.getUser()).data.user?.id || null,
-          message: messageText,
-          response: data.result,
-          role: 'user',
-          timestamp: new Date().toISOString()
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+          await supabase.from('chat_history').insert([
+            {
+              user_id: user.id,
+              message: messageText,
+              response: data.result,
+              role: 'user',
+              timestamp: new Date().toISOString()
+            }
+          ]);
+        } else {
+          console.log('User not authenticated, skipping chat history save');
         }
-      ]);
+      } catch (chatError) {
+        console.error('Error saving chat history:', chatError);
+        // Continue even if saving chat history fails
+      }
 
       // If voice is enabled, convert response to speech
       if (voiceSettings.enabled) {

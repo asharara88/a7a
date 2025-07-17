@@ -17,9 +17,9 @@ const TIER_COLORS = {
 };
 
 const TIER_LABELS = {
-  green: "Green (Strong evidence)",
-  yellow: "Yellow (Moderate evidence)",
-  orange: "Orange (Preliminary evidence)",
+  green: "Strong evidence – Supported by multiple high-quality human clinical trials and major scientific consensus.",
+  yellow: "Moderate evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus.",
+  orange: "Preliminary evidence – Mostly early-stage or animal/lab-based research, few or low-quality human trials, or anecdotal support.",
 };
 
 const TIER_ICONS = {
@@ -112,7 +112,7 @@ export default function SupplementStorePage() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Filter by Evidence Tier</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                 Supplements are categorized by the strength of scientific evidence supporting their efficacy
               </p>
             </div>
