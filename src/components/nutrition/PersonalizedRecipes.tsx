@@ -129,18 +129,18 @@ const PersonalizedRecipes: React.FC = () => {
             </div>
           )}
         </div>
+      )}
         
-        {recipes.length > 0 && (
-          <div className="mt-8 text-center">
-            <Link 
-              to="/recipes"
-              className="inline-flex items-center text-primary hover:text-primary-dark font-medium"
-            >
-              View more recipes
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </Link>
-          </div>
-        )}
+      {recipes.length > 0 && (
+        <div className="mt-8 text-center">
+          <Link 
+            to="/recipes"
+            className="inline-flex items-center text-primary hover:text-primary-dark font-medium"
+          >
+            View more recipes
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </Link>
+        </div>
       )}
     </div>
   );
