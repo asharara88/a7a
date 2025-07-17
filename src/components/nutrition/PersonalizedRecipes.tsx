@@ -93,7 +93,7 @@ const PersonalizedRecipes: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Personalized Recipes</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommended For You</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Recipes tailored to your preferences and health goals
           </p>
