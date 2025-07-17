@@ -111,9 +111,9 @@ const SupplementRecommendations: React.FC = () => {
   return (
     <div className="space-y-8">
       {recommendations.personalized_message && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg text-blue-700 dark:text-blue-300 flex items-start">
-          <Info className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" />
-          <p>{recommendations.personalized_message}</p>
+        <div className="bg-blue-50 dark:bg-blue-900/20 p-5 rounded-xl border border-blue-100 dark:border-blue-800 text-blue-700 dark:text-blue-300 flex items-start shadow-sm">
+          <Info className="w-5 h-5 mr-4 flex-shrink-0 mt-0.5" />
+          <p className="tracking-wide leading-relaxed">{recommendations.personalized_message}</p>
         </div>
       )}
 
@@ -123,9 +123,9 @@ const SupplementRecommendations: React.FC = () => {
           <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
             Recommended Supplements
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
             {recommendations.supplements.slice(0, 6).map((supplement) => (
-              <Card key={supplement.id} className="overflow-hidden hover:shadow-lg transition-all duration-300">
+              <Card key={supplement.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div className="relative h-48">
                   <img 
                     src={supplement.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300'} 

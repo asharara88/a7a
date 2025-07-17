@@ -62,14 +62,16 @@ const SupplementTracker: React.FC<SupplementTrackerProps> = ({ supplements, onMa
   const timeOfDayOrder: Supplement['timeOfDay'][] = ['morning', 'afternoon', 'evening', 'bedtime'];
 
   return (
-    <Card className="p-5">
+    <Card className="p-6">
       <div className="flex items-center mb-4">
-        <Pill className="w-5 h-5 text-primary mr-2" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Today's Supplements</h3>
+        <div className="p-2 rounded-full bg-primary/10 mr-3">
+          <Pill className="w-5 h-5 text-primary" />
+        </div>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white tracking-tight">Today's Supplements</h3>
       </div>
       
       <motion.div 
-        className="space-y-6"
+        className="space-y-7"
         variants={container}
         initial="hidden"
         animate="show"
@@ -81,20 +83,22 @@ const SupplementTracker: React.FC<SupplementTrackerProps> = ({ supplements, onMa
           
           return (
             <div key={timeOfDay}>
-              <div className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-3 ${getTimeOfDayColor(timeOfDay)}`}>
-                <Clock className="w-3 h-3 inline mr-1" />
-                {timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)}
+              <div className="flex items-center mb-4">
+                <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${getTimeOfDayColor(timeOfDay)}`}>
+                  <Clock className="w-3.5 h-3.5 mr-1.5" />
+                  <span className="tracking-wide">{timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)}</span>
+                </div>
               </div>
               
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {groupedSupplements[timeOfDay].map((supplement) => (
                   <motion.div 
                     key={supplement.id}
-                    className={`flex items-center justify-between p-3 rounded-lg border ${
+                    className={`flex items-center justify-between p-4 rounded-xl border ${
                       supplement.taken
                         ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-900/10' 
-                        : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800'
-                    }`}
+                        : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 hover:shadow-md'
+                    } transition-all duration-300`}
                     variants={item}
                   >
                     <div className="flex-1">

@@ -818,15 +818,15 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
       {/* Progress indicator */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">Complete Your Profile</h2>
-          <span className="text-sm text-gray-500">
-            Step {currentStep.id} of {ONBOARDING_STEPS.length}
+          <h2 className="text-2xl font-bold tracking-tight">Complete Your Profile</h2>
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+            {currentStep.id}/{ONBOARDING_STEPS.length}
           </span>
         </div>
         
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 shadow-inner">
           <div 
-            className="bg-primary h-2 rounded-full transition-all duration-300"
+            className="bg-primary h-2.5 rounded-full transition-all duration-700 shadow-sm"
             style={{ width: `${(currentStep.id / ONBOARDING_STEPS.length) * 100}%` }}
           />
         </div>
@@ -836,11 +836,11 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
       <Card className="p-8">
         <div className="flex items-center mb-6">
           <div className="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mr-4">
-            <currentStep.icon className="w-6 h-6 text-primary" />
+            <currentStep.icon className="w-6 h-6 text-primary drop-shadow-sm" />
           </div>
           <div>
-            <h3 className="text-xl font-semibold">{currentStep.title}</h3>
-            <p className="text-gray-600">{currentStep.description}</p>
+            <h3 className="text-xl font-semibold tracking-tight">{currentStep.title}</h3>
+            <p className="text-gray-600 dark:text-gray-400 tracking-wide">{currentStep.description}</p>
           </div>
         </div>
 
@@ -868,8 +868,8 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
           <Button
             variant="outline"
             onClick={handlePrevious}
-            disabled={currentStep.id === 1}
-            className="flex items-center"
+            disabled={currentStep.id === 1 || saving || isLoading}
+            className="flex items-center shadow-sm hover:shadow transition-all duration-300"
           >
             <ChevronLeft className="w-4 h-4 mr-2" />
             Previous
@@ -878,7 +878,7 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
           <Button
             onClick={handleNext}
             disabled={saving || isLoading}
-            className="flex items-center"
+            className="flex items-center shadow-md hover:shadow-lg transition-all duration-300"
           >
             {currentStep.id === ONBOARDING_STEPS.length ? (
               <>

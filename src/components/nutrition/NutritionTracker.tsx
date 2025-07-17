@@ -162,27 +162,27 @@ const NutritionTracker: React.FC = () => {
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">Daily Summary</h3>
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Calories</p>
-                  <p className="text-2xl font-bold text-primary">
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Calories</p>
+                  <p className="text-2xl font-bold text-primary tracking-tight">
                     {nutritionSummary?.totalCalories || 0}
                   </p>
                 </div>
-                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Protein</p>
-                  <p className="text-2xl font-bold text-blue-500">
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Protein</p>
+                  <p className="text-2xl font-bold text-blue-500 tracking-tight">
                     {nutritionSummary?.totalProtein || 0}g
                   </p>
                 </div>
-                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Carbs</p>
-                  <p className="text-2xl font-bold text-teal-500">
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Carbs</p>
+                  <p className="text-2xl font-bold text-teal-500 tracking-tight">
                     {nutritionSummary?.totalCarbs || 0}g
                   </p>
                 </div>
-                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Fat</p>
-                  <p className="text-2xl font-bold text-red-500">
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Fat</p>
+                  <p className="text-2xl font-bold text-red-500 tracking-tight">
                     {nutritionSummary?.totalFat || 0}g
                   </p>
                 </div>

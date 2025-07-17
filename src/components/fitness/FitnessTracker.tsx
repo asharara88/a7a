@@ -148,7 +148,7 @@ const FitnessTracker: React.FC = () => {
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(parseInt(e.target.value))}
-            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            className="px-4 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm transition-all duration-300 hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
           >
             <option value={7}>Last 7 days</option>
             <option value={14}>Last 14 days</option>
@@ -233,12 +233,12 @@ const FitnessTracker: React.FC = () => {
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Recent Workouts</h3>
             {workoutHistory.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                <p>No workouts logged in this period</p>
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                <p className="mb-4 text-lg">No workouts logged in this period</p>
                 <Button 
                   onClick={() => setShowAddWorkout(true)}
                   variant="outline"
-                  className="mt-4"
+                  className="mt-6 shadow-sm hover:shadow transition-all duration-300"
                 >
                   Log Your First Workout
                 </Button>
@@ -248,16 +248,17 @@ const FitnessTracker: React.FC = () => {
                 {workoutHistory.map((workout) => (
                   <div 
                     key={workout.id} 
-                    className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg flex justify-between items-center"
+                    className="p-5 border border-gray-200 dark:border-gray-700 rounded-xl flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-600"
                   >
                     <div>
-                      <div className="flex items-center">
-                        <Activity className="w-4 h-4 mr-2 text-primary" />
-                        <span className="font-medium">{workout.workoutType}</span>
+                      <div className="flex items-center mb-1">
+                        <div className="p-1 rounded-full bg-primary/10 mr-2">
+                          <Activity className="w-4 h-4 text-primary" />
+                        </div>
+                        <span className="font-medium tracking-wide">{workout.workoutType}</span>
                       </div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 tracking-wide">
                         {format(parseISO(workout.timestamp), 'MMM d, yyyy • h:mm a')}
-                      </p>
                       {workout.notes && (
                         <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{workout.notes}</p>
                       )}
