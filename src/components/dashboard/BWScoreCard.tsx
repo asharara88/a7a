@@ -123,9 +123,9 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
                     key={metric.name}
                     className={cn(
                       "cursor-pointer p-4 rounded-xl transition-all",
-                      "hover:bg-gray-50 dark:hover:bg-gray-800",
-                      "border border-transparent hover:border-gray-200 dark:hover:border-gray-700",
-                      "hover:shadow-sm"
+                      "hover:bg-gray-50 dark:hover:bg-gray-800/70",
+                      "border border-transparent hover:border-gray-200 dark:hover:border-gray-700/80",
+                      "hover:shadow-sm transform hover:translate-y-[-2px] transition-all duration-200"
                     )}
                     onClick={() => onMetricClick?.(metric.name)}
                   >
@@ -136,8 +136,11 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
                          "bg-opacity-20 dark:bg-opacity-20"
                         )} style={{ backgroundColor: metric.color, color: metric.color }}>
                         <span className="text-current">{metric.icon}</span>
+                       </div>
+                       <div className="flex flex-col">
+                         <span className="font-medium text-gray-900 dark:text-white tracking-wide">{metric.name}</span>
+                         <span className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Weight: {metric.weight}x</span>
                         </div>
-                        <span className="font-medium text-gray-900 dark:text-white tracking-wide">{metric.name}</span>
                       </div>
                       <span className="font-bold" style={{ color: getScoreColor(metric.score) }}>{metric.score}</span>
                     </div>
@@ -160,12 +163,14 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
                  <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                    About Your BW Score
                  </h4>
-                 <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
                    Your BioWell Score is a weighted average of key health metrics. Some factors like Sleep and Fitness have higher impact (1.5x weight) while others like Hydration have lower impact (0.8x weight).
                  </p>
-                 <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                <div className="mt-3 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
                   Improve your score by focusing on the metrics with the lowest values or the highest weights to see the biggest impact on your overall health.
                  </p>
+                </div>
                </div>
             </div>
           </motion.div>

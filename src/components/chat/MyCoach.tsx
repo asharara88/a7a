@@ -75,8 +75,8 @@ const MyCoach: React.FC = () => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isFetching, setIsFetching] = useState(false); 
   const [typingText, setTypingText] = useState('');
-  const [typingTimeout, setTypingTimeout] = useState<number | null>(null);
-  const typingTimeoutRef = useRef<number | null>(null);
+  const [typingTimeout, setTypingTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -182,8 +182,12 @@ const MyCoach: React.FC = () => {
       // Call OpenAI proxy function
       const { data, error: apiError } = await supabase.functions.invoke('openai-proxy', {
         body: {
-          // Include user context in the messages to OpenAI
           messages: [ 
+            // Add system message for context
+            { 
+              role: 'system', 
+              content: `You are Biowell's Digital Wellness Coach — a science-driven assistant focused on helping users optimize their health. Primary health goal: ${healthContext.primaryGoal}. Average sleep: ${healthContext.sleepAverage}. Stress level: ${healthContext.stressLevel}.` 
+            },
             ...messages.map(m => ({ role: m.role, content: m.content })),
             { role: 'user', content: messageText }
           ]
@@ -276,6 +280,13 @@ const MyCoach: React.FC = () => {
     };
     
     updateTypingText();
+
+    // Return cleanup function
+    return () => {
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+    };
   };
 
   const handleQuestionClick = (question: string) => (e: React.MouseEvent) => {
@@ -418,7 +429,7 @@ const MyCoach: React.FC = () => {
   return (
     <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-200 dark:border-gray-700">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white p-5 flex items-center justify-between rounded-t-xl shadow-md relative overflow-hidden">
+      <div className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white p-4 flex items-center justify-between rounded-t-xl shadow-md relative overflow-hidden">
         {/* Background pattern for header */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
@@ -431,6 +442,12 @@ const MyCoach: React.FC = () => {
           <span className="ml-2 text-xs bg-white/20 px-2 py-0.5 rounded-full">Wellness AI</span>
         </div>
         <div className="flex items-center">
+          {isPlayingAudio && (
+            <div className="flex items-center mr-2 px-2 py-1 bg-white/20 rounded-lg text-xs">
+              <span className="animate-pulse mr-1">●</span>
+              Speaking
+            </div>
+          )}
           <button
             onClick={() => setVoiceSettings(prev => ({ ...prev, enabled: !prev.enabled }))}
             className={cn(
