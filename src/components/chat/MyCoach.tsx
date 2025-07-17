@@ -170,6 +170,39 @@ const MyCoach: React.FC = () => {
 
     const userMessage: Message = {
       id: Date.now().toString(),
+      role: 'user',
+      content: messageText,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+    setIsFetching(true);
+    setError(null);
+
+    // Start typing animation
+    const cleanupTyping = startTypingAnimation();
+
+    try {
+      // Get recent messages for context
+      const recentMessages = messages.slice(-5);
+
+      // Call the OpenAI proxy function
+      const { data, error: apiError } = await supabase.functions.invoke('openai-proxy', {
+        body: {
+          messages: [
+            {
+              role: 'system',
+              content: `You are MyCoach™, a knowledgeable health and wellness assistant. You provide evidence-based advice on nutrition, fitness, supplements, sleep, and overall wellness. Always be supportive, informative, and encourage users to consult healthcare professionals for serious concerns.
+
+User Profile Context:
+- Primary Goal: ${healthContext.primaryGoal}
+- Sleep Average: ${healthContext.sleepAverage}
+- Stress Level: ${healthContext.stressLevel}
+
+Keep responses conversational, helpful, and under 200 words unless more detail is specifically requested.`
+            },
             ...recentMessages.map(m => ({ 
               role: m.role, 
               content: m.content 
@@ -195,123 +228,6 @@ const MyCoach: React.FC = () => {
         }
         
         throw new Error(errorMessage);
-      }
-
-      // Check if we got a valid response
-      if (!data || !data.result) {
-        console.error('Invalid response from OpenAI proxy:', data);
-        throw new Error('Invalid response from AI service. This may indicate a configuration issue. Please ensure your OpenAI API key is properly set and the Edge Function is deployed.');
-      }
-
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.result,
-        // Include metadata about the response for rendering
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
-
-      // Save to chat history
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          await supabase.from('chat_history').insert([
-            {
-              user_id: user.id,
-              message: messageText,
-              response: data.result,
-              role: 'user',
-              timestamp: new Date().toISOString()
-            }
-          ]);
-        } else {
-          console.log('User not authenticated, skipping chat history save');
-        }
-      } catch (chatError) {
-        console.error('Error saving chat history:', chatError);
-        // Continue even if saving chat history fails
-      }
-
-      // If voice is enabled, convert response to speech
-      if (voiceSettings.enabled) {
-        playTextToSpeech(data.result);
-      }
-      
-      // Stop typing animation
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
-        setTypingTimeout(null);
-      }
-      setTypingText('');
-      
-      // Update question set after each response
-      setCurrentQuestionSetIndex((prevIndex) => 
-        (prevIndex + 1) % QUESTION_SETS.length
-      );
-      
-    } catch (err) {
-      console.error('Error sending message:', err);
-      
-      // Use the error message from the thrown error (which was parsed from apiError)
-      let errorMessage = 'Failed to get a response from AI service.';
-      if (err instanceof Error) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
-      // Stop typing animation
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
-        setTypingTimeout(null);
-      }
-      setTypingText('');
-      setIsFetching(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const startTypingAnimation = () => {
-    const texts = [
-      "Thinking",
-      "Analyzing your question",
-      "Checking health data",
-      "Researching evidence",
-      "Formulating response"
-    ];
-    
-    let index = 0;
-    
-    const updateTypingText = () => {
-      setTypingText(texts[index % texts.length]);
-      index++;
-      
-      const timeout = setTimeout(updateTypingText, 3000);
-      setTypingTimeout(timeout);
-    };
-    
-    updateTypingText();
-
-    // Return cleanup function
-    return () => {
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
-      }
-    };
-  };
-          throw new Error('OpenAI API rate limit exceeded or insufficient credits. Please check your OpenAI account at https://platform.openai.com/usage');
-        } else if (data.code === 'OPENAI_ERROR' || data.code === 'NO_CONTENT') {
-          throw new Error(`OpenAI service error: ${data.error}`);
-        } else if (data.code === 'EMPTY_BODY' || data.code === 'INVALID_JSON' || data.code === 'INVALID_MESSAGES') {
-          throw new Error(`Request format error: ${data.error}`);
-        } else if (data.code === 'INTERNAL_ERROR' || data.code === 'INIT_ERROR') {
-          throw new Error(`Internal server error: ${data.error}`);
-        } else {
-          throw new Error(`AI service error: ${data.error}`);
-        }
       }
 
       // Check if we got a valid response
@@ -731,11 +647,3 @@ const MyCoach: React.FC = () => {
 };
 
 export default MyCoach;
-            }
-          ]
-        }
-      }
-      )
-    }
-  }
-}
