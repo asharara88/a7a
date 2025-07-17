@@ -57,6 +57,7 @@ const ActivityCalorieTracker: React.FC<ActivityCalorieTrackerProps> = ({
     };
     
     fetchData();
+  }, [userId, date, bmr, foodCalories]);
 
   // Prepare data for chart
   const chartData = {
