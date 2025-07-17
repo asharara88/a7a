@@ -1,5 +1,7 @@
 // This file contains the handler for text-to-speech requests
 
+const MAX_TEXT_LENGTH = 300; // Limit text length to avoid excessive API usage
+
 export async function handleTextToSpeechRequest(req: Request, apiKey: string, corsHeaders: Record<string, string>) {
   try {
     const { text, voiceId, stability, similarity_boost } = await req.json();
@@ -14,9 +16,14 @@ export async function handleTextToSpeechRequest(req: Request, apiKey: string, co
       );
     }
 
+    // Limit text length to prevent abuse
+    const trimmedText = text.length > MAX_TEXT_LENGTH 
+      ? text.substring(0, MAX_TEXT_LENGTH) + "..."
+      : text;
+
     // Prepare request body
     const requestBody: any = {
-      text,
+      text: trimmedText,
       model_id: "eleven_monolingual_v1",
       voice_settings: {
         stability: stability !== undefined ? stability : 0.5,

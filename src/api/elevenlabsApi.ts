@@ -123,19 +123,31 @@ export const elevenlabsApi = {
       // Cache the result
       const audioData = response.data;
       if (audioData) {
-        // Convert ArrayBuffer to base64
-        const bytes = new Uint8Array(audioData);
-        let binary = '';
-        for (let i = 0; i < bytes.byteLength; i++) {
-          binary += String.fromCharCode(bytes[i]);
-        }
-        const base64 = btoa(binary);
-        
-        // Store in cache
+        // Get current user
         const user = await supabase.auth.getUser();
+        
+        // Only cache if we have a valid user
         if (user.data.user) {
-          await supabase.from('audio_cache').insert({
-            user_id: user.data.user.id,
+          // Convert ArrayBuffer to base64
+          const bytes = new Uint8Array(audioData);
+          let binary = '';
+          for (let i = 0; i < bytes.byteLength; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          const base64 = btoa(binary);
+          
+          // Check if cache entry already exists
+          const { data: existingCache } = await supabase
+            .from('audio_cache')
+            .select('id')
+            .eq('user_id', user.data.user.id)
+            .eq('cache_key', cacheKey)
+            .maybeSingle();
+          
+          // Use upsert to handle both insert and update cases
+          await supabase.from('audio_cache').upsert({
+            id: existingCache?.id,
+            user_id: user.data.user.id, 
             cache_key: cacheKey,
             audio_data: base64,
             expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days

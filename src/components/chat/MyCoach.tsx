@@ -162,7 +162,7 @@ const MyCoach: React.FC = () => {
       // Save to chat history
       await supabase.from('chat_history').insert([
         {
-          user_id: (await supabase.auth.getUser()).data.user?.id || '00000000-0000-0000-0000-000000000000',
+          user_id: (await supabase.auth.getUser()).data.user?.id,
           message: messageText,
           response: data.result,
           role: 'user',
