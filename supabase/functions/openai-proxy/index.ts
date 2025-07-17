@@ -15,8 +15,22 @@ Deno.serve(async (req) => {
 
   try {
     // Initialize OpenAI client
+    const apiKey = Deno.env.get('OPENAI_API_KEY');
+    
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({ 
+          error: "OpenAI API key is not configured. Please set the OPENAI_API_KEY environment variable." 
+        }), 
+        { 
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        }
+      );
+    }
+
     const openai = new OpenAI({
-      apiKey: Deno.env.get('OPENAI_API_KEY'),
+      apiKey: apiKey,
     })
 
     // Parse request body
@@ -63,10 +77,25 @@ Deno.serve(async (req) => {
     const message = err instanceof Error ? err.message : String(err)
     console.error("Proxy error:", err)
     
+    // Provide more specific error messages
+    let errorMessage = message;
+    let statusCode = 500;
+    
+    if (message.includes('API key')) {
+      errorMessage = "Invalid OpenAI API key. Please check your configuration.";
+      statusCode = 401;
+    } else if (message.includes('quota') || message.includes('billing')) {
+      errorMessage = "OpenAI API quota exceeded. Please check your account billing.";
+      statusCode = 429;
+    } else if (message.includes('rate limit')) {
+      errorMessage = "OpenAI API rate limit exceeded. Please try again later.";
+      statusCode = 429;
+    }
+    
     return new Response(
-      JSON.stringify({ error: message }), 
+      JSON.stringify({ error: errorMessage }), 
       { 
-        status: 500,
+        status: statusCode,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       }
     )

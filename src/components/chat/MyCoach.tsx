@@ -209,12 +209,27 @@ const MyCoach: React.FC = () => {
         }
       });
 
-      if (apiError) throw new Error(apiError.message);
+      if (apiError) {
+        console.error('OpenAI proxy error:', apiError);
+        throw new Error(`OpenAI service unavailable: ${apiError.message || 'Configuration error'}`);
+      }
+
+      // Check if the function returned an error in the response data
+      if (data && data.error) {
+        console.error('OpenAI proxy returned error:', data.error);
+        throw new Error(`OpenAI service error: ${data.error}`);
+      }
+
+      // Check if we got a valid response
+      if (!data || !data.result) {
+        console.error('Invalid response from OpenAI proxy:', data);
+        throw new Error('Invalid response from AI service');
+      }
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.result || "I'm sorry, I couldn't process that request.",
+        content: data.result,
         // Include metadata about the response for rendering
         timestamp: new Date()
       };
@@ -262,7 +277,21 @@ const MyCoach: React.FC = () => {
       
     } catch (err) {
       console.error('Error sending message:', err);
-      setError('Failed to get a response. Please try again.');
+      
+      // Provide more specific error messages
+      let errorMessage = 'Failed to get a response. Please try again.';
+      
+      if (err instanceof Error) {
+        if (err.message.includes('Configuration error') || err.message.includes('OpenAI service unavailable')) {
+          errorMessage = 'AI service is currently unavailable. Please check your configuration or try again later.';
+        } else if (err.message.includes('OpenAI service error')) {
+          errorMessage = 'AI service error. Please try again or contact support if the issue persists.';
+        } else if (err.message.includes('Invalid response')) {
+          errorMessage = 'Received invalid response from AI service. Please try again.';
+        }
+      }
+      
+      setError(errorMessage);
       // Stop typing animation
       if (typingTimeout) {
         clearTimeout(typingTimeout);
