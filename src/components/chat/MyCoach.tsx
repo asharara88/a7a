@@ -217,18 +217,7 @@ const MyCoach: React.FC = () => {
       if (apiError) {
         console.error('OpenAI proxy error:', apiError);
         
-        // Handle specific configuration errors with more detail
-        if (apiError.message?.includes('MISSING_API_KEY') || apiError.message?.includes('not configured')) {
-          throw new Error('AI service is not configured. Please set up the OpenAI API key by running: supabase secrets set OPENAI_API_KEY=your-key, then redeploy with: supabase functions deploy openai-proxy');
-        } else if (apiError.message?.includes('INVALID_API_KEY') || apiError.message?.includes('Invalid OpenAI API key')) {
-          throw new Error('AI service configuration error. Please verify your OpenAI API key and run: supabase secrets set OPENAI_API_KEY=your-valid-key, then redeploy with: supabase functions deploy openai-proxy');
-        } else if (apiError.message?.includes('RATE_LIMIT') || apiError.message?.includes('rate limit')) {
-          throw new Error('OpenAI API rate limit exceeded or insufficient credits. Please check your OpenAI account at https://platform.openai.com/usage');
-        } else if (apiError.message?.includes('Edge Function returned a non-2xx status code')) {
-          throw new Error('AI service configuration error. Please check that your OpenAI API key is set with: supabase secrets list, and redeploy with: supabase functions deploy openai-proxy');
-        } else {
-          throw new Error(`AI service error: ${apiError.message || 'Unknown error occurred'}`);
-        }
+        throw new Error(`Edge Function Error: ${apiError.message || 'Unknown error occurred'}`);
       }
 
       // Check if the function returned an error in the response data
@@ -237,14 +226,16 @@ const MyCoach: React.FC = () => {
         
         // Handle specific error codes from the response
         if (data.code === 'MISSING_API_KEY') {
-          throw new Error('AI service is not configured. Please set up the OpenAI API key by running: supabase secrets set OPENAI_API_KEY=your-key, then redeploy with: supabase functions deploy openai-proxy');
+          throw new Error('AI service is not configured. Please follow these steps:\n\n1. supabase link --project-ref YOUR_PROJECT_REF\n2. supabase secrets set OPENAI_API_KEY=your-actual-openai-api-key\n3. supabase functions deploy openai-proxy\n\nVerify with: supabase secrets list');
         } else if (data.code === 'INVALID_API_KEY') {
-          throw new Error('AI service configuration error. Please verify your OpenAI API key and run: supabase secrets set OPENAI_API_KEY=your-valid-key, then redeploy with: supabase functions deploy openai-proxy');
+          throw new Error('Invalid OpenAI API key. Please verify your API key and run:\n1. supabase secrets set OPENAI_API_KEY=your-valid-key\n2. supabase functions deploy openai-proxy');
         } else if (data.code === 'RATE_LIMIT') {
           throw new Error('OpenAI API rate limit exceeded or insufficient credits. Please check your OpenAI account at https://platform.openai.com/usage');
-        } else if (data.code === 'OPENAI_ERROR') {
-          throw new Error(`OpenAI API error: ${data.error}. Please check your OpenAI account and API key.`);
-        } else if (data.code === 'INTERNAL_ERROR') {
+        } else if (data.code === 'OPENAI_ERROR' || data.code === 'NO_CONTENT') {
+          throw new Error(`OpenAI service error: ${data.error}`);
+        } else if (data.code === 'EMPTY_BODY' || data.code === 'INVALID_JSON' || data.code === 'INVALID_MESSAGES') {
+          throw new Error(`Request format error: ${data.error}`);
+        } else if (data.code === 'INTERNAL_ERROR' || data.code === 'INIT_ERROR') {
           throw new Error(`Internal server error: ${data.error}`);
         } else {
           throw new Error(`AI service error: ${data.error}`);
@@ -254,7 +245,7 @@ const MyCoach: React.FC = () => {
       // Check if we got a valid response
       if (!data || !data.result) {
         console.error('Invalid response from OpenAI proxy:', data);
-        throw new Error('Invalid response from AI service. This may indicate a configuration issue. Please ensure your OpenAI API key is properly set.');
+        throw new Error('Invalid response from AI service. This may indicate a configuration issue. Please ensure your OpenAI API key is properly set and the Edge Function is deployed.');
       }
 
       const assistantMessage: Message = {
@@ -309,18 +300,15 @@ const MyCoach: React.FC = () => {
     } catch (err) {
       console.error('Error sending message:', err);
       
-      // Provide more specific error messages
-      let errorMessage = 'Failed to get a response. Please try again.';
+      let errorMessage = 'Failed to get a response from AI service.';
       
       if (err instanceof Error) {
-        if (err.message.includes('not configured') || err.message.includes('configuration error') || err.message.includes('missing')) {
-          errorMessage = 'AI service is not properly configured. The OpenAI API key may be missing. Please contact support.';
-        } else if (err.message.includes('temporarily unavailable') || err.message.includes('high demand')) {
-          errorMessage = 'AI service is temporarily busy. Please try again in a few minutes.';
-        } else if (err.message.includes('currently unavailable')) {
-          errorMessage = 'AI service is currently unavailable due to configuration issues. Please contact support.';
-        } else if (err.message.includes('Invalid response')) {
-          errorMessage = 'Received invalid response from AI service. Please try again.';
+        if (err.message.includes('AI service is not configured') || err.message.includes('Invalid OpenAI API key')) {
+          errorMessage = err.message;
+        } else if (err.message.includes('OpenAI API rate limit') || err.message.includes('insufficient credits')) {
+          errorMessage = err.message;
+        } else if (err.message.includes('Edge Function Error')) {
+          errorMessage = 'AI service deployment error. Please ensure the OpenAI proxy Edge Function is properly deployed with: supabase functions deploy openai-proxy';
         } else {
           errorMessage = err.message;
         }
