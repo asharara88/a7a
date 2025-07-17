@@ -12,17 +12,17 @@ const HomePage: React.FC = () => {
       description: 'Get customized supplement recommendations based on your unique health profile.'
     },
     {
-      icon: <Shield className="w-10 h-10 text-green-400" />,
+      icon: <Shield className="w-10 h-10 text-secondary" />,
       title: 'Science-Backed',
       description: 'All recommendations are based on the latest scientific research and clinical studies.'
     },
     {
-      icon: <Zap className="w-10 h-10 text-yellow-400" />,
+      icon: <Zap className="w-10 h-10 text-tertiary" />,
       title: 'Optimize Performance',
       description: 'Enhance your energy, focus, and overall well-being with targeted nutrition.'
     },
     {
-      icon: <Brain className="w-10 h-10 text-purple-400" />,
+      icon: <Brain className="w-10 h-10 text-secondary-light" />,
       title: 'AI-Powered Coach',
       description: 'Get personalized guidance from our AI health coach to help you reach your wellness goals.'
     }
@@ -146,9 +146,10 @@ const HomePage: React.FC = () => {
               <motion.div 
                 key={index} 
                 className={`text-center p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${
-                  index % 3 === 0 ? 'bg-gradient-to-br from-primary-dark to-primary' : 
-                  index % 3 === 1 ? 'bg-gradient-to-br from-secondary-dark to-secondary' : 
-                  'bg-gradient-to-br from-tertiary-dark to-tertiary'
+                  index % 4 === 0 ? 'bg-gradient-to-br from-primary-dark to-primary' : 
+                  index % 4 === 1 ? 'bg-gradient-to-br from-secondary-dark to-secondary' : 
+                  index % 4 === 2 ? 'bg-gradient-to-br from-tertiary-dark to-tertiary' :
+                  'bg-gradient-to-br from-secondary-light to-secondary'
                 }`}
                 variants={{
                   hidden: { opacity: 0, y: 20 },

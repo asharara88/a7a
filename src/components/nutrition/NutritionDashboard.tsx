@@ -111,12 +111,12 @@ const NutritionDashboard: React.FC = () => {
         
         <Card className="p-4 sm:p-5">
           <div className="flex flex-col items-center text-center">
-            <div className="p-3 rounded-full bg-primary-light/10 dark:bg-primary-light/20 mb-3 shadow-sm">
-              <Salad className="w-5 h-5 text-primary-light dark:text-primary-light" />
+            <div className="p-3 rounded-full bg-tertiary/10 dark:bg-tertiary/20 mb-3 shadow-sm">
+              <Salad className="w-5 h-5 text-tertiary dark:text-tertiary-light" />
             </div>
             <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Fat</p>
             <div className="flex items-baseline">
-              <p className="text-xl font-bold text-primary-light dark:text-primary-light">{dailyIntake.fat}g</p>
+              <p className="text-xl font-bold">{dailyIntake.fat}g</p>
               <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.fatGoal}g</p>
             </div>
           </div>

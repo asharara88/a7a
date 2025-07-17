@@ -6,7 +6,7 @@ const AboutPage: React.FC = () => {
   // Core values data
   const coreValues = [
     {
-      icon: <Shield className="w-8 h-8 text-green-400" />,
+      icon: <Shield className="w-8 h-8 text-primary" />,
       title: 'Science-Backed',
       description: 'All recommendations are based on the latest scientific research and clinical studies.'
     },
@@ -160,9 +160,10 @@ const AboutPage: React.FC = () => {
               <motion.div 
                 key={index} 
                 className={`feature-card ${
-                  index % 3 === 0 ? 'bg-gradient-to-br from-primary-dark to-primary' : 
-                  index % 3 === 1 ? 'bg-gradient-to-br from-secondary-dark to-secondary' : 
-                  'bg-gradient-to-br from-tertiary-dark to-tertiary'
+                  index % 3 === 0 ? 'bg-gradient-to-br from-primary-dark to-primary' :
+                  index % 3 === 1 ? 'bg-gradient-to-br from-secondary-dark to-secondary' :
+                  index % 3 === 2 ? 'bg-gradient-to-br from-tertiary-dark to-tertiary' :
+                  'bg-gradient-to-br from-primary-dark to-primary'
                 }`}
                 variants={itemVariants}
               >
