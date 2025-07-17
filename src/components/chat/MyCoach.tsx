@@ -188,6 +188,9 @@ const MyCoach: React.FC = () => {
 
     try {
       // Call OpenAI proxy function
+      // Limit messages to prevent large payloads - send only last 10 messages plus system message
+      const recentMessages = messages.slice(-10);
+      
       const { data, error: apiError } = await supabase.functions.invoke('openai-proxy', {
         body: {
           // Include user context in the messages to OpenAI
@@ -200,7 +203,7 @@ const MyCoach: React.FC = () => {
               Keep responses concise and actionable. 
               When discussing supplements, only recommend green tier (strong evidence) or yellow tier (moderate evidence) options.
               Always emphasize that supplements should complement, not replace, a healthy lifestyle.` },
-            ...messages.map(m => ({ role: m.role, content: m.content })),
+            ...recentMessages.map(m => ({ role: m.role, content: m.content })),
             { role: 'user', content: messageText }
           ]
         },

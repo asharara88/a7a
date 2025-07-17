@@ -33,8 +33,31 @@ Deno.serve(async (req) => {
       apiKey: apiKey,
     })
 
-    // Parse request body
-    const { messages } = await req.json()
+    // Parse request body safely
+    let requestBody;
+    try {
+      const bodyText = await req.text();
+      if (!bodyText || bodyText.trim() === '') {
+        return new Response(
+          JSON.stringify({ error: "Request body is empty" }), 
+          { 
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          }
+        );
+      }
+      requestBody = JSON.parse(bodyText);
+    } catch (parseError) {
+      return new Response(
+        JSON.stringify({ error: "Invalid JSON in request body" }), 
+        { 
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        }
+      );
+    }
+
+    const { messages } = requestBody;
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(
