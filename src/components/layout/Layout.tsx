@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { ShoppingCart, User, Menu, X, MessageSquare, Moon, Sun, X as Close } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
-import MobileNav from './MobileNav'
+import MobileNav from '../ui/MobileNav'
 
 // Get initial dark mode preference from system or localStorage
 const getInitialDarkMode = () => {
