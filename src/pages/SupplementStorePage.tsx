@@ -46,18 +46,27 @@ export default function SupplementStorePage() {
     async function fetchSupplements() {
       setLoading(true);
       try {
-        let query = supabase.from('supplements').select('*');
-        // Add sorting by tier (green first, then yellow, then orange)
-        query = query.order('tier', { ascending: true });
-        
-        let { data, error: fetchError } = await query;
+        // Load supplements from the "Supplement Stacks Demo" table
+        const { data, error: fetchError } = await supabase
+          .from('Supplement Stacks Demo')
+          .select('*');
         
         if (fetchError) {
           throw fetchError;
         }
         
         if (data) {
-          setSupplements(data);
+          // Process the data - convert prices and assign tiers
+          const processedData = data.map(item => {
+            const tier = assignTier(item);
+            return {
+              ...item,
+              price_aed: parseFloat(item.price || 0) * 3.67, // Convert USD to AED
+              tier: tier, // Assign tier based on category/name
+              subscription_discount_percent: tier === 'green' ? 15 : tier === 'yellow' ? 12 : 10
+            };
+          });
+          setSupplements(processedData);
         } else {
           // Fallback to mock data if no data returned
           setSupplements(getMockSupplements());
@@ -74,6 +83,31 @@ export default function SupplementStorePage() {
     
     fetchSupplements();
   }, []);
+
+  // Helper function to assign tier based on category or name
+  const assignTier = (item) => {
+    const category = (item.category || '').toLowerCase();
+    const name = (item.name || '').toLowerCase();
+    
+    if (name.includes('creatine') || 
+        name.includes('vitamin d') || 
+        name.includes('protein') || 
+        category.includes('muscle building')) {
+      return 'green'; // Strong evidence
+    } 
+    else if (name.includes('ashwagandha') || 
+             name.includes('rhodiola') || 
+             name.includes('magnesium') ||
+             name.includes('beta-alanine') ||
+             name.includes('berberine') ||
+             category.includes('cognitive') || 
+             category.includes('sleep') || 
+             category.includes('endurance')) {
+      return 'yellow'; // Moderate evidence
+    } else {
+      return 'orange'; // Preliminary evidence
+    }
+  };
 
   const handleAddToCart = (suppId) => {
     setAddingToCart(suppId);
@@ -225,8 +259,8 @@ export default function SupplementStorePage() {
             {filteredSupps.map((supp) => {
               // Calculate discount price if available
               const discount = supp.subscription_discount_percent || 0;
-              const price = parseFloat(supp.price_aed || 0);
-              const discounted = discount > 0 ? price * (1 - discount / 100) : price;
+              const price = parseFloat(supp.price_aed || supp.price * 3.67 || 100);
+              const discounted = discount > 0 ? Math.round((price * (1 - discount / 100)) * 100) / 100 : price;
 
               return (
                 <Card key={supp.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
@@ -257,15 +291,15 @@ export default function SupplementStorePage() {
                   <div className="p-4 flex-1 flex flex-col">
                     <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">{supp.name}</h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{supp.brand || 'Biowell'}</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 flex-1">
-                      {supp.use_case || supp.description?.substring(0, 100) || 'General health support'}
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 flex-1 line-clamp-2">
+                      {supp.category || supp.description?.substring(0, 100) || 'General health support'}
                     </p>
                     
                     <div className="flex items-baseline gap-2 mb-4">
                       <span className="font-bold text-lg text-primary dark:text-primary-light">
-                        {formatAED(discounted)}
+                        {formatAED(discounted || price)}
                       </span>
-                      {discount > 0 && (
+                      {discount > 0 && price > 0 && (
                         <span className="line-through text-gray-400 text-xs">
                           {formatAED(price)}
                         </span>
