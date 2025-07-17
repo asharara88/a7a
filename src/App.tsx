@@ -49,6 +49,7 @@ const SupplementDetailPage = React.lazy(() => import('./pages/SupplementDetailPa
 const RecipeDetailPage = React.lazy(() => import('./pages/RecipeDetailPage'))
 const SavedRecipesPage = React.lazy(() => import('./pages/SavedRecipesPage'))
 const NutritionDashboardPage = React.lazy(() => import('./pages/NutritionDashboardPage'))
+const SupplementStorePage = React.lazy(() => import('./pages/SupplementStorePage'))
 const MyStacksPage = React.lazy(() => import('./pages/MyStacksPage'))
 const SupplementRecommendationsPage = React.lazy(() => import('./pages/SupplementRecommendationsPage'))
 const CartPage = React.lazy(() => import('./pages/CartPage'))
@@ -73,6 +74,7 @@ const App: React.FC = () => {
           <Route path="/recipes/:id" element={<ProtectedRoute><RecipeDetailPage /></ProtectedRoute>} />
           <Route path="/saved-recipes" element={<ProtectedRoute><SavedRecipesPage /></ProtectedRoute>} />
           <Route path="/my-stacks" element={<ProtectedRoute><MyStacksPage /></ProtectedRoute>} />
+          <Route path="/supplement-store" element={<ProtectedRoute><SupplementStorePage /></ProtectedRoute>} />
           <Route path="/supplements" element={<ProtectedRoute><SupplementsPage /></ProtectedRoute>} />
           <Route path="/recommendations" element={<ProtectedRoute><SupplementRecommendationsPage /></ProtectedRoute>} />
           <Route path="/supplements/:id" element={<ProtectedRoute><SupplementDetailPage /></ProtectedRoute>} />
