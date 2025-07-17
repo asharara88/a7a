@@ -172,7 +172,7 @@ const AboutPage: React.FC = () => {
                 <h3 className="text-xl font-bold text-white mb-3">
                   {value.title}
                 </h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-white dark:text-white text-sm">
                   {value.description}
                 </p>
               </motion.div>

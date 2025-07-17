@@ -167,7 +167,7 @@ const HomePage: React.FC = () => {
                 <h3 className="text-2xl font-bold text-white mb-4">
                   {feature.title}
                 </h3>
-                <p className="text-gray-400 text-base">
+                <p className="text-white dark:text-white text-base">
                   {feature.description}
                 </p>
               </motion.div>
