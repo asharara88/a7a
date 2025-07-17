@@ -83,7 +83,7 @@ const HomePage: React.FC = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/about"
-                  className="border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-black hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white px-8 sm:px-10 py-4 rounded-lg font-semibold transition-all duration-300 text-lg"
+                  className="bg-primary text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
                 >
                   Learn More
                 </Link>
