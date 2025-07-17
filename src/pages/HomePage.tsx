@@ -53,7 +53,7 @@ const HomePage: React.FC = () => {
               </span>
             </h1>
             <p className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              Transform your health with personalized insights and evidence-based recommendations.
+              Optimize your everyday.
             </p>
             <motion.div 
               className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-12"
