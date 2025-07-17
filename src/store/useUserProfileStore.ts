@@ -13,7 +13,7 @@ export interface UserProfile {
   email?: string;
   mobile?: string;
   dateOfBirth?: string;
-  gender?: 'male' | 'female' | 'non-binary' | 'prefer-not-to-say';
+  gender?: 'male' | 'female';
   age?: number;
   height?: { value: number; unit: 'cm' | 'ft' };
   weight?: { value: number; unit: 'kg' | 'lbs' };
