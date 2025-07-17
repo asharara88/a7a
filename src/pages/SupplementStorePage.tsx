@@ -47,9 +47,8 @@ export default function SupplementStorePage() {
     async function fetchSupplements() {
       setLoading(true);
       try {
-        // Load supplements from the "Supplement Stacks Demo" table
         const { data, error: fetchError } = await supabase
-          .from('supplement_stacks')
+          .from('supplements')
           .select('*');
         
         if (fetchError) {
