@@ -7,6 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn'; 
 import { elevenlabsApi, Voice } from '../../api/elevenlabsApi';
 import VoicePreferences from './VoicePreferences';
+import { useUserProfileStore } from '../../store/useUserProfileStore';
 
 // Sample question sets that will rotate after each response
 const QUESTION_SETS = [
@@ -60,6 +61,7 @@ interface VoiceSettings {
 const MyCoach: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const { profile } = useUserProfileStore();
   const [isLoading, setIsLoading] = useState(false);
   const [currentQuestionSetIndex, setCurrentQuestionSetIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
