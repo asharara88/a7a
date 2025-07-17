@@ -22,7 +22,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [darkMode, setDarkMode] = React.useState(getInitialDarkMode)
   const location = useLocation()
-  const location = useLocation()
 
   React.useEffect(() => {
     if (darkMode) {
