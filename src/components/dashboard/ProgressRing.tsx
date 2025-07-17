@@ -88,27 +88,3 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
 };
 
 export default ProgressRing;
-
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke={color}
-          strokeWidth={strokeWidth}
-          strokeDasharray={circumference}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          strokeLinecap="round"
-        />
-      </svg>
-      
-      {/* Content in the center */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        {children}
-      </div>
-    </div>
-  );
-};
-
-export default ProgressRing;
