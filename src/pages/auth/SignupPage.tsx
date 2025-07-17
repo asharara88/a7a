@@ -1,10 +1,19 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
+import { createClient } from '@supabase/supabase-js'
+import { Button } from '../../components/ui/Button'
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const SignupPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -12,11 +21,55 @@ const SignupPage: React.FC = () => {
     password: '',
     confirmPassword: ''
   })
+  const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle signup logic here
-    console.log('Signup attempt:', formData)
+    
+    // Validate form
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+      setError('All fields are required')
+      return
+    }
+    
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+    
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters')
+      return
+    }
+    
+    setIsLoading(true)
+    setError(null)
+    
+    try {
+      // Sign up with Supabase
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName
+          }
+        }
+      })
+      
+      if (signUpError) throw signUpError
+      
+      if (data?.user) {
+        // Redirect to onboarding
+        navigate('/onboarding')
+      }
+    } catch (err: any) {
+      console.error('Signup error:', err)
+      setError(err.message || 'Failed to create account. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,13 +206,20 @@ const SignupPage: React.FC = () => {
             </div>
           </div>
 
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
           <div>
-            <button
+            <Button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="w-full"
+              disabled={isLoading}
             >
-              Create account
-            </button>
+              {isLoading ? 'Creating account...' : 'Create account'}
+            </Button>
           </div>
         </form>
       </div>

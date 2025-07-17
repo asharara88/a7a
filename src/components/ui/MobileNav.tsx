@@ -7,9 +7,16 @@ import Navigation from '../layout/Navigation';
 interface MobileNavProps {
   isOpen: boolean;
   onClose: () => void;
+  isLoggedIn?: boolean;
+  onSignOut?: () => void;
 }
 
-const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
+const MobileNav: React.FC<MobileNavProps> = ({ 
+  isOpen, 
+  onClose, 
+  isLoggedIn = false,
+  onSignOut
+}) => {
   const location = useLocation();
 
   // Close mobile nav when route changes
@@ -63,20 +70,34 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
         
         <div className="p-4 border-t border-gray-200 dark:border-gray-800">
           <div className="flex flex-col space-y-4">
-            <Link 
-              to="/login" 
-              className="flex items-center justify-center w-full px-4 py-2 bg-primary text-white rounded-lg font-medium"
-              onClick={onClose}
-            >
-              Sign In
-            </Link>
-            <Link 
-              to="/signup" 
-              className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg font-medium text-gray-900 dark:text-white"
-              onClick={onClose}
-            >
-              Create Account
-            </Link>
+            {isLoggedIn ? (
+              <button 
+                onClick={() => {
+                  onSignOut?.();
+                  onClose();
+                }}
+                className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg font-medium text-gray-900 dark:text-white"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <>
+                <Link 
+                  to="/login" 
+                  className="flex items-center justify-center w-full px-4 py-2 bg-primary text-white rounded-lg font-medium"
+                  onClick={onClose}
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  to="/signup" 
+                  className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg font-medium text-gray-900 dark:text-white"
+                  onClick={onClose}
+                >
+                  Create Account
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

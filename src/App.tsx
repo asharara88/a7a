@@ -1,6 +1,37 @@
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/layout/Layout'
+import { createClient } from '@supabase/supabase-js'
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Protected route component
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | null>(null);
+
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getUser();
+      setIsAuthenticated(!!data.user);
+    };
+    
+    checkAuth();
+  }, []);
+
+  if (isAuthenticated === null) {
+    // Still checking authentication
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+};
 
 // Lazy load pages
 const HomePage = React.lazy(() => import('./pages/HomePage'))
@@ -32,18 +63,18 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/mycoach" element={<MyCoachPage />} />
-          <Route path="/nutrition" element={<NutritionPage />} />
-          <Route path="/nutrition/dashboard" element={<NutritionDashboardPage />} />
-          <Route path="/fitness" element={<FitnessPage />} />
-          <Route path="/recipes" element={<RecipesPage />} />
-          <Route path="/recipes/:id" element={<RecipeDetailPage />} />
-          <Route path="/saved-recipes" element={<SavedRecipesPage />} />
-          <Route path="/my-stacks" element={<MyStacksPage />} />
-          <Route path="/supplements" element={<SupplementsPage />} />
-          <Route path="/supplements/:id" element={<SupplementDetailPage />} />
-          <Route path="/cart" element={<CartPage />} />
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/mycoach" element={<ProtectedRoute><MyCoachPage /></ProtectedRoute>} />
+          <Route path="/nutrition" element={<ProtectedRoute><NutritionPage /></ProtectedRoute>} />
+          <Route path="/nutrition/dashboard" element={<ProtectedRoute><NutritionDashboardPage /></ProtectedRoute>} />
+          <Route path="/fitness" element={<ProtectedRoute><FitnessPage /></ProtectedRoute>} />
+          <Route path="/recipes" element={<ProtectedRoute><RecipesPage /></ProtectedRoute>} />
+          <Route path="/recipes/:id" element={<ProtectedRoute><RecipeDetailPage /></ProtectedRoute>} />
+          <Route path="/saved-recipes" element={<ProtectedRoute><SavedRecipesPage /></ProtectedRoute>} />
+          <Route path="/my-stacks" element={<ProtectedRoute><MyStacksPage /></ProtectedRoute>} />
+          <Route path="/supplements" element={<ProtectedRoute><SupplementsPage /></ProtectedRoute>} />
+          <Route path="/supplements/:id" element={<ProtectedRoute><SupplementDetailPage /></ProtectedRoute>} />
+          <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </React.Suspense>

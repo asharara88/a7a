@@ -1,18 +1,53 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
+import { createClient } from '@supabase/supabase-js'
+import { Button } from '../../components/ui/Button'
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
+  const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle login logic here
-    console.log('Login attempt:', formData)
+    
+    if (!formData.email || !formData.password) {
+      setError('Please enter both email and password')
+      return
+    }
+    
+    setIsLoading(true)
+    setError(null)
+    
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password
+      })
+      
+      if (signInError) throw signInError
+      
+      if (data?.user) {
+        // Successful login, redirect to dashboard
+        navigate('/dashboard')
+      }
+    } catch (err: any) {
+      console.error('Login error:', err)
+      setError(err.message || 'Failed to sign in. Please check your credentials.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,6 +123,12 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
 
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
@@ -109,12 +150,13 @@ const LoginPage: React.FC = () => {
           </div>
 
           <div>
-            <button
+            <Button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="w-full"
+              disabled={isLoading}
             >
-              Sign in
-            </button>
+              {isLoading ? 'Signing in...' : 'Sign in'}
+            </Button>
           </div>
         </form>
       </div>

@@ -1,9 +1,15 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ShoppingCart, User, Menu, X, Sparkles, Moon, Sun } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
 import MobileNav from '../ui/MobileNav'
+import { createClient } from '@supabase/supabase-js'
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Get initial dark mode preference from system or localStorage
 const getInitialDarkMode = () => {
@@ -21,7 +27,10 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [darkMode, setDarkMode] = React.useState(getInitialDarkMode)
+  const [user, setUser] = React.useState<any>(null)
+  const [isLoading, setIsLoading] = React.useState(true)
   const location = useLocation()
+  const navigate = useNavigate()
 
   React.useEffect(() => {
     if (darkMode) {
@@ -31,6 +40,41 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
     localStorage.setItem('darkMode', darkMode.toString());
   }, [darkMode]);
+
+  // Check for user session on mount
+  React.useEffect(() => {
+    const checkUser = async () => {
+      setIsLoading(true);
+      try {
+        const { data } = await supabase.auth.getUser();
+        setUser(data.user);
+      } catch (error) {
+        console.error('Error checking auth status:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    checkUser();
+    
+    // Set up auth state listener
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   // Toggle dark mode
   const toggleDarkMode = () => {
@@ -65,7 +109,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Right side buttons */}
             <div className="flex items-center space-x-3">
               <Link
-                to="/cart"
+                to={user ? "/cart" : "/login"}
                 className={cn(
                   "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 relative",
                   darkMode ? "text-white" : "text-gray-900",
@@ -77,7 +121,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-primary rounded-full">2</span>
               </Link>
               <Link
-                to="/mycoach"
+                to={user ? "/mycoach" : "/login"}
                 className={cn(
                   "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
                   darkMode ? "text-white" : "text-gray-900",
@@ -87,16 +131,29 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               >
                 <Sparkles className="w-6 h-6" />
               </Link>
-              <Link
-                to="/login"
-                className={cn(
-                  "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
-                  darkMode ? "text-white" : "text-gray-900"
-                )}
-                aria-label="User Account"
-              >
-                <User className="w-6 h-6" />
-              </Link>
+              {user ? (
+                <button
+                  onClick={handleSignOut}
+                  className={cn(
+                    "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
+                    darkMode ? "text-white" : "text-gray-900"
+                  )}
+                  aria-label="Sign Out"
+                >
+                  <User className="w-6 h-6" />
+                </button>
+              ) : (
+                <Link
+                  to="/login"
+                  className={cn(
+                    "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
+                    darkMode ? "text-white" : "text-gray-900"
+                  )}
+                  aria-label="User Account"
+                >
+                  <User className="w-6 h-6" />
+                </Link>
+              )}
               <button
                 onClick={() => toggleDarkMode()}
                 className={cn(
@@ -125,6 +182,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <MobileNav 
             isOpen={isMenuOpen} 
             onClose={() => setIsMenuOpen(false)} 
+            isLoggedIn={!!user}
+            onSignOut={handleSignOut}
           />
         </div>
       </header>
