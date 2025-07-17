@@ -14,7 +14,8 @@ import {
   Utensils,
   Package,
   Sparkles,
-  Store
+  Store,
+  Moon
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createClient } from '@supabase/supabase-js';
@@ -29,8 +30,10 @@ const MinimalNav: React.FC = () => {
   const location = useLocation();
   const [wellnessDropdownOpen, setWellnessDropdownOpen] = useState(false);
   const [utilitiesDropdownOpen, setUtilitiesDropdownOpen] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
   const [cartCount, setCartCount] = useState(2); // Mock cart count
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   
   const wellnessRef = useRef<HTMLDivElement>(null);
   const utilitiesRef = useRef<HTMLDivElement>(null);
@@ -89,6 +92,10 @@ const MinimalNav: React.FC = () => {
     return location.pathname.startsWith(path);
   };
   
+  const toggleSubmenu = (menu: string) => {
+    setOpenSubmenu(openSubmenu === menu ? null : menu);
+  };
+  
   // Determine if we need to show breadcrumbs (when in My Wellness sub-page)
   const wellnessPages = ['/dashboard', '/fitness', '/nutrition', '/my-stacks', '/recommendations'];
   const showBreadcrumbs = wellnessPages.some(path => location.pathname.startsWith(path));
@@ -126,7 +133,7 @@ const MinimalNav: React.FC = () => {
                 ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
                 : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
               }
-              alt="Biowell Logo" 
+              alt="Biowell Logo"
              className="h-12 w-auto object-contain" 
             />
           </Link>
@@ -134,18 +141,18 @@ const MinimalNav: React.FC = () => {
           {/* Main Navigation Icons */}
           <div className="flex items-center space-x-1">
             <Link 
-              to="/" 
+              to="/dashboard" 
               className={cn(
                 "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
                 "hover:scale-105 transition-transform duration-150",
                 "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               )}
-              aria-label="Home"
+              aria-label="Dashboard"
             >
               <Home size={20} />
-              {isActive('/') && (
+              {isActive('/dashboard') && (
                 <motion.div 
-                  className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"
+                  className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
                   layoutId="activeIndicator"
                   transition={{ duration: 0.15 }}
                 />
@@ -162,13 +169,13 @@ const MinimalNav: React.FC = () => {
                 )}
                 aria-label="My Wellness"
                 aria-expanded={wellnessDropdownOpen}
-              >
+              >  
                 <Leaf size={20} />
                 {wellnessPages.some(path => isActive(path)) && (
                   <motion.div 
-                    className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"
+                    className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
                     layoutId="activeIndicator"
-                    transition={{ duration: 0.15 }}
+                    transition={{ duration: 0.15 }}  
                   />
                 )}
               </button>
@@ -182,61 +189,94 @@ const MinimalNav: React.FC = () => {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                    <Link to="/dashboard" className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <div className="flex flex-col items-center text-center">
-                        <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-full mb-3">
-                          <LayoutDashboard size={20} className="text-indigo-600 dark:text-indigo-400" />
-                        </div>
-                        <span className="font-medium text-gray-900 dark:text-white">Dashboard</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your wellness</span>
+                  <div className="max-w-7xl mx-auto px-4">
+                    <div className="mb-4">
+                      <h3 className="text-lg font-medium px-4 py-2 text-gray-900 dark:text-white">My Wellness</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                      {/* Nutrition Section */}
+                      <div className="space-y-3">
+                        <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Nutrition</h4>
+                        <Link to="/nutrition" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3">
+                            <Utensils size={18} className="text-green-600 dark:text-green-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">Nutrition Dashboard</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your meals and nutrition</p>
+                          </div>
+                        </Link>
+                        
+                        <Link to="/recipes" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
+                            <Utensils size={18} className="text-green-600 dark:text-green-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">Personalized Recipes</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">AI-tailored meal suggestions</p>
+                          </div>
+                        </Link>
+                        
+                        <Link to="/metabolism" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
+                            <Activity size={18} className="text-green-600 dark:text-green-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">Metabolism</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Continuous glucose monitoring</p>
+                          </div>
+                        </Link>
                       </div>
-                    </Link>
-                    <Link to="/fitness" className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <div className="flex flex-col items-center text-center">
-                        <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-full mb-3">
-                          <Activity size={20} className="text-orange-600 dark:text-orange-400" />
+                      
+                      {/* Fitness Section */}
+                      <div className="space-y-3">
+                        <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Fitness</h4>
+                        <Link to="/fitness" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3">
+                            <Activity size={18} className="text-orange-600 dark:text-orange-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">Fitness Tracker</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your workouts</p>
+                          </div>
+                        </Link>
+                        
+                        <Link to="/fitness/activity" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
+                            <Activity size={18} className="text-orange-600 dark:text-orange-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">Activity</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Daily activity metrics</p>
+                          </div>
+                        </Link>
                         </div>
-                        <span className="font-medium text-gray-900 dark:text-white">Fitness</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track workouts</span>
-                      </div>
-                    </Link>
-                    <Link to="/nutrition" className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <div className="flex flex-col items-center text-center">
-                        <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full mb-3">
-                          <Utensils size={20} className="text-green-600 dark:text-green-400" />
+                      
+                      {/* Sleep Section */}
+                      <div className="space-y-3">
+                        <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Sleep</h4>
+                        <Link to="/sleep" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3">
+                            <Moon size={18} className="text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">Sleep Quality</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Monitor your sleep</p>
+                          </div>
+                        </Link>
+                        
+                        <Link to="/sleep/bioclock" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3 opacity-70">
+                            <Moon size={18} className="text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">Bioclock™</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Circadian health</p>
+                          </div>
+                        </Link>
                         </div>
-                        <span className="font-medium text-gray-900 dark:text-white">Nutrition</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Log your meals</span>
-                      </div>
-                    </Link>
-                    <Link to="/my-stacks" className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <div className="flex flex-col items-center text-center">
-                        <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-3">
-                          <Package size={20} className="text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <span className="font-medium text-gray-900 dark:text-white">My Stacks</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Supplement routines</span>
-                      </div>
-                    </Link>
-                    <Link to="/recommendations" className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <div className="flex flex-col items-center text-center">
-                        <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full mb-3">
-                          <Sparkles size={20} className="text-purple-600 dark:text-purple-400" />
-                        </div>
-                        <span className="font-medium text-gray-900 dark:text-white">Recommendations</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Personalized for you</span>
-                      </div>
-                    </Link>
-                    <Link to="/mycoach" className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <div className="flex flex-col items-center text-center">
-                        <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-full mb-3">
-                          <Sparkles size={20} className="text-pink-600 dark:text-pink-400" />
-                        </div>
-                        <span className="font-medium text-gray-900 dark:text-white">MyCoach</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">AI Health Assistant</span>
-                      </div>
-                    </Link>
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -247,14 +287,77 @@ const MinimalNav: React.FC = () => {
               className={cn(
                 "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
                 "hover:scale-105 transition-transform duration-150",
-                "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               )}
               aria-label="Supplements"
             >
               <Pill size={20} />
               {isActive('/supplements') && (
                 <motion.div 
-                  className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"
+                  className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                  layoutId="activeIndicator"
+                  transition={{ duration: 0.15 }}
+                />
+              )}
+            </Link>
+            
+            {/* My Supplements */}
+            <div className="relative">
+              <button 
+                onClick={() => toggleSubmenu('supplements')}
+                className={cn(
+                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                  "hover:scale-105 transition-transform duration-150",
+                  "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                )}
+                aria-label="My Supplements"
+                aria-expanded={openSubmenu === 'supplements'}
+              >
+                <Pill size={20} />
+                {(isActive('/my-stacks') || isActive('/supplements')) && (
+                  <motion.div 
+                    className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                    layoutId="activeIndicator"
+                    transition={{ duration: 0.15 }}
+                  />
+                )}
+              </button>
+              
+              {/* Supplements Dropdown */}
+              {openSubmenu === 'supplements' && (
+                <motion.div 
+                  className="absolute top-full right-0 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-20"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Link to="/my-stacks" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Package size={18} className="text-gray-700 dark:text-gray-300" />
+                    <span className="ml-3 text-gray-700 dark:text-gray-300">My Stacks</span>
+                  </Link>
+                  <Link to="/supplements" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Pill size={18} className="text-gray-700 dark:text-gray-300" />
+                    <span className="ml-3 text-gray-700 dark:text-gray-300">Explore Supplements</span>
+                  </Link>
+                </motion.div>
+              )}
+            </div>
+            
+            {/* MyCoach */}
+            <Link 
+              to="/mycoach" 
+              className={cn(
+                "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                "hover:scale-105 transition-transform duration-150",
+                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              )}
+              aria-label="MyCoach"
+            >
+              <Sparkles size={20} />
+              {isActive('/mycoach') && (
+                <motion.div 
+                  className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
                   layoutId="activeIndicator"
                   transition={{ duration: 0.15 }}
                 />
@@ -267,7 +370,7 @@ const MinimalNav: React.FC = () => {
                 className={cn(
                   "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
                   "hover:scale-105 transition-transform duration-150",
-                  "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 )}
                 aria-label="Utilities"
                 aria-expanded={utilitiesDropdownOpen}
@@ -304,7 +407,7 @@ const MinimalNav: React.FC = () => {
                     </div>
                     <span className="ml-3 text-gray-700 dark:text-gray-300">Cart</span>
                   </Link>
-                  <Link to="/notifications" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link to="/mycoach" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
                     <span className="ml-3 text-gray-700 dark:text-gray-300">MyCoach™</span>
                   </Link>
@@ -314,10 +417,16 @@ const MinimalNav: React.FC = () => {
                       <span className="ml-3 text-gray-700 dark:text-gray-300">Profile</span>
                     </Link>
                   ) : (
+                    <>
+                    <Link to="/signup" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                      <User size={18} className="text-gray-700 dark:text-gray-300" />
+                      <span className="ml-3 text-gray-700 dark:text-gray-300">Sign Up</span>
+                    </Link>
                     <Link to="/login" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <User size={18} className="text-gray-700 dark:text-gray-300" />
-                      <span className="ml-3 text-gray-700 dark:text-gray-300">Login</span>
+                      <span className="ml-3 text-gray-700 dark:text-gray-300">Sign In</span>
                     </Link>
+                    </>
                   )}
                 </motion.div>
               )}
@@ -356,5 +465,3 @@ const MinimalNav: React.FC = () => {
 };
 
 export default MinimalNav;
-
-export default MinimalNav
