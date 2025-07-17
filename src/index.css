@@ -5,19 +5,19 @@
 /* Base design system variables */
 :root {
   /* Primary colors */
-  --color-primary: 169deg 100% 35%;
-  --color-primary-light: 169deg 100% 45%;
-  --color-primary-dark: 169deg 100% 25%;
+  --color-primary: 169deg 100% 38%;
+  --color-primary-light: 169deg 100% 48%;
+  --color-primary-dark: 169deg 100% 28%;
   
   /* Secondary colors */
-  --color-secondary: 190deg 100% 40%;
-  --color-secondary-light: 190deg 100% 50%;
-  --color-secondary-dark: 190deg 100% 30%;
+  --color-secondary: 190deg 100% 42%;
+  --color-secondary-light: 190deg 100% 52%;
+  --color-secondary-dark: 190deg 100% 32%;
 
   /* Tertiary color (third color from logo) */
-  --color-tertiary: 183deg 100% 38%;
-  --color-tertiary-light: 183deg 100% 48%;
-  --color-tertiary-dark: 183deg 100% 28%;
+  --color-tertiary: 183deg 100% 40%;
+  --color-tertiary-light: 183deg 100% 50%;
+  --color-tertiary-dark: 183deg 100% 30%;
   
   /* Status colors */
   --color-success: 142deg 76% 36%;
@@ -109,8 +109,10 @@
 @layer base {
   html {
     font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-    letter-spacing: 0.01em;
-    word-spacing: 0.025em;
+    letter-spacing: 0.015em;
+    word-spacing: 0.035em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   body {
@@ -124,47 +126,47 @@
 
 @layer components {
   .container {
-    @apply px-5 sm:px-6 lg:px-8 mx-auto max-w-6xl w-full;
+    @apply px-6 sm:px-8 lg:px-10 mx-auto max-w-6xl w-full;
   }
   
   .card {
-    @apply bg-surface-1 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-200;
+    @apply bg-surface-1 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300;
   }
 
   .card-hover {
-    @apply hover:shadow-md hover:scale-[1.01] transition-all duration-300;
+    @apply hover:shadow-lg hover:scale-[1.02] transition-all duration-300;
   }
 
   .feature-card {
-    @apply bg-gray-900 p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex flex-col;
+    @apply bg-gray-900 p-7 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex flex-col;
   }
 
   .feature-icon-container {
-    @apply p-4 rounded-full bg-white/20 inline-flex mb-4 shadow-sm;
+    @apply p-4 rounded-full bg-white/20 inline-flex mb-5 shadow-md;
   }
   
   .btn {
-    @apply inline-flex items-center justify-center px-6 py-2 rounded-lg font-medium tracking-wide transition-all duration-200 shadow-sm;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-medium tracking-wide transition-all duration-300 shadow-md;
   }
   
   .btn-primary {
-    @apply bg-primary text-white hover:bg-primary-dark shadow-sm hover:shadow-md;
+    @apply bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg;
   }
   
   .btn-secondary {
-    @apply bg-secondary text-white hover:bg-secondary-dark shadow-sm hover:shadow-md;
+    @apply bg-secondary text-white hover:bg-secondary-dark shadow-md hover:shadow-lg;
   }
 
   .btn-tertiary {
-    @apply bg-tertiary text-white hover:bg-tertiary-dark shadow-sm hover:shadow-md;
+    @apply bg-tertiary text-white hover:bg-tertiary-dark shadow-md hover:shadow-lg;
   }
   
   .btn-outline {
-    @apply border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm hover:shadow-md;
+    @apply border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md hover:shadow-lg;
   }
 
   .mobile-container {
-    @apply px-5 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto transition-all duration-200 overflow-hidden;
+    @apply px-6 sm:px-8 lg:px-10 w-full max-w-6xl mx-auto transition-all duration-300 overflow-hidden;
   }
   
   .text-shadow-sm {
@@ -177,11 +179,11 @@
 
   /* Consistent spacing classes */
   .section-padding {
-    @apply py-12 sm:py-16 md:py-20;
+    @apply py-16 sm:py-20 md:py-24;
   }
 
   .section-margin {
-    @apply my-12 sm:my-16 md:my-20;
+    @apply my-16 sm:my-20 md:my-24;
   }
   
   .animate-fadeIn {
@@ -209,56 +211,56 @@
 
   /* Consistent card styles */
   .content-card {
-    @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 transition-all duration-200;
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-7 transition-all duration-300;
   }
 
   /* Consistent text styles */
   .heading-1 {
-    @apply text-3xl sm:text-4xl md:text-5xl font-semibold tracking-normal;
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight;
   }
 
   .heading-2 {
-    @apply text-2xl sm:text-3xl font-semibold tracking-normal;
+    @apply text-2xl sm:text-3xl font-bold tracking-tight leading-tight;
   }
 
   .heading-3 {
-    @apply text-xl sm:text-2xl font-medium tracking-normal;
+    @apply text-xl sm:text-2xl font-semibold tracking-tight leading-tight;
   }
 
   .body-text {
-    @apply text-base text-gray-700 dark:text-gray-200 leading-relaxed tracking-wide;
+    @apply text-base text-gray-700 dark:text-gray-200 leading-relaxed tracking-wide font-normal;
   }
 
   .caption-text {
-    @apply text-sm text-gray-600 dark:text-gray-300 font-normal tracking-wide;
+    @apply text-sm text-gray-600 dark:text-gray-300 font-normal tracking-wide leading-relaxed;
   }
   
   /* Navigation specific styles */
   .nav-item {
-    @apply relative flex items-center px-4 py-2 rounded-lg transition-all duration-200;
+    @apply relative flex items-center px-4 py-2 rounded-xl transition-all duration-300;
   }
   
   .nav-item-active {
-    @apply bg-primary/10 dark:bg-primary/20 text-primary font-medium;
+    @apply bg-primary/15 dark:bg-primary/25 text-primary font-medium;
   }
   
   .nav-item-inactive {
-    @apply text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800;
+    @apply text-gray-800 dark:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80;
   }
   
   .nav-icon {
-    @apply mr-3 flex-shrink-0;
+    @apply mr-4 flex-shrink-0;
   }
   
   .nav-submenu {
-    @apply pl-4 mt-1 space-y-1 border-l border-gray-200 dark:border-gray-700;
+    @apply pl-5 mt-2 space-y-2 border-l-2 border-gray-200 dark:border-gray-700;
   }
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -267,7 +269,7 @@
 
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--color-text-disabled));
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

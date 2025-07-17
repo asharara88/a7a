@@ -41,7 +41,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
     <motion.div
       whileHover={{ y: -5, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}
       className={cn(
-        "bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-5 cursor-pointer transition-all duration-300",
+        "bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-6 cursor-pointer transition-all duration-300",
         colorClasses[color],
       )}
       onClick={onClick}
@@ -49,7 +49,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
       <div className="flex items-start justify-between">
         <div className="flex-1 text-left">
           <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">{title}</p>
-          <p className="text-2xl font-semibold text-gray-800 dark:text-white tracking-wide">{value}</p>
+          <p className="text-2xl font-bold text-gray-800 dark:text-white tracking-tight">{value}</p>
           <div className={`flex items-center mt-1 ${changeColor}`}>
             {change.type === 'increase' ? (
               <ArrowUp className="w-4 h-4 mr-1" />
@@ -59,7 +59,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
             <span className="text-sm font-medium">{Math.abs(change.value)}%</span>
           </div>
         </div>
-        <div className={`p-3 rounded-lg bg-white dark:bg-gray-700 shadow-sm ${colorClasses[color]}`}>
+        <div className={`p-3.5 rounded-xl bg-white dark:bg-gray-700 shadow-md ${colorClasses[color]}`}>
           {icon}
         </div>
       </div>

@@ -32,7 +32,7 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       {/* Background circle */}
-      <svg width={size} height={size} className="transform -rotate-90 drop-shadow-sm">
+      <svg width={size} height={size} className="transform -rotate-90 drop-shadow-md">
         <defs>
           <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor={color} />
@@ -45,7 +45,7 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
           r={radius}
           fill="none"
           stroke={backgroundColor}
-          strokeWidth={strokeWidth}
+          strokeWidth={strokeWidth * 0.9}
           strokeLinecap="round"
         />
         
@@ -57,7 +57,7 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
             r={radius}
             fill="none"
             stroke={`url(#${gradientId})`}
-            strokeWidth={strokeWidth}
+            strokeWidth={strokeWidth * 1.1}
             strokeDasharray={circumference}
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset: offset }}
@@ -71,7 +71,7 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
             r={radius}
             fill="none"
             stroke={`url(#${gradientId})`}
-            strokeWidth={strokeWidth}
+            strokeWidth={strokeWidth * 1.1}
             strokeDasharray={circumference}
             strokeDashoffset={offset}
             strokeLinecap="round"
