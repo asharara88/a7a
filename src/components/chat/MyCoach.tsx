@@ -219,13 +219,13 @@ const MyCoach: React.FC = () => {
         
         // Handle specific configuration errors with more detail
         if (apiError.message?.includes('MISSING_API_KEY') || apiError.message?.includes('not configured')) {
-          throw new Error('AI service is not configured. The OpenAI API key is missing. Please contact support.');
+          throw new Error('AI service is not configured. Please set up the OpenAI API key by running: supabase secrets set OPENAI_API_KEY=your-key, then redeploy with: supabase functions deploy openai-proxy');
         } else if (apiError.message?.includes('INVALID_API_KEY') || apiError.message?.includes('Invalid OpenAI API key')) {
-          throw new Error('AI service configuration error. The OpenAI API key is invalid. Please contact support.');
+          throw new Error('AI service configuration error. Please verify your OpenAI API key and run: supabase secrets set OPENAI_API_KEY=your-valid-key, then redeploy with: supabase functions deploy openai-proxy');
         } else if (apiError.message?.includes('RATE_LIMIT') || apiError.message?.includes('rate limit')) {
-          throw new Error('AI service is temporarily unavailable due to high demand. Please try again in a few minutes.');
+          throw new Error('OpenAI API rate limit exceeded or insufficient credits. Please check your OpenAI account at https://platform.openai.com/usage');
         } else if (apiError.message?.includes('Edge Function returned a non-2xx status code')) {
-          throw new Error('AI service is currently unavailable. This may be due to configuration issues. Please contact support.');
+          throw new Error('AI service configuration error. Please check that your OpenAI API key is set with: supabase secrets list, and redeploy with: supabase functions deploy openai-proxy');
         } else {
           throw new Error(`AI service error: ${apiError.message || 'Unknown error occurred'}`);
         }
@@ -233,17 +233,17 @@ const MyCoach: React.FC = () => {
 
       // Check if the function returned an error in the response data
       if (data && data.error) {
-        console.error('OpenAI proxy returned error:', data.error);
+        console.error('OpenAI proxy returned error:', data);
         
         // Handle specific error codes from the response
         if (data.code === 'MISSING_API_KEY') {
-          throw new Error('AI service is not configured. The OpenAI API key is missing. Please contact support.');
+          throw new Error('AI service is not configured. Please set up the OpenAI API key by running: supabase secrets set OPENAI_API_KEY=your-key, then redeploy with: supabase functions deploy openai-proxy');
         } else if (data.code === 'INVALID_API_KEY') {
-          throw new Error('AI service configuration error. The OpenAI API key is invalid. Please contact support.');
+          throw new Error('AI service configuration error. Please verify your OpenAI API key and run: supabase secrets set OPENAI_API_KEY=your-valid-key, then redeploy with: supabase functions deploy openai-proxy');
         } else if (data.code === 'RATE_LIMIT') {
-          throw new Error('AI service is temporarily unavailable due to high demand. Please try again in a few minutes.');
+          throw new Error('OpenAI API rate limit exceeded or insufficient credits. Please check your OpenAI account at https://platform.openai.com/usage');
         } else if (data.code === 'OPENAI_ERROR') {
-          throw new Error(`OpenAI API error: ${data.error}`);
+          throw new Error(`OpenAI API error: ${data.error}. Please check your OpenAI account and API key.`);
         } else if (data.code === 'INTERNAL_ERROR') {
           throw new Error(`Internal server error: ${data.error}`);
         } else {
@@ -254,7 +254,7 @@ const MyCoach: React.FC = () => {
       // Check if we got a valid response
       if (!data || !data.result) {
         console.error('Invalid response from OpenAI proxy:', data);
-        throw new Error('Invalid response from AI service. Please try again.');
+        throw new Error('Invalid response from AI service. This may indicate a configuration issue. Please ensure your OpenAI API key is properly set.');
       }
 
       const assistantMessage: Message = {

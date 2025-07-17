@@ -13,26 +13,19 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders })
   }
 
-  // Add detailed logging for debugging
-  console.log('OpenAI Proxy function called')
-  console.log('Request method:', req.method)
-  console.log('Request headers:', Object.fromEntries(req.headers.entries()))
-
   try {
     // Initialize OpenAI client
     const apiKey = Deno.env.get('OPENAI_API_KEY');
     
-    console.log('API Key status:', apiKey ? 'Present' : 'Missing')
-    
     if (!apiKey) {
-      console.error('OPENAI_API_KEY environment variable is not set')
+      console.error('OPENAI_API_KEY secret is not configured')
       return new Response(
         JSON.stringify({ 
-          error: "OpenAI API key is not configured. Please set the OPENAI_API_KEY secret using: supabase secrets set OPENAI_API_KEY=your-key",
+          error: "OpenAI API key is not configured. Please run: supabase secrets set OPENAI_API_KEY=your-key, then redeploy with: supabase functions deploy openai-proxy",
           code: "MISSING_API_KEY"
         }), 
         { 
-          status: 503,
+          status: 503, // Service Unavailable
           headers: { ...corsHeaders, "Content-Type": "application/json" }
         }
       );
@@ -46,7 +39,6 @@ Deno.serve(async (req) => {
     let requestBody;
     try {
       const bodyText = await req.text();
-      console.log('Request body length:', bodyText.length)
       if (!bodyText || bodyText.trim() === '') {
         console.error('Request body is empty')
         return new Response(
@@ -58,7 +50,6 @@ Deno.serve(async (req) => {
         );
       }
       requestBody = JSON.parse(bodyText);
-      console.log('Parsed request body successfully')
     } catch (parseError) {
       console.error('JSON parsing error:', parseError)
       return new Response(
@@ -83,18 +74,14 @@ Deno.serve(async (req) => {
       )
     }
 
-    console.log('Messages count:', messages.length)
-
     // Create OpenAI completion
     let completion;
     try {
-      console.log('Calling OpenAI API...')
       completion = await openai.chat.completions.create({
         model: "gpt-4",
         messages,
         temperature: 0.7,
       });
-      console.log('OpenAI API call successful')
     } catch (openaiError) {
       console.error("OpenAI API error:", openaiError);
       
@@ -102,7 +89,7 @@ Deno.serve(async (req) => {
       if (openaiError.status === 401) {
         return new Response(
           JSON.stringify({ 
-            error: "Invalid OpenAI API key. Please check your API key configuration.",
+            error: "Invalid OpenAI API key. Please verify your API key and run: supabase secrets set OPENAI_API_KEY=your-valid-key, then redeploy with: supabase functions deploy openai-proxy",
             code: "INVALID_API_KEY"
           }), 
           { 
@@ -113,7 +100,7 @@ Deno.serve(async (req) => {
       } else if (openaiError.status === 429) {
         return new Response(
           JSON.stringify({ 
-            error: "OpenAI API rate limit exceeded. Please try again later.",
+            error: "OpenAI API rate limit exceeded or insufficient credits. Please check your OpenAI account at https://platform.openai.com/usage",
             code: "RATE_LIMIT"
           }), 
           { 
@@ -122,14 +109,9 @@ Deno.serve(async (req) => {
           }
         );
       } else {
-        console.error('OpenAI API error details:', {
-          status: openaiError.status,
-          message: openaiError.message,
-          code: openaiError.code
-        })
         return new Response(
           JSON.stringify({ 
-            error: `OpenAI API request failed: ${openaiError.message || 'Unknown error'}`,
+            error: `OpenAI API error (${openaiError.status}): ${openaiError.message || 'Unknown error'}. Check your OpenAI account and API key.`,
             code: "OPENAI_ERROR"
           }), 
           { 
@@ -156,7 +138,6 @@ Deno.serve(async (req) => {
       )
     }
 
-    console.log('Returning successful response')
     return new Response(
       JSON.stringify({ result: content }), 
       {
@@ -167,11 +148,7 @@ Deno.serve(async (req) => {
 
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error("Proxy error:", {
-      message,
-      stack: err instanceof Error ? err.stack : undefined,
-      name: err instanceof Error ? err.name : undefined
-    })
+    console.error("Proxy error:", message)
     
     return new Response(
       JSON.stringify({ 
