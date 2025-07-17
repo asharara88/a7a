@@ -40,9 +40,12 @@ const HomePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="inline-block bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-1 mb-6">
+            <a 
+              href="#evidence-based-health" 
+              className="inline-block bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-1 mb-6 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            >
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Evidence-based health optimization</span>
-            </div>
+            </a>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
               <span>Your Personal </span>
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
@@ -162,7 +165,9 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Evidence-Based Health Optimization Section */}
-      <EvidenceBasedHealthOptimization expanded={false} />
+      <section id="evidence-based-health">
+        <EvidenceBasedHealthOptimization expanded={false} />
+      </section>
 
       {/* CTA Section */}
       <section className="py-16 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white transition-all duration-200 relative overflow-hidden">
