@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from '../ui/Card';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProgressRing from './ProgressRing';
 
 interface HealthScoreCardProps {
@@ -14,7 +14,7 @@ const HealthScoreCard: React.FC<HealthScoreCardProps> = ({ score, previousScore,
   
   return (
     <Card className="p-5">
-      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Health Score</h3>
+      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Legacy Health Score</h3>
       
       <div className="flex items-center justify-between mb-6">
         <div className="flex-1">
@@ -57,7 +57,8 @@ const HealthScoreCard: React.FC<HealthScoreCardProps> = ({ score, previousScore,
             score >= 80 ? 'hsl(142, 76%, 36%)' : // Green for good
             score >= 60 ? 'hsl(48, 96%, 53%)' :  // Yellow for moderate
             'hsl(0, 84%, 60%)'                   // Red for poor
-          }
+          } 
+          animated
         >
           <div className="text-center">
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{score}</p>
@@ -66,7 +67,7 @@ const HealthScoreCard: React.FC<HealthScoreCardProps> = ({ score, previousScore,
       </div>
       
       <div>
-        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Insights</h4>
+        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Legacy Insights</h4>
         <motion.ul 
           className="space-y-2"
           initial={{ opacity: 0 }}

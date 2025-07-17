@@ -1,5 +1,5 @@
 import React from 'react'
-import { Activity, Heart, Moon, Zap, Droplet, Utensils, Pill, Target } from 'lucide-react'
+import { Activity, Heart, Moon, Zap, Droplet, Utensils, Pill, Target, Dumbbell, Brain, Gauge, Weight } from 'lucide-react'
 import MetricsCard from '../components/dashboard/MetricsCard'
 import TrendsChart from '../components/dashboard/TrendsChart'
 import StatisticsGrid from '../components/dashboard/StatisticsGrid'
@@ -9,6 +9,7 @@ import RecommendationsCard from '../components/dashboard/RecommendationsCard'
 import GoalsProgress from '../components/dashboard/GoalsProgress'
 import SupplementTracker from '../components/dashboard/SupplementTracker'
 import WearableDeviceCard from '../components/dashboard/WearableDeviceCard'
+import BWScoreCard, { MetricScore } from '../components/dashboard/BWScoreCard'
 
 const DashboardPage: React.FC = () => {
   // Mock data for metrics cards
@@ -213,6 +214,79 @@ const DashboardPage: React.FC = () => {
     connected: true
   };
 
+  // BW Score metrics
+  const bwScoreMetrics: MetricScore[] = [
+    {
+      name: 'Sleep',
+      score: 78,
+      weight: 1.5,
+      color: '#8B5CF6', // purple-500
+      icon: <Moon className="w-4 h-4" />,
+      description: 'Based on sleep duration, quality, and consistency'
+    },
+    {
+      name: 'Fitness',
+      score: 82,
+      weight: 1.5,
+      color: '#3B82F6', // blue-500
+      icon: <Dumbbell className="w-4 h-4" />,
+      description: 'Based on activity levels, workouts, and recovery'
+    },
+    {
+      name: 'Nutrition',
+      score: 65,
+      weight: 1.5,
+      color: '#10B981', // green-500
+      icon: <Utensils className="w-4 h-4" />,
+      description: 'Based on diet quality, macronutrient balance, and meal timing'
+    },
+    {
+      name: 'Supplement Compliance',
+      score: 90,
+      weight: 1.0,
+      color: '#F59E0B', // amber-500
+      icon: <Pill className="w-4 h-4" />,
+      description: 'Based on adherence to recommended supplement regimen'
+    },
+    {
+      name: 'Body Composition',
+      score: 72,
+      weight: 1.0,
+      color: '#EC4899', // pink-500
+      icon: <Weight className="w-4 h-4" />,
+      description: 'Based on BMI, body fat percentage, and muscle mass'
+    },
+    {
+      name: 'Metabolic Health',
+      score: 68,
+      weight: 1.2,
+      color: '#EF4444', // red-500
+      icon: <Gauge className="w-4 h-4" />,
+      description: 'Based on glucose levels, heart rate variability, and blood pressure'
+    },
+    {
+      name: 'Cognitive Function',
+      score: 85,
+      weight: 1.0,
+      color: '#6366F1', // indigo-500
+      icon: <Brain className="w-4 h-4" />,
+      description: 'Based on focus, memory, and mental clarity metrics'
+    },
+    {
+      name: 'Hydration',
+      score: 70,
+      weight: 0.8,
+      color: '#0EA5E9', // sky-500
+      icon: <Droplet className="w-4 h-4" />,
+      description: 'Based on daily water intake and hydration status'
+    }
+  ];
+
+  const handleMetricClick = (metricName: string) => {
+    console.log(`Navigating to detailed view for: ${metricName}`);
+    // In a real app, this would navigate to a detailed view for the specific metric
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 sm:py-8 transition-all duration-200">
       <div className="mobile-container">
@@ -222,7 +296,7 @@ const DashboardPage: React.FC = () => {
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <MetricsCard
             title="Heart Rate"
             value="72 BPM"
@@ -250,6 +324,14 @@ const DashboardPage: React.FC = () => {
             change={{ value: 10, type: 'decrease' }}
             icon={<Droplet className="w-6 h-6" />}
             color="tertiary"
+          />
+        </div>
+
+        {/* BW Score */}
+        <div className="mb-8">
+          <BWScoreCard 
+            metrics={bwScoreMetrics}
+            onMetricClick={handleMetricClick}
           />
         </div>
 
