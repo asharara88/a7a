@@ -326,7 +326,7 @@ const MyCoach: React.FC = () => {
         {error && (
           <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg font-medium shadow-sm">
             <AlertCircle className="w-4 h-4 inline-block mr-2" />
-            <AlertCircle className="w-4 h-4 inline-block mr-2" />
+            <span>{error}</span>
             {error}
           </div>
         )}

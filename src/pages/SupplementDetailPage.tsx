@@ -259,7 +259,7 @@ const SupplementDetailPage: React.FC = () => {
                   {supplement.subscription_discount_percent > 0 && (
                     <div className="text-right">
                       <p className="text-sm text-gray-600 dark:text-gray-400">Subscription Price</p>
-                      <p className="text-2xl font-bold text-primary dark:text-primary-light">
+                  {addedToCart ? (
                         {calculateDiscountedPrice(
                           supplement.price_aed, 
                           supplement.subscription_discount_percent
