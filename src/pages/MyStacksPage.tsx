@@ -142,7 +142,7 @@ const MyStacksPage: React.FC = () => {
                   </div>
                   
                   <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <span className="font-bold text-gray-900 dark:text-white">${stack.totalPrice.toFixed(2)}</span>
+                    <span className="font-bold text-gray-900 dark:text-white">{stack.totalPrice.toFixed(2)} AED</span>
                     <div className="flex items-center">
                       <span className="text-sm text-gray-600 dark:text-gray-400 mr-2">Active</span>
                       <button

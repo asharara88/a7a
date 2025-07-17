@@ -68,7 +68,7 @@ const SupplementDetailPage: React.FC = () => {
               </p>
 
               <div className="text-3xl font-bold text-gray-900 mb-6">
-                ${supplement.price}
+               {supplement.price} AED
               </div>
 
               <div className="flex space-x-4 mb-8">

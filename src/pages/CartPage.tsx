@@ -69,7 +69,7 @@ const CartPage: React.FC = () => {
                           </button>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                          <p className="font-medium">{(item.price * item.quantity).toFixed(2)} AED</p>
                           <button className="text-red-600 hover:text-red-700 mt-1">
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -91,13 +91,13 @@ const CartPage: React.FC = () => {
                     <span>${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping</span>
+                     <span>{shipping.toFixed(2)} AED</span>
                     <span>${shipping.toFixed(2)}</span>
                   </div>
                   <div className="border-t pt-2">
                     <div className="flex justify-between font-semibold">
-                      <span>Total</span>
-                      <span>${total.toFixed(2)}</span>
+                       <span>{total.toFixed(2)} AED</span>
+                     <span>{subtotal.toFixed(2)} AED</span>
                     </div>
                   </div>
                 </div>
