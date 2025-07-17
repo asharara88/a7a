@@ -45,8 +45,20 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
         
-        <div className="p-4">
-          <Navigation isMobile onItemClick={onClose} />
+        <div className="p-4 space-y-6">
+          <div>
+            <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
+              Main Menu
+            </h3>
+            <Navigation isMobile onItemClick={onClose} type="main" />
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
+              Account
+            </h3>
+            <Navigation isMobile onItemClick={onClose} type="account" />
+          </div>
         </div>
         
         <div className="p-4 border-t border-gray-200 dark:border-gray-800">
@@ -65,19 +77,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
             >
               Create Account
             </Link>
-      <div className="p-4 space-y-6">
-        <div>
-          <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
-            Main Menu
-          </h3>
-          <Navigation isMobile onItemClick={onClose} type="main" />
-        </div>
-        
-        <div>
-          <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
-            Account
-          </h3>
-          <Navigation isMobile onItemClick={onClose} type="account" />
+          </div>
         </div>
       </div>
     </div>
@@ -85,5 +85,3 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
 };
 
 export default MobileNav;
-  )
-}
