@@ -5,6 +5,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Link } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
+import { cn } from '../../utils/cn';
 
 // Helper function to get tier badge component
 const getTierBadge = (tier: string) => {
@@ -35,6 +36,7 @@ const SupplementRecommendations: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
+  const [selectedStackId, setSelectedStackId] = useState<string | null>(null);
 
   useEffect(() => {
     loadRecommendations();
@@ -245,18 +247,31 @@ const SupplementRecommendations: React.FC = () => {
                     
                     {stack.components.length > 3 && (
                       <div className="text-sm text-gray-500 dark:text-gray-400">
-                        +{stack.components.length - 3} more supplements
+                        +{stack.components.length - 3} more supplement{stack.components.length - 3 > 1 ? 's' : ''}
                       </div>
                     )}
                   </div>
                   
                   <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
                     <span className="font-bold text-lg text-primary dark:text-primary-light">
-                      {stack.total_price.toFixed(2)} AED
+                      {Number(stack.total_price).toFixed(2)} AED
                     </span>
-                    <Button as={Link} to={`/my-stacks/${stack.id}`} size="sm">
-                      View Stack
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className={cn(
+                          "text-xs px-3 py-1",
+                          selectedStackId === stack.id && "bg-green-50 text-green-700 border-green-300"
+                        )}
+                        onClick={() => setSelectedStackId(selectedStackId === stack.id ? null : stack.id)}
+                      >
+                        {selectedStackId === stack.id ? "Selected" : "Select Stack"}
+                      </Button>
+                      <Button as={Link} to={`/my-stacks/${stack.id}`} size="sm" className="text-xs px-3 py-1">
+                        View Details
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -267,6 +282,15 @@ const SupplementRecommendations: React.FC = () => {
             <Button as={Link} to="/my-stacks" variant="outline">
               View All Stacks
             </Button>
+            {selectedStackId && (
+              <Button 
+                className="ml-4" 
+                as={Link} 
+                to={`/my-stacks/${selectedStackId}`}
+              >
+                Proceed with Selected Stack
+              </Button>
+            )}
           </div>
         </div>
       )}
