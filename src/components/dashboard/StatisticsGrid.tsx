@@ -133,7 +133,7 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {/* Calories Card */}
-      <Card className="p-5">
+      <Card className="p-5 h-full">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Calories</h3>
         <div className="flex justify-center mb-4">
           <motion.div
@@ -166,7 +166,7 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
       </Card>
 
       {/* Macros Card */}
-      <Card className="p-5">
+      <Card className="p-5 h-full">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Macronutrients</h3>
         <div className="h-48 flex items-center justify-center">
           <motion.div
@@ -196,7 +196,7 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
       </Card>
 
       {/* Sleep Card */}
-      <Card className="p-5">
+      <Card className="p-5 h-full">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Sleep Analysis</h3>
         <div className="flex items-center justify-between mb-4">
           <motion.div
@@ -237,7 +237,7 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
       </Card>
 
       {/* Water Intake Card */}
-      <Card className="p-5 md:col-span-2 lg:col-span-1">
+      <Card className="p-5 md:col-span-2 lg:col-span-1 h-full">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Water Intake</h3>
         <div className="flex justify-center mb-4">
           <motion.div

@@ -22,7 +22,7 @@ function DonutChart({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, go
 
 function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
   return (
-    <div className="rounded-2xl bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800 p-6 w-full">
+    <div className="rounded-2xl bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
@@ -60,7 +60,7 @@ function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
 
 function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goalCarbs = 250, goalFat = 70 }) {
   return (
-    <div className="rounded-2xl bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800 p-6 w-full">
+    <div className="rounded-2xl bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
           Macros
@@ -89,7 +89,7 @@ function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goa
 function SleepCard({ totalSleep = 7.5, deepSleep = 1.2, remSleep = 1.0, sleepGoal = 8 }) {
   const percent = Math.round((totalSleep / sleepGoal) * 100);
   return (
-    <div className="rounded-2xl bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800 p-6 w-full">
+    <div className="rounded-2xl bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
           Sleep Analysis
