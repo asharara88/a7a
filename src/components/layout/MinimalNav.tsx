@@ -409,11 +409,8 @@ const MinimalNav: React.FC = () => {
                   </Link>
                   <Link to="/mycoach" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">MyCoach™</span>
-                  </Link>
-                  {user ? (
-                    <Link to="/profile" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <User size={18} className="text-gray-700 dark:text-gray-300" />
+                    <span className="ml-3 text-gray-700 dark:text-gray-300">MyCoach</span>
+                    <span className="text-xs align-super">™</span>
                       <span className="ml-3 text-gray-700 dark:text-gray-300">Profile</span>
                     </Link>
                   ) : (
