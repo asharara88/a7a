@@ -1,10 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import FitnessTracker from '../components/fitness/FitnessTracker';
+import ActivityCalorieTracker from '../components/fitness/ActivityCalorieTracker';
 import { ArrowRight } from 'lucide-react';
 import { Card } from '../components/ui/Card';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const FitnessPage: React.FC = () => {
+  const [userId, setUserId] = React.useState<string>('demo-user-id');
+
+  React.useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        setUserId(data.user.id);
+      }
+    };
+    
+    getUser();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 sm:py-8 transition-all duration-200">
       <div className="mobile-container">
@@ -18,6 +38,11 @@ const FitnessPage: React.FC = () => {
           </Link>
         </div>
         <p className="text-gray-600 dark:text-gray-400 mb-6">Track your workouts and monitor your progress as part of your wellness journey</p>
+        
+        {/* Activity Calorie Tracker - Integration with food logging */}
+        <div className="mb-8">
+          <ActivityCalorieTracker userId={userId} />
+        </div>
         
         <FitnessTracker />
         
