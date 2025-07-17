@@ -22,15 +22,15 @@ function DonutChart({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, go
 
 function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
   return (
-    <div className="rounded-2xl bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
+    <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          <span className="text-xl font-medium text-gray-800 dark:text-gray-100">
             BW Score
           </span>
           <Info className="w-4 h-4 text-blue-500 cursor-pointer" title="Biowell Score: Composite of sleep, fitness, and consistency." />
         </div>
-        <span className="text-3xl font-extrabold text-yellow-500">{score}</span>
+        <span className="text-3xl font-bold text-yellow-500">{score}</span>
       </div>
       <div className="flex items-center gap-2 mb-4">
         <span className="text-sm text-gray-500 dark:text-gray-400">/100</span>
@@ -60,9 +60,9 @@ function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
 
 function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goalCarbs = 250, goalFat = 70 }) {
   return (
-    <div className="rounded-2xl bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
+    <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+        <span className="text-xl font-medium text-gray-800 dark:text-gray-100">
           Macros
         </span>
         <Info className="w-4 h-4 text-green-500 cursor-pointer" title="Macronutrient breakdown based on daily intake and goals." />
@@ -89,16 +89,16 @@ function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goa
 function SleepCard({ totalSleep = 7.5, deepSleep = 1.2, remSleep = 1.0, sleepGoal = 8 }) {
   const percent = Math.round((totalSleep / sleepGoal) * 100);
   return (
-    <div className="rounded-2xl bg-white dark:bg-neutral-900 shadow-lg border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
+    <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+        <span className="text-xl font-medium text-gray-800 dark:text-gray-100">
           Sleep Analysis
         </span>
         <Info className="w-4 h-4 text-purple-500 cursor-pointer" title="Total, Deep, and REM sleep compared to optimal targets." />
       </div>
       <div className="flex items-center gap-4">
         <div>
-          <span className="text-3xl font-extrabold text-purple-500">{totalSleep}h</span>
+          <span className="text-3xl font-bold text-purple-500">{totalSleep}h</span>
           <div className="text-xs text-gray-500 dark:text-gray-400">Total Sleep</div>
         </div>
         <div className="flex-1">
@@ -124,7 +124,7 @@ function SleepCard({ totalSleep = 7.5, deepSleep = 1.2, remSleep = 1.0, sleepGoa
 // Main Dashboard Cards component
 const DashboardCards: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
       <div className="md:col-span-1">
         <BWScoreCard />
       </div>

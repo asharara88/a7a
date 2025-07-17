@@ -41,7 +41,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
     <motion.div
       whileHover={{ y: -5, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}
       className={cn(
-        "bg-gradient-to-br rounded-xl shadow-md p-5 cursor-pointer transition-all duration-300",
+        "bg-gradient-to-br rounded-xl shadow-sm p-5 cursor-pointer transition-all duration-300",
         colorClasses[color],
         "bg-white dark:bg-gray-800"
       )}
@@ -50,7 +50,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+          <p className="text-2xl font-semibold text-gray-800 dark:text-white">{value}</p>
           <div className={`flex items-center mt-1 ${changeColor}`}>
             {change.type === 'increase' ? (
               <ArrowUp className="w-4 h-4 mr-1" />

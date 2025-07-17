@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Poppins font */
+@import '@fontsource/poppins/300.css';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+
 /* Base design system variables */
 :root {
   /* Primary colors */
@@ -59,9 +66,15 @@
   --radius-full: 9999px;
 }
 
+/* Animation keyframes */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .dark {
@@ -102,7 +115,7 @@
 
 @layer base {
   html {
-    font-family: 'Inter Variable', system-ui, sans-serif;
+    font-family: 'Poppins', system-ui, sans-serif;
   }
   
   body {
@@ -116,19 +129,19 @@
 
 @layer components {
   .container {
-    @apply px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl w-full;
+    @apply px-4 sm:px-6 lg:px-8 mx-auto max-w-6xl w-full;
   }
   
   .card {
-    @apply bg-surface-1 rounded-lg shadow-lg overflow-hidden transition-all duration-200;
+    @apply bg-surface-1 rounded-xl shadow-md overflow-hidden transition-all duration-200;
   }
 
   .card-hover {
-    @apply hover:shadow-xl hover:scale-[1.01];
+    @apply hover:shadow-lg hover:scale-[1.02] transition-all duration-300;
   }
 
   .feature-card {
-    @apply bg-gray-900 text-center p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center;
+    @apply bg-gray-900 text-center p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center;
   }
 
   .feature-icon-container {
@@ -136,27 +149,27 @@
   }
   
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold transition-all duration-200 shadow-md;
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all duration-200 shadow-sm;
   }
   
   .btn-primary {
-    @apply bg-gradient-to-r from-primary via-tertiary to-secondary text-white hover:opacity-90 shadow-md hover:shadow-lg;
+    @apply bg-gradient-to-r from-primary via-tertiary to-secondary text-white hover:opacity-90 shadow-sm hover:shadow-md;
   }
   
   .btn-secondary {
-    @apply bg-gradient-to-r from-secondary via-tertiary to-primary text-white hover:opacity-90 shadow-md hover:shadow-lg;
+    @apply bg-gradient-to-r from-secondary via-tertiary to-primary text-white hover:opacity-90 shadow-sm hover:shadow-md;
   }
 
   .btn-tertiary {
-    @apply bg-tertiary text-white hover:bg-tertiary-dark shadow-md hover:shadow-lg;
+    @apply bg-tertiary text-white hover:bg-tertiary-dark shadow-sm hover:shadow-md;
   }
   
   .btn-outline {
-    @apply border-2 border-white text-white hover:bg-white hover:text-primary shadow-md hover:shadow-lg;
+    @apply border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm hover:shadow-md;
   }
 
   .mobile-container {
-    @apply px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto transition-all duration-200 overflow-hidden;
+    @apply px-4 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto transition-all duration-200 overflow-hidden;
   }
   
   .text-shadow-sm {
@@ -179,6 +192,10 @@
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-in-out;
   }
+
+  .animate-slideIn {
+    animation: slideIn 0.4s ease-out forwards;
+  }
   
   @keyframes slideDown {
     from { 
@@ -197,33 +214,33 @@
 
   /* Consistent card styles */
   .content-card {
-    @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-all duration-200;
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-all duration-200;
   }
 
   /* Consistent text styles */
   .heading-1 {
-    @apply text-3xl sm:text-4xl md:text-5xl font-bold;
+    @apply text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight;
   }
 
   .heading-2 {
-    @apply text-2xl sm:text-3xl font-bold;
+    @apply text-2xl sm:text-3xl font-semibold tracking-tight;
   }
 
   .heading-3 {
-    @apply text-xl sm:text-2xl font-semibold;
+    @apply text-xl sm:text-2xl font-medium tracking-tight;
   }
 
   .body-text {
-    @apply text-base text-gray-800 dark:text-gray-100;
+    @apply text-base text-gray-700 dark:text-gray-200 leading-relaxed;
   }
 
   .caption-text {
-    @apply text-sm text-gray-700 dark:text-gray-200 font-medium;
+    @apply text-sm text-gray-600 dark:text-gray-300 font-normal;
   }
   
   /* Navigation specific styles */
   .nav-item {
-    @apply relative flex items-center px-4 py-2 rounded-lg transition-all duration-200;
+    @apply relative flex items-center px-4 py-2 rounded-xl transition-all duration-200;
   }
   
   .nav-item-active {
@@ -231,7 +248,7 @@
   }
   
   .nav-item-inactive {
-    @apply text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800;
+    @apply text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800;
   }
   
   .nav-icon {
@@ -239,14 +256,14 @@
   }
   
   .nav-submenu {
-    @apply pl-4 mt-1 space-y-1 border-l-2 border-gray-200 dark:border-gray-700;
+    @apply pl-4 mt-1 space-y-1 border-l border-gray-200 dark:border-gray-700;
   }
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -254,10 +271,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--color-surface-3));
-  border-radius: 4px;
+  background: hsl(var(--color-text-disabled));
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--color-text-disabled));
+  background: hsl(var(--color-text-light));
 }

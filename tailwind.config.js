@@ -4,6 +4,9 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Poppins', 'system-ui', 'sans-serif'],
+      },
       colors: {
         primary: {
           DEFAULT: 'hsl(var(--color-primary))', /* Teal from logo */
@@ -44,8 +47,9 @@ export default {
           3: 'hsl(var(--color-surface-3))',
         },
       },
-      fontFamily: {
-        sans: ['Inter Variable', 'system-ui', 'sans-serif'],
+      borderRadius: {
+        'xl': '1rem',
+        '2xl': '1.5rem',
       },
     },
   },
