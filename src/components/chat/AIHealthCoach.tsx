@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Volume2, VolumeX, Loader2, HelpCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../ui/Button';
 import ChatMessage from './ChatMessage';
 import { createClient } from '@supabase/supabase-js';
@@ -240,9 +240,9 @@ const AIHealthCoach: React.FC = () => {
         {/* Suggested Questions */}
         {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
           <div className="flex flex-wrap gap-2 mt-4 mb-2">
-            <div className="w-full flex items-center mb-2">
+            <div className="w-full flex items-center mb-3">
               <HelpCircle className="w-4 h-4 text-primary mr-2" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
                 Suggested questions:
               </span>
             </div>
@@ -262,12 +262,15 @@ const AIHealthCoach: React.FC = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: index * 0.05 }}
+                aria-label={`Ask about ${questionObj.text}`}
               >
-                <span className={cn(
-                  "absolute left-0 top-0 h-full w-1",
-                  getCategoryColor(questionObj.category)
-                )}></span>
-                <span className="pl-1">{questionObj.text}</span>
+                <span 
+                  className={cn(
+                    "absolute left-0 top-0 h-full w-1",
+                    getCategoryColor(questionObj.category)
+                  )}
+                ></span>
+                <span className="pl-2">{questionObj.text}</span>
               </motion.button>
             ))}
           </div>

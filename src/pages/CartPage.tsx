@@ -1,5 +1,5 @@
 import React from 'react'
-import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag, Check } from 'lucide-react'
+import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag, Check, Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 
@@ -150,7 +150,7 @@ const CartPage: React.FC = () => {
                 >
                   {isCheckingOut ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                       Processing...
                     </>
                   ) : (

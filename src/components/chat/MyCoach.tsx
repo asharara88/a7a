@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Volume2, VolumeX, Loader2, Settings, Sparkles, X, HelpCircle } from 'lucide-react';
+import { Send, Volume2, VolumeX, Loader2, Settings, Sparkles, X, HelpCircle, Check, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '../ui/Button';
-import { Check, AlertCircle } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn'; 
@@ -355,13 +354,15 @@ const MyCoach: React.FC = () => {
                 whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, delay: index * 0.05 }}
+                transition={{ duration: 0.2, delay: index * 0.1 }}
               >
-                <span className={cn(
-                  "absolute left-0 top-0 h-full w-1",
-                  getCategoryColor(questionObj.category)
-                )}/>
-                <span className="pl-2">{questionObj.text}</span>
+                <span 
+                  className={cn(
+                    "absolute left-0 top-0 h-full w-1",
+                    getCategoryColor(questionObj.category)
+                  )}
+                ></span>
+                <span className="pl-3">{questionObj.text}</span>
               </motion.button>
             ))}
           </div>

@@ -151,10 +151,10 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
   const validateCurrentStep = (): boolean => {
     const errors: Record<string, string> = {};
 
-    // Get current step data with fallback to profile data
+    // Get current step data with fallback to profile data for validation
     const stepData = {
-      ...profile,
-      ...currentStepData
+      ...(profile || {}),
+      ...currentStepData,
     };
 
     switch (currentStep.id) {
@@ -201,7 +201,10 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
     }
 
     setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    
+    // Return true if no errors
+    const isValid = Object.keys(errors).length === 0;
+    return isValid;
   };
 
   const handleNext = async () => {
