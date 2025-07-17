@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, Volume2, VolumeX, Loader2, Settings, Sparkles, X, HelpCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '../ui/Button';
-import { Check } from 'lucide-react';
+import { Check, AlertCircle } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn'; 
@@ -326,6 +326,7 @@ const MyCoach: React.FC = () => {
         )}
         {error && (
           <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg font-medium shadow-sm">
+            <AlertCircle className="w-4 h-4 inline-block mr-2" />
             {error}
           </div>
         )}
@@ -335,7 +336,7 @@ const MyCoach: React.FC = () => {
           <div className="flex flex-wrap gap-2 mt-4 mb-2">
             <div className="w-full flex items-center mb-2">
               <HelpCircle className="w-4 h-4 text-primary mr-2" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
                 Suggested questions:
               </span>
             </div>
@@ -359,8 +360,8 @@ const MyCoach: React.FC = () => {
                 <span className={cn(
                   "absolute left-0 top-0 h-full w-1",
                   getCategoryColor(questionObj.category)
-                )}></span>
-                <span className="pl-1">{questionObj.text}</span>
+                )}/>
+                <span className="pl-2">{questionObj.text}</span>
               </motion.button>
             ))}
           </div>

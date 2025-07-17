@@ -1,5 +1,5 @@
 import React from 'react'
-import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag } from 'lucide-react'
+import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag, Check } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 
@@ -24,6 +24,16 @@ const CartPage: React.FC = () => {
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const shipping = 5.99
   const total = subtotal + shipping
+  const [isCheckingOut, setIsCheckingOut] = React.useState(false)
+  
+  const handleCheckout = () => {
+    setIsCheckingOut(true)
+    // Simulate checkout process
+    setTimeout(() => {
+      setIsCheckingOut(false)
+      // In a real app, you would redirect to checkout page or show success message
+    }, 2000)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -133,12 +143,23 @@ const CartPage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <button className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-dark transition-colors flex items-center justify-center">
-                  <ShoppingBag className="w-5 h-5 mr-2" />
-                  <span>
-                    Proceed to Checkout
-                  </span>
-                </button>
+                <Button 
+                  className="w-full py-3"
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
+                >
+                  {isCheckingOut ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="w-5 h-5 mr-2" />
+                      Proceed to Checkout
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
           </div>

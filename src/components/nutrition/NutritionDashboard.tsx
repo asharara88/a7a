@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Utensils, TrendingUp, Apple, Salad, Clock } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Button } from '../ui/Button';
 import { Doughnut } from 'react-chartjs-2';
 import { cn } from '../../utils/cn';
 
@@ -75,7 +74,7 @@ const NutritionDashboard: React.FC = () => {
             <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Calories</p>
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.calories}</p>
-              <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.calorieGoal}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 ml-1 font-medium">/ {dailyIntake.calorieGoal}</p>
             </div>
           </div>
         </Card>
@@ -88,7 +87,7 @@ const NutritionDashboard: React.FC = () => {
             <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Protein</p>
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.protein}g</p>
-              <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.proteinGoal}g</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 ml-1 font-medium">/ {dailyIntake.proteinGoal}g</p>
             </div>
           </div>
         </Card>
@@ -101,7 +100,7 @@ const NutritionDashboard: React.FC = () => {
             <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Carbs</p>
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.carbs}g</p>
-              <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.carbsGoal}g</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 ml-1 font-medium">/ {dailyIntake.carbsGoal}g</p>
             </div>
           </div>
         </Card>
@@ -114,7 +113,7 @@ const NutritionDashboard: React.FC = () => {
             <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Fat</p>
             <div className="flex items-baseline">
               <p className="text-xl font-bold">{dailyIntake.fat}g</p>
-              <p className="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">/ {dailyIntake.fatGoal}g</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 ml-1 font-medium">/ {dailyIntake.fatGoal}g</p>
             </div>
           </div>
         </Card>
