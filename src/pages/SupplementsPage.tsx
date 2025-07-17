@@ -61,14 +61,14 @@ const SupplementsPage: React.FC = () => {
   const addToCart = async (supplementId: string) => {
     try {
       setAddingToCart(supplementId);
-
+      
       // Add to cart
       setCartItems(prev => [...prev, supplementId]);
       
       // Clear adding state after a delay
       setTimeout(() => {
         setAddingToCart(null);
-      }, 1500);
+      }, 1000);
     } catch (error) {
       console.error('Error adding to cart:', error);
       setAddingToCart(null);
@@ -287,13 +287,12 @@ const SupplementsPage: React.FC = () => {
                           onClick={() => addToCart(supplement.id)}
                           disabled={addingToCart === supplement.id}
                         >
-                          {addingToCart === supplement.id && (
+                          {addingToCart === supplement.id ? (
                             <>
                               <Check className="w-4 h-4 mr-1" />
                               Added!
                             </>
-                          )}
-                          {addingToCart !== supplement.id && (
+                          ) : (
                             <>
                               <ShoppingCart className="w-4 h-4 mr-1" />
                               Add to Cart

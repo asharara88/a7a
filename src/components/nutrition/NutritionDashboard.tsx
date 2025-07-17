@@ -129,15 +129,15 @@ const NutritionDashboard: React.FC = () => {
           <div className="grid grid-cols-3 gap-4 mt-6 text-center">
             <div>
               <p className="text-sm text-gray-800 dark:text-gray-100 font-medium mb-1">Protein</p>
-              <p className="font-bold text-secondary dark:text-secondary-light">{Math.round(dailyIntake.protein / dailyIntake.proteinGoal * 100)}%</p>
+              <p className="font-bold text-secondary dark:text-secondary-light">{Math.round((dailyIntake.protein / dailyIntake.proteinGoal) * 100)}%</p>
             </div>
             <div>
               <p className="text-sm text-gray-800 dark:text-gray-100 font-medium mb-1">Carbs</p>
-              <p className="font-bold text-tertiary dark:text-tertiary-light">{Math.round(dailyIntake.carbs / dailyIntake.carbsGoal * 100)}%</p>
+              <p className="font-bold text-tertiary dark:text-tertiary-light">{Math.round((dailyIntake.carbs / dailyIntake.carbsGoal) * 100)}%</p>
             </div>
             <div>
               <p className="text-sm text-gray-800 dark:text-gray-100 font-medium mb-1">Fat</p>
-              <p className="font-bold text-primary dark:text-primary-light">{Math.round(dailyIntake.fat / dailyIntake.fatGoal * 100)}%</p>
+              <p className="font-bold text-primary dark:text-primary-light">{Math.round((dailyIntake.fat / dailyIntake.fatGoal) * 100)}%</p>
             </div>
           </div>
         </Card>

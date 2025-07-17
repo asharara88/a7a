@@ -326,6 +326,7 @@ const MyCoach: React.FC = () => {
         {error && (
           <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg font-medium shadow-sm">
             <AlertCircle className="w-4 h-4 inline-block mr-2" />
+            <AlertCircle className="w-4 h-4 inline-block mr-2" />
             {error}
           </div>
         )}
@@ -357,12 +358,9 @@ const MyCoach: React.FC = () => {
                 transition={{ duration: 0.2, delay: index * 0.1 }}
               >
                 <span 
-                  className={cn(
-                    "absolute left-0 top-0 h-full w-1",
-                    getCategoryColor(questionObj.category)
-                  )}
+                  className={`absolute left-0 top-0 h-full w-1 ${getCategoryColor(questionObj.category)}`}
                 ></span>
-                <span className="pl-3">{questionObj.text}</span>
+                <span className="pl-4">{questionObj.text}</span>
               </motion.button>
             ))}
           </div>

@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Volume2, VolumeX, Loader2, HelpCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Send, Volume2, VolumeX, Loader2, HelpCircle, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from '../ui/Button';
 import ChatMessage from './ChatMessage';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn'; 
-import { motion } from 'framer-motion';
 
 // Sample question sets that will rotate after each response
 const QUESTION_SETS = [
@@ -233,6 +232,7 @@ const AIHealthCoach: React.FC = () => {
         )}
         {error && (
           <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg font-medium shadow-sm">
+            <AlertCircle className="w-4 h-4 inline-block mr-2" />
             {error}
           </div>
         )}
@@ -253,7 +253,7 @@ const AIHealthCoach: React.FC = () => {
                 className={cn(
                   "px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow",
                   "flex-grow md:flex-grow-0 relative overflow-hidden",
-                  recentlyClickedQuestion === questionObj.text 
+                  recentlyClickedQuestion === questionObj.text
                     ? "bg-primary text-white" 
                     : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200"
                 )}
@@ -264,13 +264,8 @@ const AIHealthCoach: React.FC = () => {
                 transition={{ duration: 0.2, delay: index * 0.05 }}
                 aria-label={`Ask about ${questionObj.text}`}
               >
-                <span 
-                  className={cn(
-                    "absolute left-0 top-0 h-full w-1",
-                    getCategoryColor(questionObj.category)
-                  )}
-                ></span>
-                <span className="pl-2">{questionObj.text}</span>
+                <span className={`absolute left-0 top-0 h-full w-1 ${getCategoryColor(questionObj.category)}`}></span>
+                <span className="pl-4">{questionObj.text}</span>
               </motion.button>
             ))}
           </div>

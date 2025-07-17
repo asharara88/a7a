@@ -72,7 +72,7 @@ const PersonalizedRecipes: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex-grow">
+        <div className="flex-1">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommended For You</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Recipes tailored to your preferences and health goals
@@ -135,10 +135,10 @@ const PersonalizedRecipes: React.FC = () => {
       {recipes.length > 0 && (
         <div className="mt-8 text-center">
           <Link 
-            to="/recipes" 
+            to="/recipes"
             className="inline-flex items-center text-primary hover:text-primary-dark font-medium"
           >
-            View all personalized recipes
+            View all recommended recipes
             <ChevronRight className="w-4 h-4 ml-1" />
           </Link>
         </div>

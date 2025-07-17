@@ -113,7 +113,7 @@ const SupplementTracker: React.FC<SupplementTrackerProps> = ({ supplements, onMa
                     {supplement.taken ? (
                       <div className="flex items-center text-green-600 dark:text-green-400">
                         <Check className="w-5 h-5 mr-1" />
-                        <span className="ml-1 text-sm font-medium">Taken</span>
+                        <span className="text-sm font-medium">Taken</span>
                       </div>
                     ) : (
                       <Button

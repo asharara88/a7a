@@ -153,7 +153,7 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
 
     // Get current step data with fallback to profile data for validation
     const stepData = {
-      ...(profile || {}),
+      ...((profile || {}) as Partial<UserProfile>),
       ...currentStepData,
     };
 
