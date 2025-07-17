@@ -214,13 +214,33 @@ const MyCoach: React.FC = () => {
 
       if (apiError) {
         console.error('OpenAI proxy error:', apiError);
-        throw new Error(`OpenAI service unavailable: ${apiError.message || 'Configuration error'}`);
+        
+        // Handle specific configuration errors
+        if (apiError.message?.includes('MISSING_API_KEY')) {
+          throw new Error('AI service is not configured. Please contact support or check the setup guide.');
+        } else if (apiError.message?.includes('INVALID_API_KEY')) {
+          throw new Error('AI service configuration error. Please contact support.');
+        } else if (apiError.message?.includes('RATE_LIMIT')) {
+          throw new Error('AI service is temporarily unavailable due to high demand. Please try again in a few minutes.');
+        } else {
+          throw new Error(`AI service unavailable: ${apiError.message || 'Configuration error'}`);
+        }
       }
 
       // Check if the function returned an error in the response data
       if (data && data.error) {
         console.error('OpenAI proxy returned error:', data.error);
-        throw new Error(`OpenAI service error: ${data.error}`);
+        
+        // Handle specific error codes from the response
+        if (data.code === 'MISSING_API_KEY') {
+          throw new Error('AI service is not configured. Please contact support or check the setup guide.');
+        } else if (data.code === 'INVALID_API_KEY') {
+          throw new Error('AI service configuration error. Please contact support.');
+        } else if (data.code === 'RATE_LIMIT') {
+          throw new Error('AI service is temporarily unavailable due to high demand. Please try again in a few minutes.');
+        } else {
+          throw new Error(`AI service error: ${data.error}`);
+        }
       }
 
       // Check if we got a valid response
@@ -285,12 +305,16 @@ const MyCoach: React.FC = () => {
       let errorMessage = 'Failed to get a response. Please try again.';
       
       if (err instanceof Error) {
-        if (err.message.includes('Configuration error') || err.message.includes('OpenAI service unavailable')) {
-          errorMessage = 'AI service is currently unavailable. Please check your configuration or try again later.';
-        } else if (err.message.includes('OpenAI service error')) {
-          errorMessage = 'AI service error. Please try again or contact support if the issue persists.';
+        if (err.message.includes('not configured') || err.message.includes('configuration error')) {
+          errorMessage = 'AI service is not properly configured. Please contact support or check the setup guide.';
+        } else if (err.message.includes('temporarily unavailable') || err.message.includes('high demand')) {
+          errorMessage = 'AI service is temporarily busy. Please try again in a few minutes.';
+        } else if (err.message.includes('AI service error')) {
+          errorMessage = 'AI service error. Please try again or contact support.';
         } else if (err.message.includes('Invalid response')) {
           errorMessage = 'Received invalid response from AI service. Please try again.';
+        } else {
+          errorMessage = err.message;
         }
       }
       

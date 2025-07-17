@@ -20,10 +20,11 @@ Deno.serve(async (req) => {
     if (!apiKey) {
       return new Response(
         JSON.stringify({ 
-          error: "OpenAI API key is not configured. Please set the OPENAI_API_KEY environment variable." 
+          error: "OpenAI API key is not configured. Please set the OPENAI_API_KEY secret in your Supabase project.",
+          code: "MISSING_API_KEY"
         }), 
         { 
-          status: 500,
+          status: 503,
           headers: { ...corsHeaders, "Content-Type": "application/json" }
         }
       );
@@ -70,17 +71,61 @@ Deno.serve(async (req) => {
     }
 
     // Create OpenAI completion
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages,
-      temperature: 0.7,
-    })
+    let completion;
+    try {
+      completion = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages,
+        temperature: 0.7,
+      });
+    } catch (openaiError) {
+      console.error("OpenAI API error:", openaiError);
+      
+      // Handle specific OpenAI errors
+      if (openaiError.status === 401) {
+        return new Response(
+          JSON.stringify({ 
+            error: "Invalid OpenAI API key. Please check your API key configuration.",
+            code: "INVALID_API_KEY"
+          }), 
+          { 
+            status: 401,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          }
+        );
+      } else if (openaiError.status === 429) {
+        return new Response(
+          JSON.stringify({ 
+            error: "OpenAI API rate limit exceeded. Please try again later.",
+            code: "RATE_LIMIT"
+          }), 
+          { 
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          }
+        );
+      } else {
+        return new Response(
+          JSON.stringify({ 
+            error: "OpenAI API request failed. Please try again.",
+            code: "OPENAI_ERROR"
+          }), 
+          { 
+            status: 503,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          }
+        );
+      }
+    }
 
     const content = completion.choices?.[0]?.message?.content
 
     if (!content) {
       return new Response(
-        JSON.stringify({ error: "No response from AI" }), 
+        JSON.stringify({ 
+          error: "No response from AI",
+          code: "NO_RESPONSE"
+        }), 
         { 
           status: 502,
           headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -100,25 +145,13 @@ Deno.serve(async (req) => {
     const message = err instanceof Error ? err.message : String(err)
     console.error("Proxy error:", err)
     
-    // Provide more specific error messages
-    let errorMessage = message;
-    let statusCode = 500;
-    
-    if (message.includes('API key')) {
-      errorMessage = "Invalid OpenAI API key. Please check your configuration.";
-      statusCode = 401;
-    } else if (message.includes('quota') || message.includes('billing')) {
-      errorMessage = "OpenAI API quota exceeded. Please check your account billing.";
-      statusCode = 429;
-    } else if (message.includes('rate limit')) {
-      errorMessage = "OpenAI API rate limit exceeded. Please try again later.";
-      statusCode = 429;
-    }
-    
     return new Response(
-      JSON.stringify({ error: errorMessage }), 
+      JSON.stringify({ 
+        error: "Internal server error. Please try again later.",
+        code: "INTERNAL_ERROR"
+      }), 
       { 
-        status: statusCode,
+        status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       }
     )
