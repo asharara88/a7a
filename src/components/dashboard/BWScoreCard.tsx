@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Card } from '../ui/Card';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, Info } from 'lucide-react';
-import ProgressRing from './ProgressRing';
 import { cn } from '../../utils/cn';
+import ProgressRing from './ProgressRing';
 
 export interface MetricScore {
   name: string;
@@ -121,7 +121,11 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
                 {metrics.map((metric) => (
                   <div 
                     key={metric.name}
-                    className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-4 rounded-xl transition-colors"
+                    className={cn(
+                      "cursor-pointer p-4 rounded-xl transition-colors",
+                      "hover:bg-gray-50 dark:hover:bg-gray-800",
+                      "border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+                    )}
                     onClick={() => onMetricClick?.(metric.name)}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -149,6 +153,16 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
                   </div>
                 ))}
               </div>
+               
+               {/* Add total weighted score explanation */}
+               <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                 <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                   About Your BW Score
+                 </h4>
+                 <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                   Your BioWell Score is a weighted average of key health metrics. Some factors like Sleep and Fitness have higher impact (1.5x weight) while others like Hydration have lower impact (0.8x weight). This provides a more accurate picture of your overall health.
+                 </p>
+               </div>
             </div>
           </motion.div>
         )}

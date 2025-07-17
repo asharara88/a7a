@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Utensils, TrendingUp, Apple, Salad, Clock } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Doughnut } from 'react-chartjs-2';
 import { cn } from '../../utils/cn';
@@ -126,6 +127,23 @@ const NutritionDashboard: React.FC = () => {
           <div className="h-64 flex items-center justify-center">
             <Doughnut data={macroChartData} options={chartOptions} />
           </div>
+          
+          {/* Add a legend with percentages */}
+          <div className="grid grid-cols-3 gap-4 mt-2">
+            <div className="flex flex-col items-center">
+              <div className="w-3 h-3 rounded-full bg-primary mb-1"></div>
+              <p className="text-xs text-center">Protein<br/>{Math.round((dailyIntake.protein * 4 / dailyIntake.calories) * 100)}%</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-3 h-3 rounded-full bg-tertiary mb-1"></div>
+              <p className="text-xs text-center">Carbs<br/>{Math.round((dailyIntake.carbs * 4 / dailyIntake.calories) * 100)}%</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-3 h-3 rounded-full bg-secondary mb-1"></div>
+              <p className="text-xs text-center">Fat<br/>{Math.round((dailyIntake.fat * 9 / dailyIntake.calories) * 100)}%</p>
+            </div>
+          </div>
+          
           <div className="grid grid-cols-3 gap-4 mt-6 text-center">
             <div>
               <p className="text-sm text-gray-800 dark:text-gray-100 font-medium mb-1">Protein</p>
@@ -157,8 +175,9 @@ const NutritionDashboard: React.FC = () => {
                   <p className="font-semibold text-gray-900 dark:text-white">{meal.name}</p>
                   <p className="text-sm text-gray-700 dark:text-gray-300">{meal.time}</p>
                 </div>
-                <div className="text-right">
+                <div className="text-right flex items-center">
                   <p className="font-bold text-primary dark:text-primary-light">{meal.calories} cal</p>
+                  <ArrowRight className="w-4 h-4 ml-2 text-gray-400" />
                 </div>
               </div>
             ))}
@@ -169,6 +188,7 @@ const NutritionDashboard: React.FC = () => {
               variant="outline"
               className="w-full mt-4"
             >
+              <Utensils className="w-4 h-4 mr-2" />
               Log a Meal
             </Button>
           </div>
@@ -208,6 +228,38 @@ const NutritionDashboard: React.FC = () => {
               </div>
             </Link>
           ))}
+        </div>
+      </Card>
+        
+      {/* Calorie & Macro Target Card */}
+      <Card className="p-6 sm:p-8 mt-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Nutrition Goals</h3>
+          <Link to="/nutrition/settings" className="text-primary hover:text-primary-dark text-sm font-semibold">
+            Edit Goals
+          </Link>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Daily Calories</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-white">{dailyIntake.calorieGoal} cal</p>
+          </div>
+          
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Protein Target</p>
+            <p className="text-xl font-bold text-blue-600 dark:text-blue-400">{dailyIntake.proteinGoal}g</p>
+          </div>
+          
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Carbs Target</p>
+            <p className="text-xl font-bold text-teal-600 dark:text-teal-400">{dailyIntake.carbsGoal}g</p>
+          </div>
+          
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Fat Target</p>
+            <p className="text-xl font-bold text-pink-600 dark:text-pink-400">{dailyIntake.fatGoal}g</p>
+          </div>
         </div>
       </Card>
     </div>
