@@ -22,8 +22,8 @@ const PersonalizedRecipes: React.FC = () => {
     maxCalories: 800
   });
 
-  // User ID - null for demo purposes to avoid UUID validation errors
-  const userId = null;
+  // Mock user ID for demo purposes
+  const userId = 'demo-user-id';
 
   useEffect(() => {
     loadRecipes();
