@@ -4,9 +4,7 @@ import { CheckCircle, AlertCircle, Info, Loader2, Shield } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { supplementApi } from '../api/supplementApi';
-import SupplementGrid from '../components/supplements/SupplementGrid';
 import StackBuilderModal from '../components/supplements/StackBuilderModal';
-import { cn } from '../utils/cn';
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
@@ -98,12 +96,14 @@ export default function SupplementStorePage() {
   
   const category = (item.category || '').toLowerCase();
   const name = (item.name || '').toLowerCase();
-    
+  const description = (item.description || '').toLowerCase();  
+  
   // Green tier - strong evidence
   if (name.includes('creatine') || 
       name.includes('vitamin d') || 
       name.includes('protein') || 
       name.includes('whey') ||
+     name.includes('caffeine') ||
       category.includes('muscle building')) {
     return 'green'; 
   } 
@@ -115,6 +115,10 @@ export default function SupplementStorePage() {
       name.includes('beta-alanine') ||
       name.includes('berberine') ||
       name.includes('theanine') ||
+     name.includes('zinc') ||
+     name.includes('electrolytes') ||
+     name.includes('b-complex') ||
+     name.includes('glutamine') ||
       category.includes('cognitive') || 
       category.includes('sleep') || 
       category.includes('endurance')) {
@@ -271,23 +275,99 @@ export default function SupplementStorePage() {
             </Button>
           </Card>
         ) : (
-          <SupplementGrid
-            supplements={filteredSupps.map(supp => ({
-              id: supp.id,
-              name: supp.name,
-              brand: supp.brand || 'Biowell',
-              description: supp.description || supp.category || 'General health support',
-              tier: supp.tier,
-              use_case: supp.category || 'General Health',
-              price_aed: parseFloat(supp.price_aed) || parseFloat(supp.price) * 3.67 || 100,
-              subscription_discount_percent: supp.subscription_discount_percent || 0,
-              image_url: supp.image_url || "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300",
-              is_bestseller: supp.is_bestseller || false,
-              is_featured: supp.is_featured || false
-            }))}
-            onAddToCart={handleAddToCart}
-            onAddToStack={handleAddToStack}
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredSupps.map((supp) => {
+              // Calculate discount price if available
+              const discount = supp.subscription_discount_percent || 0;
+              const price = parseFloat(supp.price_aed || supp.price * 3.67 || 100);
+              const discounted = discount > 0 ? Math.round((price * (1 - discount / 100)) * 100) / 100 : price;
+
+              return (
+                <Card key={supp.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
+                  <div className="relative h-48 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                    {/* Always show an image even if it's a placeholder */}
+                    <div className="w-full h-full relative overflow-hidden">
+                      <img 
+                        src={supp.image_url || "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300"} 
+                        alt={supp.name} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    
+                    <div className="absolute top-2 left-2">
+                      <div 
+                        className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-lg border font-semibold ${TIER_COLORS[supp.tier]}`} 
+                        title={TIER_LABELS[supp.tier]}
+                      >
+                        <span className="flex items-center gap-1">
+                          {TIER_ICONS[supp.tier]}
+                          {supp.tier.charAt(0).toUpperCase() + supp.tier.slice(1)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 flex-1 flex flex-col">
+                    <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1 line-clamp-1">
+                      {supp.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                      {supp.brand || 'Biowell'}
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 flex-1 line-clamp-3">
+                      {supp.description || supp.category || 'General health support'}
+                    </p>
+                    
+                    <div className="flex items-baseline gap-2 mb-4">
+                      <span className="font-bold text-lg text-primary dark:text-primary-light">
+                        {formatAED(discounted || price)}
+                      </span>
+                      {discount > 0 && price > 0 && discounted < price && (
+                        <span className="line-through text-gray-400 text-xs">
+                          {formatAED(price)}
+                        </span>
+                      )}
+                      {discount > 0 && (
+                        <span className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 rounded px-2 py-0.5 text-xs font-semibold">
+                          {discount}% off
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => {
+                          if (typeof handleAddToStack === 'function') {
+                            handleAddToStack(supp.id);
+                          } else {
+                            console.warn("handleAddToStack is not defined");
+                          }
+                        }}
+                      >
+                        Add to Stack
+                      </Button>
+                      
+                      <Button
+                        className="flex-1"
+                        onClick={() => handleAddToCart(supp.id)}
+                        disabled={addingToCart === supp.id}
+                      >
+                        {addingToCart === supp.id ? (
+                          <>
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Added
+                          </>
+                        ) : (
+                          "Buy Now"
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
             
             {filteredSupps.length === 0 && (
               <div className="col-span-full text-center py-12">
