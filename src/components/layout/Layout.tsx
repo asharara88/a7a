@@ -1,7 +1,8 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { ShoppingCart, User, Menu, X, MessageSquare, Moon, Sun } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ShoppingCart, User, Menu, X, MessageSquare, Moon, Sun, X as Close } from 'lucide-react'
 import { cn } from '../../utils/cn'
+import Navigation from './Navigation'
 
 // Get initial dark mode preference from system or localStorage
 const getInitialDarkMode = () => {
@@ -21,7 +22,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [darkMode, setDarkMode] = React.useState(getInitialDarkMode)
   const location = useLocation()
 
-  // Apply dark mode class on initial render and when darkMode changes
   React.useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -30,16 +30,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
     localStorage.setItem('darkMode', darkMode.toString());
   }, [darkMode]);
-
-  const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Nutrition', href: '/nutrition' },
-    { name: 'Recipes', href: '/recipes' },
-    { name: 'Fitness', href: '/fitness' },
-    { name: 'Supplements', href: '/supplements' },
-    { name: 'Dashboard', href: '/dashboard' },
-  ]
 
   // Toggle dark mode
   const toggleDarkMode = () => {
@@ -65,22 +55,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-6">
-              {navigation.map((item) => (
-                <Link 
-                  key={item.name}
-                  className={cn(
-                    "text-gray-900 dark:text-white",
-                    location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href))
-                      ? "text-primary bg-gradient-to-r from-primary/10 via-tertiary/10 to-secondary/10 dark:from-primary/20 dark:via-tertiary/20 dark:to-secondary/20 shadow-sm"
-                      : "hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800"
-                  )}
-                  to={item.href}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </nav>
+            <Navigation />
 
             {/* Right side buttons */}
             <div className="flex items-center space-x-3">
@@ -141,25 +116,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-800 animate-fadeIn">
-              <nav className="flex flex-col space-y-3">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={cn(
-                      "px-4 py-3 rounded-md text-sm font-semibold transition-all duration-200",
-                      darkMode ? "text-white" : "text-gray-900",
-                      location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href))
-                        ? "text-primary bg-gradient-to-r from-primary/10 via-tertiary/10 to-secondary/10 dark:from-primary/20 dark:via-tertiary/20 dark:to-secondary/20 shadow-sm"
-                        : "hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800"
-                    )}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </nav>
+            <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-800 animate-fadeIn max-h-[80vh] overflow-y-auto">
+              <Navigation isMobile onItemClick={() => setIsMenuOpen(false)} />
             </div>
           )}
         </div>
