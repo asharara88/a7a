@@ -141,8 +141,8 @@ const PersonalizedRecipes: React.FC = () => {
             </Link>
           </div>
         )}
-      </div>
-    )}
+      )}
+    </div>
   );
 };
 
