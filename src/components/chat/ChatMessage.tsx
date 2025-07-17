@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { User, Sparkles, ThumbsUp } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';

@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { CheckCircle, AlertCircle, Info, Loader2, Shield } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
+import { supplementApi } from '../api/supplementApi';
 import StackBuilderModal from '../components/supplements/StackBuilderModal';
 
 // Initialize Supabase client
@@ -48,7 +49,7 @@ export default function SupplementStorePage() {
       try {
         // Load supplements from the "Supplement Stacks Demo" table
         const { data, error: fetchError } = await supabase
-          .from('Supplement Stacks Demo')
+          .from('supplement_stacks')
           .select('*');
         
         if (fetchError) {
@@ -63,7 +64,9 @@ export default function SupplementStorePage() {
               ...item,
               price_aed: parseFloat(item.price || 0) * 3.67, // Convert USD to AED
               tier: tier, // Assign tier based on category/name
-              subscription_discount_percent: tier === 'green' ? 15 : tier === 'yellow' ? 12 : 10
+              subscription_discount_percent: tier === 'green' ? 15 : tier === 'yellow' ? 12 : 10,
+              // Generate a mock image URL if none exists
+              image_url: item.image_url || `https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300`
             };
           });
           setSupplements(processedData);
@@ -86,28 +89,39 @@ export default function SupplementStorePage() {
 
   // Helper function to assign tier based on category or name
   const assignTier = (item) => {
-    const category = (item.category || '').toLowerCase();
-    const name = (item.name || '').toLowerCase();
+  // Try to use existing tier if available
+  if (item.tier && ['green', 'yellow', 'orange'].includes(item.tier.toLowerCase())) {
+    return item.tier.toLowerCase();
+  }
+  
+  const category = (item.category || '').toLowerCase();
+  const name = (item.name || '').toLowerCase();
     
-    if (name.includes('creatine') || 
-        name.includes('vitamin d') || 
-        name.includes('protein') || 
-        category.includes('muscle building')) {
-      return 'green'; // Strong evidence
-    } 
-    else if (name.includes('ashwagandha') || 
-             name.includes('rhodiola') || 
-             name.includes('magnesium') ||
-             name.includes('beta-alanine') ||
-             name.includes('berberine') ||
-             category.includes('cognitive') || 
-             category.includes('sleep') || 
-             category.includes('endurance')) {
-      return 'yellow'; // Moderate evidence
-    } else {
-      return 'orange'; // Preliminary evidence
-    }
-  };
+  // Green tier - strong evidence
+  if (name.includes('creatine') || 
+      name.includes('vitamin d') || 
+      name.includes('protein') || 
+      name.includes('whey') ||
+      category.includes('muscle building')) {
+    return 'green'; 
+  } 
+  
+  // Yellow tier - moderate evidence
+  if (name.includes('ashwagandha') || 
+      name.includes('rhodiola') || 
+      name.includes('magnesium') ||
+      name.includes('beta-alanine') ||
+      name.includes('berberine') ||
+      name.includes('theanine') ||
+      category.includes('cognitive') || 
+      category.includes('sleep') || 
+      category.includes('endurance')) {
+    return 'yellow';
+  } 
+  
+  // Default to orange - preliminary evidence
+  return 'orange';
+};
 
   const handleAddToCart = (suppId) => {
     setAddingToCart(suppId);
@@ -219,23 +233,23 @@ export default function SupplementStorePage() {
           </div>
           
           <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="flex flex-wrap gap-4 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div className="flex items-center gap-1">
                 {TIER_ICONS.green}
                 <span className="font-medium text-gray-800 dark:text-gray-200">Strong Evidence:</span>
-                <span className="text-gray-600 dark:text-gray-400">Multiple high-quality clinical trials</span>
+                <span className="text-gray-600 dark:text-gray-400">Multiple clinical trials</span>
               </div>
               
               <div className="flex items-center gap-1">
                 {TIER_ICONS.yellow}
                 <span className="font-medium text-gray-800 dark:text-gray-200">Moderate Evidence:</span>
-                <span className="text-gray-600 dark:text-gray-400">Some supporting studies</span>
+                <span className="text-gray-600 dark:text-gray-400">Some human studies</span>
               </div>
               
               <div className="flex items-center gap-1">
                 {TIER_ICONS.orange}
                 <span className="font-medium text-gray-800 dark:text-gray-200">Preliminary Evidence:</span>
-                <span className="text-gray-600 dark:text-gray-400">Early-stage research</span>
+                <span className="text-gray-600 dark:text-gray-400">Early research</span>
               </div>
             </div>
           </div>
@@ -265,15 +279,14 @@ export default function SupplementStorePage() {
               return (
                 <Card key={supp.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
                   <div className="relative h-48 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                    {supp.image_url ? (
+                    {/* Always show an image even if it's a placeholder */}
+                    <div className="w-full h-full relative overflow-hidden">
                       <img 
-                        src={supp.image_url} 
+                        src={supp.image_url || "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300"} 
                         alt={supp.name} 
                         className="w-full h-full object-cover"
                       />
-                    ) : (
-                      <div className="text-gray-400 dark:text-gray-600">No image</div>
-                    )}
+                    </div>
                     
                     <div className="absolute top-2 left-2">
                       <div 
@@ -289,17 +302,21 @@ export default function SupplementStorePage() {
                   </div>
                   
                   <div className="p-4 flex-1 flex flex-col">
-                    <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">{supp.name}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{supp.brand || 'Biowell'}</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 flex-1 line-clamp-2">
-                      {supp.category || supp.description?.substring(0, 100) || 'General health support'}
+                    <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1 line-clamp-1">
+                      {supp.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                      {supp.brand || 'Biowell'}
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 flex-1 line-clamp-3">
+                      {supp.description || supp.category || 'General health support'}
                     </p>
                     
                     <div className="flex items-baseline gap-2 mb-4">
                       <span className="font-bold text-lg text-primary dark:text-primary-light">
                         {formatAED(discounted || price)}
                       </span>
-                      {discount > 0 && price > 0 && (
+                      {discount > 0 && price > 0 && discounted < price && (
                         <span className="line-through text-gray-400 text-xs">
                           {formatAED(price)}
                         </span>
@@ -315,7 +332,13 @@ export default function SupplementStorePage() {
                       <Button
                         variant="outline"
                         className="flex-1"
-                        onClick={() => handleAddToStack(supp.id)}
+                        onClick={() => {
+                          if (typeof handleAddToStack === 'function') {
+                            handleAddToStack(supp.id);
+                          } else {
+                            console.warn("handleAddToStack is not defined");
+                          }
+                        }}
                       >
                         Add to Stack
                       </Button>
