@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  Home, 
-  Info, 
-  Utensils, 
-  BookOpen, 
-  Activity, 
-  Pill, 
+  Home,
+  Sparkles,
+  Info,
+  Utensils,
+  BookOpen,
+  Activity,
+  Pill,
   LayoutDashboard,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  ShoppingCart,
+  User,
+  Settings,
+  MessageSquare,
+  Package
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
+
+interface NavigationProps {
+  isMobile?: boolean;
+  onItemClick?: () => void;
+  type?: 'main' | 'account';
+}
 
 interface NavigationItem {
   name: string;
@@ -20,10 +32,11 @@ interface NavigationItem {
   children?: NavigationItem[];
 }
 
-const Navigation: React.FC<{
-  isMobile?: boolean;
-  onItemClick?: () => void;
-}> = ({ isMobile = false, onItemClick }) => {
+const Navigation: React.FC<NavigationProps> = ({ 
+  isMobile = false, 
+  onItemClick,
+  type = 'main'
+}) => {
   const location = useLocation();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
@@ -32,51 +45,48 @@ const Navigation: React.FC<{
     setOpenSubmenu(null);
   }, [location.pathname]);
 
-  const navigation: NavigationItem[] = [
+  const mainNavigation: NavigationItem[] = [
     { 
       name: 'Home', 
       href: '/', 
-      icon: <Home className="w-5 h-5" /> 
-    },
-    { 
-      name: 'About', 
-      href: '/about', 
-      icon: <Info className="w-5 h-5" /> 
-    },
-    { 
-      name: 'Nutrition', 
-      href: '/nutrition', 
-      icon: <Utensils className="w-5 h-5" />,
+      icon: <Home className="w-5 h-5" />,
       children: [
-        { name: 'Meal Tracker', href: '/nutrition', icon: <Utensils className="w-4 h-4" /> },
-        { name: 'Dashboard', href: '/nutrition/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> }
+        { name: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+        { name: 'Fitness', href: '/fitness', icon: <Activity className="w-4 h-4" /> },
+        { name: 'Nutrition', href: '/nutrition', icon: <Utensils className="w-4 h-4" /> }
       ]
     },
     { 
-      name: 'Recipes', 
-      href: '/recipes', 
-      icon: <BookOpen className="w-5 h-5" />,
-      children: [
-        { name: 'Browse Recipes', href: '/recipes', icon: <BookOpen className="w-4 h-4" /> },
-        { name: 'Saved Recipes', href: '/saved-recipes', icon: <BookOpen className="w-4 h-4" /> }
-      ]
-    },
-    { 
-      name: 'Fitness', 
-      href: '/fitness', 
-      icon: <Activity className="w-5 h-5" /> 
-    },
-    { 
-      name: 'Supplements', 
-      href: '/supplements', 
-      icon: <Pill className="w-5 h-5" /> 
-    },
-    { 
-      name: 'Dashboard', 
+      name: 'MyCoach', 
       href: '/dashboard', 
-      icon: <LayoutDashboard className="w-5 h-5" /> 
+      icon: <Sparkles className="w-5 h-5" /> 
     },
+    { 
+      name: 'Personalized Supplements', 
+      href: '/supplements', 
+      icon: <Package className="w-5 h-5" />,
+      children: [
+        { name: 'My Stacks', href: '/my-stacks', icon: <Package className="w-4 h-4" /> },
+        { name: 'Supplement Store', href: '/supplements', icon: <Pill className="w-4 h-4" /> },
+        { name: 'My Cart', href: '/cart', icon: <ShoppingCart className="w-4 h-4" /> }
+      ]
+    }
   ];
+  
+  const accountNavigation: NavigationItem[] = [
+    { 
+      name: 'Account', 
+      href: '/login', 
+      icon: <User className="w-5 h-5" />,
+      children: [
+        { name: 'Profile', href: '/profile', icon: <User className="w-4 h-4" /> },
+        { name: 'Settings', href: '/settings', icon: <Settings className="w-4 h-4" /> },
+        { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> }
+      ]
+    }
+  ];
+  
+  const navigation = type === 'main' ? mainNavigation : accountNavigation;
 
   const toggleSubmenu = (name: string) => {
     setOpenSubmenu(prev => prev === name ? null : name);
@@ -95,7 +105,8 @@ const Navigation: React.FC<{
   const renderNavItem = (item: NavigationItem, depth = 0) => {
     const hasChildren = item.children && item.children.length > 0;
     const isItemActive = isActive(item);
-    const isSubmenuOpen = openSubmenu === item.name;
+    const isSubmenuOpen = openSubmenu === item.name || 
+                         (hasChildren && item.children?.some(child => isActive(child)));
 
     return (
       <div key={item.name} className={cn(
@@ -136,15 +147,15 @@ const Navigation: React.FC<{
             {hasChildren && (
               <span className="ml-2">
                 {isSubmenuOpen ? 
-                  <ChevronDown className="w-4 h-4" /> : 
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronDown className="w-4 h-4 transition-transform duration-200" /> : 
+                  <ChevronRight className="w-4 h-4 transition-transform duration-200" />
                 }
               </span>
             )}
           </div>
           
           {hasChildren && isSubmenuOpen && (
-            <div className="mt-1 mb-1 space-y-1 animate-fadeIn">
+            <div className="mt-1 mb-1 space-y-1 animate-slideDown">
               {item.children.map(child => renderNavItem(child, depth + 1))}
             </div>
           )}

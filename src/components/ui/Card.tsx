@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn } from '../../utils/cn';
 import { Link } from 'react-router-dom';
+import { cn } from '../../utils/cn';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   as?: typeof Link;

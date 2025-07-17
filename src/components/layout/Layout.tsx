@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { ShoppingCart, User, Menu, X, MessageSquare, Moon, Sun, X as Close } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
+import { ShoppingCart, User, Menu, X, Sparkles, Moon, Sun, X as Close } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
+import MobileNav from '../ui/MobileNav'
 
 // Get initial dark mode preference from system or localStorage
 const getInitialDarkMode = () => {
@@ -55,19 +56,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
 
             {/* Desktop Navigation */}
-            <Navigation />
+            <div className="hidden md:flex md:items-center md:space-x-8">
+              <Navigation type="main" />
+              <div className="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
+              <Navigation type="account" />
+            </div>
 
             {/* Right side buttons */}
             <div className="flex items-center space-x-3">
               <Link
                 to="/cart"
                 className={cn(
-                  "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
-                  darkMode ? "text-white" : "text-gray-900"
+                  "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 relative",
+                  darkMode ? "text-white" : "text-gray-900",
+                  location.pathname === '/cart' ? "text-primary bg-primary/10 dark:bg-primary/20" : ""
                 )}
                 aria-label="Shopping Cart"
               >
                 <ShoppingCart className="w-6 h-6" />
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-primary rounded-full">2</span>
               </Link>
               <Link
                 to="/dashboard"
@@ -78,7 +85,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 )}
                 aria-label="AI Coach"
               >
-                <MessageSquare className="w-6 h-6" />
+                <Sparkles className="w-6 h-6" />
               </Link>
               <Link
                 to="/login"
@@ -93,7 +100,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <button
                 onClick={toggleDarkMode}
                 className={cn(
-                  "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
+                  "p-2 rounded-full transition-all duration-200 hover:text-secondary hover:bg-gray-100 dark:hover:bg-gray-700",
                   darkMode ? "text-white" : "text-gray-900"
                 )}
                 aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
@@ -109,17 +116,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   "text-gray-900 dark:text-white",
                 )}
               >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <img src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/stack%20dash%20metalic%20favicon.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9zdGFjayBkYXNoIG1ldGFsaWMgZmF2aWNvbi5zdmciLCJpYXQiOjE3NTI2ODA1MzEsImV4cCI6MTc4NDIxNjUzMX0.hO0sJD4Y2r1tzCqdp5V6g_b4pql7w031aOpIuNWM_NY" className="w-6 h-6 dark:invert" alt="Menu toggle" />}
+                {isMenuOpen ? <X className="w-8 h-8" /> : <img src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/stack%20dash%20metalic%20favicon.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9zdGFjayBkYXNoIG1ldGFsaWMgZmF2aWNvbi5zdmciLCJpYXQiOjE3NTI2ODA1MzEsImV4cCI6MTc4NDIxNjUzMX0.hO0sJD4Y2r1tzCqdp5V6g_b4pql7w031aOpIuNWM_NY" className="w-8 h-8 dark:invert" alt="Menu toggle" />}
               </button>
             </div>
           </div>
 
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-800 animate-fadeIn max-h-[80vh] overflow-y-auto">
-              <Navigation isMobile onItemClick={() => setIsMenuOpen(false)} />
-            </div>
-          )}
+          {/* Mobile Navigation - Now using the dedicated MobileNav component */}
+          <MobileNav 
+            isOpen={isMenuOpen} 
+            onClose={() => setIsMenuOpen(false)} 
+          />
         </div>
       </header>
 
