@@ -49,7 +49,8 @@ export default function SupplementStorePage() {
       try {
         const { data, error: fetchError } = await supabase
           .from('supplements')
-          .select('*');
+          .select('*')
+          .eq('is_available', true);
         
         if (fetchError) {
           throw fetchError;
@@ -61,7 +62,7 @@ export default function SupplementStorePage() {
             const tier = assignTier(item);
             return {
               ...item,
-              price_aed: parseFloat(item.price || 0) * 3.67, // Convert USD to AED
+              price_aed: parseFloat(item.price_aed || item.price || 0) || 85, // Use price_aed if available, fallback to price
               tier: tier, // Assign tier based on category/name
               subscription_discount_percent: tier === 'green' ? 15 : tier === 'yellow' ? 12 : 10,
               // Generate a mock image URL if none exists
@@ -93,7 +94,8 @@ export default function SupplementStorePage() {
     return item.tier.toLowerCase();
   }
   
-  const category = (item.category || '').toLowerCase();
+  // Handle the case where category might be null
+  const category = item.category ? item.category.toLowerCase() : '';
   const name = (item.name || '').toLowerCase();
   const description = (item.description || '').toLowerCase();  
   
