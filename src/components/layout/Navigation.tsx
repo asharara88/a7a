@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  Home, 
-  Info, 
-  Utensils, 
-  BookOpen, 
-  Activity, 
-  Pill, 
+  Home,
+  Info,
+  Utensils,
+  BookOpen,
+  Activity,
+  Pill,
   LayoutDashboard,
   ChevronDown,
   ChevronRight,
   ShoppingCart,
   User,
-  Settings
+  Settings,
+  MessageSquare,
+  Package
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
+
+interface NavigationProps {
+  isMobile?: boolean;
+  onItemClick?: () => void;
+  type?: 'main' | 'account';
+}
 
 interface NavigationItem {
   name: string;
@@ -23,10 +31,11 @@ interface NavigationItem {
   children?: NavigationItem[];
 }
 
-const Navigation: React.FC<{
-  isMobile?: boolean;
-  onItemClick?: () => void;
-}> = ({ isMobile = false, onItemClick }) => {
+const Navigation: React.FC<NavigationProps> = ({ 
+  isMobile = false, 
+  onItemClick,
+  type = 'main'
+}) => {
   const location = useLocation();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
@@ -35,42 +44,35 @@ const Navigation: React.FC<{
     setOpenSubmenu(null);
   }, [location.pathname]);
 
-  const navigation: NavigationItem[] = [
+  const mainNavigation: NavigationItem[] = [
     { 
       name: 'Home', 
       href: '/', 
-      icon: <Home className="w-5 h-5" /> 
-    },
-    { 
-      name: 'Nutrition', 
-      href: '/nutrition', 
-      icon: <Utensils className="w-5 h-5" />,
+      icon: <Home className="w-5 h-5" />,
       children: [
-        { name: 'Meal Tracker', href: '/nutrition', icon: <Utensils className="w-4 h-4" /> },
-        { name: 'Dashboard', href: '/nutrition/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-        { name: 'Personalized Recipes', href: '/recipes', icon: <BookOpen className="w-4 h-4" /> },
-        { name: 'Saved Recipes', href: '/saved-recipes', icon: <BookOpen className="w-4 h-4" /> }
+        { name: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+        { name: 'Fitness', href: '/fitness', icon: <Activity className="w-4 h-4" /> },
+        { name: 'Nutrition', href: '/nutrition', icon: <Utensils className="w-4 h-4" /> }
       ]
     },
     { 
-      name: 'Fitness', 
-      href: '/fitness', 
-      icon: <Activity className="w-5 h-5" /> 
+      name: 'MyCoach', 
+      href: '/dashboard', 
+      icon: <MessageSquare className="w-5 h-5" /> 
     },
     { 
-      name: 'Supplements', 
+      name: 'Personalized Supplements', 
       href: '/supplements', 
-      icon: <Pill className="w-5 h-5" />,
+      icon: <Package className="w-5 h-5" />,
       children: [
-        { name: 'All Supplements', href: '/supplements', icon: <Pill className="w-4 h-4" /> },
+        { name: 'My Stacks', href: '/my-stacks', icon: <Package className="w-4 h-4" /> },
+        { name: 'Supplement Store', href: '/supplements', icon: <Pill className="w-4 h-4" /> },
         { name: 'My Cart', href: '/cart', icon: <ShoppingCart className="w-4 h-4" /> }
       ]
-    },
-    { 
-      name: 'Dashboard', 
-      href: '/dashboard', 
-      icon: <LayoutDashboard className="w-5 h-5" /> 
-    },
+    }
+  ];
+  
+  const accountNavigation: NavigationItem[] = [
     { 
       name: 'Account', 
       href: '/login', 
@@ -80,8 +82,10 @@ const Navigation: React.FC<{
         { name: 'Settings', href: '/settings', icon: <Settings className="w-4 h-4" /> },
         { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> }
       ]
-    },
+    }
   ];
+  
+  const navigation = type === 'main' ? mainNavigation : accountNavigation;
 
   const toggleSubmenu = (name: string) => {
     setOpenSubmenu(prev => prev === name ? null : name);

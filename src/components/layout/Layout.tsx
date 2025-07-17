@@ -56,7 +56,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
 
             {/* Desktop Navigation */}
-            <Navigation />
+            <div className="hidden md:flex md:items-center md:space-x-8">
+              <Navigation type="main" />
+              <div className="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
+              <Navigation type="account" />
+            </div>
 
             {/* Right side buttons */}
             <div className="flex items-center space-x-3">
@@ -118,7 +122,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
 
           {/* Mobile Navigation - Now using the dedicated MobileNav component */}
-          <MobileNav isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+          <MobileNav 
+            isOpen={isMenuOpen} 
+            onClose={() => setIsMenuOpen(false)} 
+          />
         </div>
       </header>
 

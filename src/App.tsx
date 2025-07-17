@@ -17,6 +17,7 @@ const SupplementDetailPage = React.lazy(() => import('./pages/SupplementDetailPa
 const RecipeDetailPage = React.lazy(() => import('./pages/RecipeDetailPage'))
 const SavedRecipesPage = React.lazy(() => import('./pages/SavedRecipesPage'))
 const NutritionDashboardPage = React.lazy(() => import('./pages/NutritionDashboardPage'))
+const MyStacksPage = React.lazy(() => import('./pages/MyStacksPage'))
 const CartPage = React.lazy(() => import('./pages/CartPage'))
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'))
 
@@ -37,6 +38,7 @@ const App: React.FC = () => {
           <Route path="/recipes" element={<RecipesPage />} />
           <Route path="/recipes/:id" element={<RecipeDetailPage />} />
           <Route path="/saved-recipes" element={<SavedRecipesPage />} />
+          <Route path="/my-stacks" element={<MyStacksPage />} />
           <Route path="/supplements" element={<SupplementsPage />} />
           <Route path="/supplements/:id" element={<SupplementDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
