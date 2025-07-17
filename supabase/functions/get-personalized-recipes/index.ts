@@ -51,7 +51,18 @@ Deno.serve(async (req) => {
     // Get API key from environment
     const apiKey = Deno.env.get("SPOONACULAR_API_KEY");
     if (!apiKey) {
-      throw new Error("Spoonacular API key not configured");
+      console.warn("Spoonacular API key not configured, returning mock data");
+      return new Response(
+        JSON.stringify({ 
+          recipes: getMockRecipeData(),
+          total: getMockRecipeData().length,
+          message: "Using mock data - API key not configured"
+        }),
+        { 
+          status: 200, 
+          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        }
+      );
     }
 
     // Build query parameters
@@ -110,12 +121,12 @@ Deno.serve(async (req) => {
     
     return new Response(
       JSON.stringify({ 
-        error: error instanceof Error ? error.message : "Failed to process request",
-        // If we have mock data, return it for development purposes
-        recipes: getMockRecipeData()
+        recipes: getMockRecipeData(),
+        total: getMockRecipeData().length,
+        message: error instanceof Error ? error.message : "Failed to process request - using mock data"
       }),
       { 
-        status: error.response?.status || 500, 
+        status: 200, 
         headers: { ...corsHeaders, "Content-Type": "application/json" } 
       }
     );

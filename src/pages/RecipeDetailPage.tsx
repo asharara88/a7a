@@ -17,7 +17,7 @@ const RecipeDetailPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSaved, setIsSaved] = useState(false);
-  const [userId, setUserId] = useState<string>('demo-user-id');
+  const [userId, setUserId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
 

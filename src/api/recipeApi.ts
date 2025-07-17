@@ -104,6 +104,19 @@ export const recipeApi = {
   
   // Save a recipe to user's favorites
   saveRecipe: async (userId: string, recipe: Recipe, isFavorite: boolean = false): Promise<SavedRecipe> => {
+    // Handle null/invalid user ID by returning mock data
+    if (!userId || userId === 'demo-user-id') {
+      return {
+        id: 'mock-saved-recipe-id',
+        userId: 'demo-user-id',
+        recipeId: recipe.id,
+        title: recipe.title,
+        image: recipe.image,
+        savedAt: new Date().toISOString(),
+        isFavorite: isFavorite
+      };
+    }
+    
     try {
       // Check if recipe is already saved
       const { data: existingRecipes, error: checkError } = await supabase
@@ -169,6 +182,11 @@ export const recipeApi = {
   
   // Unsave a recipe
   unsaveRecipe: async (userId: string, recipeId: number): Promise<boolean> => {
+    // Handle null/invalid user ID
+    if (!userId || userId === 'demo-user-id') {
+      return true;
+    }
+    
     try {
       const { error } = await supabase
         .from('saved_recipes')
@@ -187,6 +205,11 @@ export const recipeApi = {
   
   // Get user's saved recipes
   getSavedRecipes: async (userId: string): Promise<SavedRecipe[]> => {
+    // Handle null/invalid user ID by returning empty array
+    if (!userId || userId === 'demo-user-id') {
+      return [];
+    }
+    
     try {
       const { data, error } = await supabase
         .from('saved_recipes')
@@ -213,6 +236,11 @@ export const recipeApi = {
   
   // Get personalized recipe recommendations based on user profile
   getPersonalizedRecommendations: async (userId: string): Promise<Recipe[]> => {
+    // Handle null/invalid user ID by returning mock data
+    if (!userId || userId === 'demo-user-id') {
+      return getMockRecipeData();
+    }
+    
     try {
       // First get user profile to determine preferences
       const { data: profileData, error: profileError } = await supabase
