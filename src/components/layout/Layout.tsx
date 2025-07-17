@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { ShoppingCart, User, Menu, X, MessageSquare, Moon, Sun, X as Close } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
+import MobileNav from './MobileNav'
 
 // Get initial dark mode preference from system or localStorage
 const getInitialDarkMode = () => {
@@ -20,6 +21,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [darkMode, setDarkMode] = React.useState(getInitialDarkMode)
+  const location = useLocation()
   const location = useLocation()
 
   React.useEffect(() => {
@@ -62,12 +64,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Link
                 to="/cart"
                 className={cn(
-                  "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700",
-                  darkMode ? "text-white" : "text-gray-900"
+                  "p-2 rounded-full transition-all duration-200 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 relative",
+                  darkMode ? "text-white" : "text-gray-900",
+                  location.pathname === '/cart' ? "text-primary bg-primary/10 dark:bg-primary/20" : ""
                 )}
                 aria-label="Shopping Cart"
               >
                 <ShoppingCart className="w-6 h-6" />
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-primary rounded-full">2</span>
               </Link>
               <Link
                 to="/dashboard"
@@ -114,12 +118,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </div>
 
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-800 animate-fadeIn max-h-[80vh] overflow-y-auto">
-              <Navigation isMobile onItemClick={() => setIsMenuOpen(false)} />
-            </div>
-          )}
+          {/* Mobile Navigation - Now using the dedicated MobileNav component */}
+          <MobileNav isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </div>
       </header>
 

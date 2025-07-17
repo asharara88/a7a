@@ -9,7 +9,10 @@ import {
   Pill, 
   LayoutDashboard,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  ShoppingCart,
+  User,
+  Settings
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
@@ -39,11 +42,6 @@ const Navigation: React.FC<{
       icon: <Home className="w-5 h-5" /> 
     },
     { 
-      name: 'About', 
-      href: '/about', 
-      icon: <Info className="w-5 h-5" /> 
-    },
-    { 
       name: 'Nutrition', 
       href: '/nutrition', 
       icon: <Utensils className="w-5 h-5" />,
@@ -69,12 +67,26 @@ const Navigation: React.FC<{
     { 
       name: 'Supplements', 
       href: '/supplements', 
-      icon: <Pill className="w-5 h-5" /> 
+      icon: <Pill className="w-5 h-5" />,
+      children: [
+        { name: 'All Supplements', href: '/supplements', icon: <Pill className="w-4 h-4" /> },
+        { name: 'My Cart', href: '/cart', icon: <ShoppingCart className="w-4 h-4" /> }
+      ]
     },
     { 
       name: 'Dashboard', 
       href: '/dashboard', 
       icon: <LayoutDashboard className="w-5 h-5" /> 
+    },
+    { 
+      name: 'Account', 
+      href: '/login', 
+      icon: <User className="w-5 h-5" />,
+      children: [
+        { name: 'Profile', href: '/profile', icon: <User className="w-4 h-4" /> },
+        { name: 'Settings', href: '/settings', icon: <Settings className="w-4 h-4" /> },
+        { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> }
+      ]
     },
   ];
 
@@ -95,7 +107,8 @@ const Navigation: React.FC<{
   const renderNavItem = (item: NavigationItem, depth = 0) => {
     const hasChildren = item.children && item.children.length > 0;
     const isItemActive = isActive(item);
-    const isSubmenuOpen = openSubmenu === item.name;
+    const isSubmenuOpen = openSubmenu === item.name || 
+                         (hasChildren && item.children?.some(child => isActive(child)));
 
     return (
       <div key={item.name} className={cn(
@@ -136,15 +149,15 @@ const Navigation: React.FC<{
             {hasChildren && (
               <span className="ml-2">
                 {isSubmenuOpen ? 
-                  <ChevronDown className="w-4 h-4" /> : 
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronDown className="w-4 h-4 transition-transform duration-200" /> : 
+                  <ChevronRight className="w-4 h-4 transition-transform duration-200" />
                 }
               </span>
             )}
           </div>
           
           {hasChildren && isSubmenuOpen && (
-            <div className="mt-1 mb-1 space-y-1 animate-fadeIn">
+            <div className="mt-1 mb-1 space-y-1 animate-slideDown">
               {item.children.map(child => renderNavItem(child, depth + 1))}
             </div>
           )}
