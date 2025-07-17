@@ -158,5 +158,3 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
 };
 
 export default BWScoreCard;
-
-export default BWScoreCard
