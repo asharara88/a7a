@@ -1,35 +1,216 @@
 import React from 'react'
-import { Activity, Heart, Moon, Zap } from 'lucide-react'
+import { Activity, Heart, Moon, Zap, Droplet, Utensils, Pill, Target } from 'lucide-react'
 import MyCoach from '../components/chat/MyCoach'
+import MetricsCard from '../components/dashboard/MetricsCard'
+import TrendsChart from '../components/dashboard/TrendsChart'
+import StatisticsGrid from '../components/dashboard/StatisticsGrid'
+import ActivityTimeline from '../components/dashboard/ActivityTimeline'
+import HealthScoreCard from '../components/dashboard/HealthScoreCard'
+import RecommendationsCard from '../components/dashboard/RecommendationsCard'
+import GoalsProgress from '../components/dashboard/GoalsProgress'
+import SupplementTracker from '../components/dashboard/SupplementTracker'
+import WearableDeviceCard from '../components/dashboard/WearableDeviceCard'
 
 const DashboardPage: React.FC = () => {
-  // Health metrics data
-  const metrics = [
+  // Mock data for metrics cards
+  const [isSyncing, setIsSyncing] = React.useState(false);
+  
+  // Handle sync device
+  const handleSyncDevice = (deviceId: string) => {
+    setIsSyncing(true);
+    // Simulate sync process
+    setTimeout(() => {
+      setIsSyncing(false);
+    }, 2000);
+  };
+  
+  // Handle mark supplement as taken
+  const handleMarkSupplementTaken = (id: string) => {
+    // In a real app, this would update the state
+    console.log('Marked supplement as taken:', id);
+  };
+  
+  // Mock data for trends chart
+  const trendsData = {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    datasets: [
+      {
+        label: 'Steps',
+        data: [7500, 8200, 6800, 9300, 8700, 10200, 9100],
+        borderColor: 'hsl(var(--color-primary))',
+        backgroundColor: 'hsla(var(--color-primary), 0.1)',
+        fill: true,
+        tension: 0.4
+      },
+      {
+        label: 'Heart Rate',
+        data: [68, 72, 70, 74, 71, 73, 69],
+        borderColor: 'hsl(var(--color-secondary))',
+        backgroundColor: 'hsla(var(--color-secondary), 0.1)',
+        fill: true,
+        tension: 0.4
+      }
+    ]
+  };
+  
+  // Mock data for nutrition and sleep
+  const nutritionData = {
+    calories: { consumed: 1850, goal: 2200 },
+    macros: { protein: 95, carbs: 210, fat: 65 },
+    water: { consumed: 2.1, goal: 3 }
+  };
+  
+  const sleepData = {
+    hours: 7.5,
+    quality: 85,
+    deepSleep: 1.8,
+    remSleep: 2.2
+  };
+  
+  // Mock data for activity timeline
+  const timelineEvents = [
     {
-      icon: <Heart className="w-8 h-8 text-primary" />,
-      title: 'Heart Rate',
-      value: '72 BPM',
-      change: '+2%'
+      id: '1',
+      time: '8:00 AM',
+      title: 'Morning Supplements',
+      description: 'Vitamin D, Omega-3, Multivitamin',
+      type: 'supplement' as const
     },
     {
-      icon: <Activity className="w-8 h-8 text-secondary" />,
-      title: 'Steps',
-      value: '8,432',
-      change: '+15%'
+      id: '2',
+      time: '8:30 AM',
+      title: 'Breakfast',
+      description: 'Protein smoothie with berries',
+      type: 'meal' as const
     },
     {
-      icon: <Moon className="w-8 h-8 text-purple-500" />,
-      title: 'Sleep',
-      value: '7.5 hrs',
-      change: '+0.5 hrs'
+      id: '3',
+      time: '10:00 AM',
+      title: 'Hydration Check',
+      description: '500ml water',
+      type: 'water' as const
     },
     {
-      icon: <Zap className="w-8 h-8 text-yellow-500" />,
-      title: 'Energy',
-      value: '85%',
-      change: '+5%'
+      id: '4',
+      time: '12:30 PM',
+      title: 'Lunch',
+      description: 'Grilled chicken salad',
+      type: 'meal' as const
+    },
+    {
+      id: '5',
+      time: '3:00 PM',
+      title: 'Workout Session',
+      description: '30 min strength training',
+      type: 'workout' as const
     }
-  ]
+  ];
+  
+  // Mock data for health score
+  const healthScoreInsights = [
+    'Sleep quality improved by 12% this week',
+    'Protein intake is consistently meeting your goals',
+    'Consider increasing daily water intake',
+    'Your stress levels have decreased since last week'
+  ];
+  
+  // Mock data for recommendations
+  const recommendations = [
+    {
+      id: '1',
+      title: 'Increase Vitamin D Intake',
+      description: 'Your recent blood work shows slightly low Vitamin D levels. Consider adding a supplement.',
+      actionText: 'View Supplement Options',
+      actionLink: '/supplements',
+      priority: 'high' as const
+    },
+    {
+      id: '2',
+      title: 'Try These Recovery Recipes',
+      description: 'Based on your workout patterns, these protein-rich recipes could help with recovery.',
+      actionText: 'View Recipes',
+      actionLink: '/recipes',
+      priority: 'medium' as const
+    },
+    {
+      id: '3',
+      title: 'Improve Sleep Quality',
+      description: 'Your deep sleep has been declining. Consider these sleep optimization techniques.',
+      actionText: 'View Sleep Tips',
+      actionLink: '/sleep-tips',
+      priority: 'medium' as const
+    }
+  ];
+  
+  // Mock data for goals
+  const goals = [
+    {
+      id: '1',
+      title: 'Increase daily steps',
+      progress: 85,
+      dueDate: 'Jun 30, 2025',
+      status: 'on-track' as const
+    },
+    {
+      id: '2',
+      title: 'Improve sleep quality',
+      progress: 60,
+      dueDate: 'Jul 15, 2025',
+      status: 'at-risk' as const
+    },
+    {
+      id: '3',
+      title: 'Complete 12 workouts this month',
+      progress: 100,
+      status: 'completed' as const
+    }
+  ];
+  
+  // Mock data for supplements
+  const supplements = [
+    {
+      id: '1',
+      name: 'Vitamin D3',
+      dosage: '2000 IU',
+      timing: 'With breakfast',
+      taken: true,
+      timeOfDay: 'morning' as const
+    },
+    {
+      id: '2',
+      name: 'Omega-3 Fish Oil',
+      dosage: '1000mg',
+      timing: 'With breakfast',
+      taken: true,
+      timeOfDay: 'morning' as const
+    },
+    {
+      id: '3',
+      name: 'Magnesium Glycinate',
+      dosage: '400mg',
+      timing: 'Before bed',
+      taken: false,
+      timeOfDay: 'bedtime' as const
+    },
+    {
+      id: '4',
+      name: 'Zinc',
+      dosage: '15mg',
+      timing: 'With dinner',
+      taken: false,
+      timeOfDay: 'evening' as const
+    }
+  ];
+  
+  // Mock data for wearable device
+  const wearableDevice = {
+    id: 'device-1',
+    name: 'Oura Ring',
+    type: 'Oura',
+    lastSynced: '2 hours ago',
+    batteryLevel: 72,
+    connected: true
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 sm:py-8 transition-all duration-200">
@@ -39,61 +220,99 @@ const DashboardPage: React.FC = () => {
           <p className="text-gray-600 dark:text-gray-400">Track your wellness journey</p>
         </div>
 
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          {metrics.map((metric, index) => (
-            <div key={index} className="bg-white dark:bg-gray-900 rounded-lg shadow-md hover:shadow-lg p-4 sm:p-6 transition-all duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{metric.title}</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{metric.value}</p>
-                  <p className="text-sm text-green-600 dark:text-green-400">{metric.change}</p>
-                </div>
-                <div className="flex-shrink-0">
-                  {metric.icon}
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <MetricsCard
+            title="Heart Rate"
+            value="72 BPM"
+            change={{ value: 2, type: 'increase' }}
+            icon={<Heart className="w-6 h-6" />}
+            color="primary"
+          />
+          <MetricsCard
+            title="Steps"
+            value="8,432"
+            change={{ value: 15, type: 'increase' }}
+            icon={<Activity className="w-6 h-6" />}
+            color="secondary"
+          />
+          <MetricsCard
+            title="Sleep"
+            value="7.5 hrs"
+            change={{ value: 5, type: 'increase' }}
+            icon={<Moon className="w-6 h-6" />}
+            color="purple"
+          />
+          <MetricsCard
+            title="Water"
+            value="2.1L"
+            change={{ value: 10, type: 'decrease' }}
+            icon={<Droplet className="w-6 h-6" />}
+            color="tertiary"
+          />
         </div>
 
+        {/* Main Dashboard Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Trends Chart */}
+            <TrendsChart 
+              title="Weekly Activity Trends" 
+              data={trendsData} 
+              height={250}
+            />
+            
+            {/* Statistics Grid */}
+            <StatisticsGrid 
+              nutritionData={nutritionData}
+              sleepData={sleepData}
+            />
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            {/* Health Score */}
+            <HealthScoreCard 
+              score={82}
+              previousScore={78}
+              insights={healthScoreInsights}
+            />
+            
+            {/* Wearable Device */}
+            <WearableDeviceCard 
+              device={wearableDevice}
+              onSync={handleSyncDevice}
+              isSyncing={isSyncing}
+            />
+          </div>
+        </div>
+
+        {/* Bottom Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Recent Activity */}
-          <div className="lg:col-span-1 bg-white dark:bg-gray-900 rounded-lg shadow-md hover:shadow-lg transition-all duration-200">
-            <div className="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
-              <h2 className="text-lg font-medium text-gray-900 dark:text-white">Recent Activity</h2>
-            </div>
-            <div className="p-4 sm:p-6">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-600 dark:text-gray-300">Completed morning supplement routine</p>
-                  </div>
-                  <span className="text-xs text-gray-400 dark:text-gray-500">2h ago</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-secondary rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-600 dark:text-gray-300">Logged 30-minute workout</p>
-                  </div>
-                  <span className="text-xs text-gray-400 dark:text-gray-500">4h ago</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-600 dark:text-gray-300">Sleep quality: Good (7.5 hours)</p>
-                  </div>
-                  <span className="text-xs text-gray-400 dark:text-gray-500">Yesterday</span>
-                </div>
-              </div>
-            </div>
+          {/* Activity Timeline */}
+          <div>
+            <ActivityTimeline events={timelineEvents} />
           </div>
           
-          {/* AI Health Coach */}
-          <div className="lg:col-span-2">
-            <MyCoach />
+          {/* Supplement Tracker */}
+          <div>
+            <SupplementTracker 
+              supplements={supplements}
+              onMarkTaken={handleMarkSupplementTaken}
+            />
           </div>
+          
+          {/* Recommendations */}
+          <div className="space-y-6">
+            <RecommendationsCard recommendations={recommendations} />
+            <GoalsProgress goals={goals} />
+          </div>
+        </div>
+        
+        {/* AI Health Coach */}
+        <div className="mt-6">
+          <MyCoach />
         </div>
       </div>
     </div>
