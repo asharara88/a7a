@@ -22,6 +22,7 @@ interface NavigationProps {
   isMobile?: boolean;
   onItemClick?: () => void;
   type?: 'main' | 'account';
+  isLoggedIn?: boolean;
 }
 
 interface NavigationItem {
@@ -34,7 +35,8 @@ interface NavigationItem {
 const Navigation: React.FC<NavigationProps> = ({ 
   isMobile = false, 
   onItemClick,
-  type = 'main'
+  type = 'main',
+  isLoggedIn = false
 }) => {
   const location = useLocation();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
@@ -148,32 +150,41 @@ const Navigation: React.FC<NavigationProps> = ({
             </Link>
             
             {hasChildren && (
-             <span 
-               className="ml-2"
-               onClick={(e) => {
-                 e.preventDefault();
-                 e.stopPropagation();
-                 toggleSubmenu(item.name);
-               }}
-             >
-                {isSubmenuOpen ? 
-                  <ChevronDown className="w-4 h-4 transition-transform duration-200" /> : 
-                  <ChevronRight className="w-4 h-4 transition-transform duration-200" />
-                }
-              </span>
-            )}
-          </div>
-          
-          {hasChildren && isSubmenuOpen && (
-            <div className="mt-2 mb-2 space-y-2 animate-slideDown pl-2 border-l-2 border-gray-100 dark:border-gray-700">
-              {item.children.map(child => renderNavItem(child, depth + 1))}
-            </div>
-          )}
-        </div>
-      </div>
-    );
+  // Define navigation items based on authentication state
+  const getNavigationItems = (): NavigationItem[] => {
+    if (!isLoggedIn) {
+      if (type === 'main') {
+        return [
+          { name: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
+          { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> },
+          { name: 'Pricing', href: '/pricing', icon: <DollarSign className="w-4 h-4" /> }
+        ];
+      } else {
+        return [
+          { 
+            name: 'Account', 
+            href: '/login', 
+            icon: <User className="w-5 h-5" />,
+            children: [
+              { name: 'Login', href: '/login', icon: <LogIn className="w-4 h-4" /> },
+              { name: 'Sign Up', href: '/signup', icon: <UserPlus className="w-4 h-4" /> }
+            ]
+          }
+        ];
+      }
+    }
+    
+    // Return the default navigation for logged-in users
+    if (type === 'main') {
+      return mainNavigation;
+    } else {
+      return accountNavigation;
+    }
   };
-
+                 e.preventDefault();
+  // Get the navigation items based on authentication state
+  const navigation = getNavigationItems();
+    );
   return (
     <nav className={cn(
       "flex flex-col space-y-1",

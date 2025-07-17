@@ -53,19 +53,42 @@ const MobileNav: React.FC<MobileNavProps> = ({
         </div>
         
         <div className="p-4 space-y-6">
-          <div>
-            <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
-              Main Menu
-            </h3>
-           {isOpen && <Navigation isMobile onItemClick={onClose} type="main" />}
-          </div>
+          {!isLoggedIn && (
+            <div>
+              <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
+                Menu
+              </h3>
+              <div className="space-y-1">
+                <Link to="/" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={onClose}>
+                  <span className="text-gray-800 dark:text-gray-200 font-medium">Home</span>
+                </Link>
+                <Link to="/about" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={onClose}>
+                  <span className="text-gray-800 dark:text-gray-200 font-medium">About</span>
+                </Link>
+                <Link to="/pricing" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={onClose}>
+                  <span className="text-gray-800 dark:text-gray-200 font-medium">Pricing</span>
+                </Link>
+              </div>
+            </div>
+          )}
           
-          <div>
-            <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
-              Account
-            </h3>
-           {isOpen && <Navigation isMobile onItemClick={onClose} type="account" />}
-          </div>
+          {isLoggedIn && (
+            <div>
+              <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
+                Main Menu
+              </h3>
+             {isOpen && <Navigation isMobile onItemClick={onClose} type="main" />}
+            </div>
+          )}
+          
+          {isLoggedIn && (
+            <div>
+              <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
+                Account
+              </h3>
+             {isOpen && <Navigation isMobile onItemClick={onClose} type="account" />}
+            </div>
+          )}
         </div>
         
         <div className="p-4 border-t border-gray-200 dark:border-gray-800">

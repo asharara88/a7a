@@ -38,6 +38,7 @@ const HomePage = React.lazy(() => import('./pages/HomePage'))
 const AboutPage = React.lazy(() => import('./pages/AboutPage'))
 const LoginPage = React.lazy(() => import('./pages/auth/LoginPage'))
 const SignupPage = React.lazy(() => import('./pages/auth/SignupPage'))
+const PricingPage = React.lazy(() => import('./pages/PricingPage'))
 const OnboardingPage = React.lazy(() => import('./pages/auth/OnboardingPage'))
 const DashboardPage = React.lazy(() => import('./pages/DashboardPage'))
 const MyCoachPage = React.lazy(() => import('./pages/MyCoachPage.tsx'))
@@ -62,6 +63,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />

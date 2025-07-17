@@ -72,6 +72,20 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     try {
       await supabase.auth.signOut();
       navigate('/');
+     
+     // If user is authenticated, fetch cart count
+     if (data.user) {
+       try {
+         const { data: cartData } = await supabase
+           .from('cart_items')
+           .select('id')
+           .eq('user_id', data.user.id);
+         
+         setCartCount(cartData?.length || 0);
+       } catch (error) {
+         console.error('Error fetching cart count:', error);
+       }
+     }
     } catch (error) {
       console.error('Error signing out:', error);
     }

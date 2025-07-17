@@ -140,219 +140,250 @@ const MinimalNav: React.FC = () => {
           
           {/* Main Navigation Icons */}
           <div className="flex items-center space-x-1">
-            <Link 
-              to="/dashboard" 
-              className={cn(
-                "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                "hover:scale-105 transition-transform duration-150",
-                "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              )}
-              aria-label="Dashboard"
-            >
-              <Home size={20} />
-              {isActive('/dashboard') && (
-                <motion.div 
-                  className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
-                  layoutId="activeIndicator"
-                  transition={{ duration: 0.15 }}
-                />
-              )}
-            </Link>
+            {/* Pre-sign in navigation */}
+            {!user && (
+              <>
+                <Link to="/about" className="relative px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-primary font-medium">
+                  About
+                  {isActive('/about') && (
+                    <motion.div 
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                      layoutId="activeIndicator"
+                      transition={{ duration: 0.15 }}
+                    />
+                  )}
+                </Link>
+                <Link to="/pricing" className="relative px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-primary font-medium">
+                  Pricing
+                  {isActive('/pricing') && (
+                    <motion.div 
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                      layoutId="activeIndicator"
+                      transition={{ duration: 0.15 }}
+                    />
+                  )}
+                </Link>
+              </>
+            )}
             
-            <div ref={wellnessRef} className="relative">
-              <button 
-                onClick={() => setWellnessDropdownOpen(!wellnessDropdownOpen)}
-                className={cn(
-                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                  "hover:scale-105 transition-transform duration-150",
-                  "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                )}
-                aria-label="My Wellness"
-                aria-expanded={wellnessDropdownOpen}
-              >  
-                <Leaf size={20} />
-                {wellnessPages.some(path => isActive(path)) && (
-                  <motion.div 
-                    className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
-                    layoutId="activeIndicator"
-                    transition={{ duration: 0.15 }}  
-                  />
-                )}
-              </button>
-              
-              {/* Wellness Dropdown */}
-              {wellnessDropdownOpen && (
-                <motion.div 
-                  className="absolute top-full left-0 right-0 w-screen bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-800 py-6 z-20"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
+            {/* Post-sign in navigation */}
+            {user && (
+              <>
+                <Link 
+                  to="/dashboard" 
+                  className={cn(
+                    "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                    "hover:scale-105 transition-transform duration-150",
+                    "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  )}
+                  aria-label="Dashboard"
                 >
-                  <div className="max-w-7xl mx-auto px-4">
-                    <div className="mb-4">
-                      <h3 className="text-lg font-medium px-4 py-2 text-gray-900 dark:text-white">My Wellness</h3>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                      {/* Nutrition Section */}
-                      <div className="space-y-3">
-                        <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Nutrition</h4>
-                        <Link to="/nutrition" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                          <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3">
-                            <Utensils size={18} className="text-green-600 dark:text-green-400" />
-                          </div>
-                          <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Nutrition Dashboard</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your meals and nutrition</p>
-                          </div>
-                        </Link>
+                  <Home size={20} />
+                  {isActive('/dashboard') && (
+                    <motion.div 
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                      layoutId="activeIndicator"
+                      transition={{ duration: 0.15 }}
+                    />
+                  )}
+                </Link>
+                
+                <div ref={wellnessRef} className="relative">
+                  <button 
+                    onClick={() => setWellnessDropdownOpen(!wellnessDropdownOpen)}
+                    className={cn(
+                      "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                      "hover:scale-105 transition-transform duration-150",
+                      "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    )}
+                    aria-label="My Wellness"
+                    aria-expanded={wellnessDropdownOpen}
+                  >  
+                    <Leaf size={20} />
+                    {wellnessPages.some(path => isActive(path)) && (
+                      <motion.div 
+                        className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                        layoutId="activeIndicator"
+                        transition={{ duration: 0.15 }}  
+                      />
+                    )}
+                  </button>
+                  
+                  {/* Wellness Dropdown */}
+                  {wellnessDropdownOpen && (
+                    <motion.div 
+                      className="absolute top-full left-0 right-0 w-screen bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-800 py-6 z-20"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="max-w-7xl mx-auto px-4">
+                        <div className="mb-4">
+                          <h3 className="text-lg font-medium px-4 py-2 text-gray-900 dark:text-white">My Wellness</h3>
+                        </div>
                         
-                        <Link to="/recipes" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                          <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
-                            <Utensils size={18} className="text-green-600 dark:text-green-400" />
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                          {/* Nutrition Section */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Nutrition</h4>
+                            <Link to="/nutrition" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3">
+                                <Utensils size={18} className="text-green-600 dark:text-green-400" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-medium text-gray-900 dark:text-white">Nutrition Dashboard</span>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your meals and nutrition</p>
+                              </div>
+                            </Link>
+                            
+                            <Link to="/recipes" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
+                                <Utensils size={18} className="text-green-600 dark:text-green-400" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-medium text-gray-900 dark:text-white">Personalized Recipes</span>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">AI-tailored meal suggestions</p>
+                              </div>
+                            </Link>
+                            
+                            <Link to="/metabolism" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
+                                <Activity size={18} className="text-green-600 dark:text-green-400" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-medium text-gray-900 dark:text-white">Metabolism</span>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Continuous glucose monitoring</p>
+                              </div>
+                            </Link>
                           </div>
-                          <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Personalized Recipes</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">AI-tailored meal suggestions</p>
+                          
+                          {/* Fitness Section */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Fitness</h4>
+                            <Link to="/fitness" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                              <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3">
+                                <Activity size={18} className="text-orange-600 dark:text-orange-400" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-medium text-gray-900 dark:text-white">Fitness Tracker</span>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your workouts</p>
+                              </div>
+                            </Link>
+                            
+                            <Link to="/fitness/activity" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                              <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
+                                <Activity size={18} className="text-orange-600 dark:text-orange-400" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-medium text-gray-900 dark:text-white">Activity</span>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Daily activity metrics</p>
+                              </div>
+                            </Link>
                           </div>
-                        </Link>
-                        
-                        <Link to="/metabolism" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                          <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
-                            <Activity size={18} className="text-green-600 dark:text-green-400" />
+                          
+                          {/* Sleep Section */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Sleep</h4>
+                            <Link to="/sleep" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3">
+                                <Moon size={18} className="text-purple-600 dark:text-purple-400" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-medium text-gray-900 dark:text-white">Sleep Quality</span>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Monitor your sleep</p>
+                              </div>
+                            </Link>
+                            
+                            <Link to="/sleep/bioclock" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3 opacity-70">
+                                <Moon size={18} className="text-purple-600 dark:text-purple-400" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-medium text-gray-900 dark:text-white">Bioclock™</span>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Circadian health</p>
+                              </div>
+                            </Link>
                           </div>
-                          <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Metabolism</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Continuous glucose monitoring</p>
-                          </div>
-                        </Link>
+                        </div>
                       </div>
-                      
-                      {/* Fitness Section */}
-                      <div className="space-y-3">
-                        <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Fitness</h4>
-                        <Link to="/fitness" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                          <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3">
-                            <Activity size={18} className="text-orange-600 dark:text-orange-400" />
-                          </div>
-                          <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Fitness Tracker</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your workouts</p>
-                          </div>
-                        </Link>
-                        
-                        <Link to="/fitness/activity" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                          <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
-                            <Activity size={18} className="text-orange-600 dark:text-orange-400" />
-                          </div>
-                          <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Activity</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Daily activity metrics</p>
-                          </div>
-                        </Link>
-                      </div>
-                      
-                      {/* Sleep Section */}
-                      <div className="space-y-3">
-                        <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Sleep</h4>
-                        <Link to="/sleep" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                          <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3">
-                            <Moon size={18} className="text-purple-600 dark:text-purple-400" />
-                          </div>
-                          <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Sleep Quality</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Monitor your sleep</p>
-                          </div>
-                        </Link>
-                        
-                        <Link to="/sleep/bioclock" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                          <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3 opacity-70">
-                            <Moon size={18} className="text-purple-600 dark:text-purple-400" />
-                          </div>
-                          <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Bioclock™</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Circadian health</p>
-                          </div>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </div>
-            
-            
-            {/* My Supplements */}
-            <div className="relative">
-              <button 
-                onClick={() => toggleSubmenu('supplements')}
-                className={cn(
-                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                  "hover:scale-105 transition-transform duration-150",
-                  "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                )}
-                aria-label="Supplements"
-                aria-expanded={openSubmenu === 'supplements'}
-              >
-                <Pill size={20} />
-                {(isActive('/my-stacks') || isActive('/supplements') || isActive('/supplement-store')) && (
-                  <motion.div 
-                    className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
-                    layoutId="activeIndicator"
-                    transition={{ duration: 0.15 }}
-                  />
-                )}
-              </button>
-              
-              {/* Supplements Dropdown */}
-              {openSubmenu === 'supplements' && (
-                <motion.div 
-                  className="absolute top-full right-0 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-20"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
+                    </motion.div>
+                  )}
+                </div>
+                
+                
+                {/* My Supplements */}
+                <div className="relative">
+                  <button 
+                    onClick={() => toggleSubmenu('supplements')}
+                    className={cn(
+                      "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                      "hover:scale-105 transition-transform duration-150",
+                      "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    )}
+                    aria-label="Supplements"
+                    aria-expanded={openSubmenu === 'supplements'}
+                  >
+                    <Pill size={20} />
+                    {(isActive('/my-stacks') || isActive('/supplements') || isActive('/supplement-store')) && (
+                      <motion.div 
+                        className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                        layoutId="activeIndicator"
+                        transition={{ duration: 0.15 }}
+                      />
+                    )}
+                  </button>
+                  
+                  {/* Supplements Dropdown */}
+                  {openSubmenu === 'supplements' && (
+                    <motion.div 
+                      className="absolute top-full right-0 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-20"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Link to="/supplements" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Pill size={18} className="text-gray-700 dark:text-gray-300" />
+                        <span className="ml-3 text-gray-700 dark:text-gray-300">Explore Supplements</span>
+                      </Link>
+                      <Link to="/my-stacks" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Package size={18} className="text-gray-700 dark:text-gray-300" />
+                        <span className="ml-3 text-gray-700 dark:text-gray-300">My Stacks</span>
+                      </Link>
+                      <Link to="/supplement-store" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Store size={18} className="text-gray-700 dark:text-gray-300" />
+                        <span className="ml-3 text-gray-700 dark:text-gray-300">Supplement Store</span>
+                      </Link>
+                      <Link to="/recommendations" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
+                        <span className="ml-3 text-gray-700 dark:text-gray-300">Recommendations</span>
+                      </Link>
+                    </motion.div>
+                  )}
+                </div>
+                
+                {/* MyCoach */}
+                <Link 
+                  to="/mycoach" 
+                  className={cn(
+                    "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                    "hover:scale-105 transition-transform duration-150",
+                    "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  )}
+                  aria-label="MyCoach"
                 >
-                  <Link to="/supplements" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Pill size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Explore Supplements</span>
-                  </Link>
-                  <Link to="/my-stacks" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Package size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">My Stacks</span>
-                  </Link>
-                  <Link to="/supplement-store" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Store size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Supplement Store</span>
-                  </Link>
-                  <Link to="/recommendations" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Recommendations</span>
-                  </Link>
-                </motion.div>
-              )}
-            </div>
-            
-            {/* MyCoach */}
-            <Link 
-              to="/mycoach" 
-              className={cn(
-                "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                "hover:scale-105 transition-transform duration-150",
-                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              )}
-              aria-label="MyCoach"
-            >
-              <Sparkles size={20} />
-              {isActive('/mycoach') && (
-                <motion.div 
-                  className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
-                  layoutId="activeIndicator"
-                  transition={{ duration: 0.15 }}
-                />
-              )}
-            </Link>
+                  <Sparkles size={20} />
+                  {isActive('/mycoach') && (
+                    <motion.div 
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                      layoutId="activeIndicator"
+                      transition={{ duration: 0.15 }}
+                    />
+                  )}
+                </Link>
+              </>
+            )}
             
             <div ref={utilitiesRef} className="relative">
               <button 
