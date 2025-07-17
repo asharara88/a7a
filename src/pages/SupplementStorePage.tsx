@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { CheckCircle, AlertCircle, Info, Loader2 } from "lucide-react";
+import { CheckCircle, AlertCircle, Info, Loader2, Shield } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import StackBuilderModal from '../components/supplements/StackBuilderModal';
@@ -13,19 +13,19 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 const TIER_COLORS = {
   green: "bg-green-100 text-green-700 border-green-500 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700",
   yellow: "bg-yellow-100 text-yellow-700 border-yellow-500 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700",
-  orange: "bg-orange-100 text-orange-700 border-orange-500 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-700",
+  orange: "bg-orange-100 text-orange-700 border-orange-500 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-700"
 };
 
 const TIER_LABELS = {
   green: "Strong evidence – Supported by multiple high-quality human clinical trials and major scientific consensus.",
   yellow: "Moderate evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus.",
-  orange: "Preliminary evidence – Mostly early-stage or animal/lab-based research, few or low-quality human trials, or anecdotal support.",
+  orange: "Preliminary evidence – Mostly early-stage or animal/lab-based research, few or low-quality human trials, or anecdotal support."
 };
 
 const TIER_ICONS = {
-  green: <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />,
+  green: <Shield className="w-4 h-4 text-green-600 dark:text-green-400" />,
   yellow: <AlertCircle className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />,
-  orange: <Info className="w-4 h-4 text-orange-600 dark:text-orange-400" />,
+  orange: <Info className="w-4 h-4 text-orange-600 dark:text-orange-400" />
 };
 
 function formatAED(price) {
@@ -40,6 +40,7 @@ export default function SupplementStorePage() {
   const [addingToCart, setAddingToCart] = useState(null);
   const [showStackBuilder, setShowStackBuilder] = useState(false);
   const [selectedSupplementId, setSelectedSupplementId] = useState(null);
+  const [showTierInfo, setShowTierInfo] = useState(false);
 
   useEffect(() => {
     async function fetchSupplements() {
@@ -105,7 +106,38 @@ export default function SupplementStorePage() {
       <div className="mobile-container">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Supplement Store</h1>
-          <p className="text-gray-600 dark:text-gray-400">Browse our evidence-based supplements</p>
+          <p className="text-gray-600 dark:text-gray-400">Browse our evidence-based supplements by tier</p>
+        </div>
+
+        {/* Tier Information */}
+        <div className="mb-6">
+          <button 
+            onClick={() => setShowTierInfo(!showTierInfo)}
+            className="flex items-center text-primary hover:text-primary-dark font-medium"
+          >
+            <Info className="w-5 h-5 mr-2" />
+            {showTierInfo ? 'Hide' : 'Show'} Evidence Tier Information
+          </button>
+          
+          {showTierInfo && (
+            <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+              <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Evidence Tier Definitions</h3>
+              <div className="space-y-3">
+                <div className="flex items-start">
+                  <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 mr-3 mt-0.5">Green</span>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">Strong evidence – Supported by multiple high-quality human clinical trials and major scientific consensus (e.g., creatine, vitamin D).</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 mr-3 mt-0.5">Yellow</span>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">Moderate/emerging evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus (e.g., ashwagandha, beta-alanine).</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 mr-3 mt-0.5">Orange</span>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">Limited/preliminary evidence – Mostly early-stage or animal/lab-based research, few or low-quality human trials, or anecdotal support (e.g., tongkat ali, shilajit).</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <Card className="p-6 mb-8">
@@ -129,7 +161,7 @@ export default function SupplementStorePage() {
               <Button
                 variant={tierFilter === "green" ? "default" : "outline"}
                 onClick={() => setTierFilter("green")}
-                className={`px-4 py-2 flex items-center gap-2 ${tierFilter === "green" ? "bg-green-600 hover:bg-green-700" : ""}`}
+                className="px-4 py-2 flex items-center gap-1.5"
               >
                 {TIER_ICONS.green} Green Tier
               </Button>
@@ -137,7 +169,7 @@ export default function SupplementStorePage() {
               <Button
                 variant={tierFilter === "yellow" ? "default" : "outline"}
                 onClick={() => setTierFilter("yellow")}
-                className={`px-4 py-2 flex items-center gap-2 ${tierFilter === "yellow" ? "bg-yellow-600 hover:bg-yellow-700" : ""}`}
+                className="px-4 py-2 flex items-center gap-1.5"
               >
                 {TIER_ICONS.yellow} Yellow Tier
               </Button>
@@ -145,7 +177,7 @@ export default function SupplementStorePage() {
               <Button
                 variant={tierFilter === "orange" ? "default" : "outline"}
                 onClick={() => setTierFilter("orange")}
-                className={`px-4 py-2 flex items-center gap-2 ${tierFilter === "orange" ? "bg-orange-600 hover:bg-orange-700" : ""}`}
+                className="px-4 py-2 flex items-center gap-1.5"
               >
                 {TIER_ICONS.orange} Orange Tier
               </Button>
@@ -214,7 +246,10 @@ export default function SupplementStorePage() {
                         className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-lg border font-semibold ${TIER_COLORS[supp.tier]}`} 
                         title={TIER_LABELS[supp.tier]}
                       >
-                        {TIER_ICONS[supp.tier]} {supp.tier.charAt(0).toUpperCase() + supp.tier.slice(1)}
+                        <span className="flex items-center gap-1">
+                          {TIER_ICONS[supp.tier]}
+                          {supp.tier.charAt(0).toUpperCase() + supp.tier.slice(1)}
+                        </span>
                       </div>
                     </div>
                   </div>
