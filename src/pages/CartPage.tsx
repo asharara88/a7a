@@ -42,7 +42,7 @@ const CartPage: React.FC = () => {
       // First get the user ID
       const { data: { user } } = await supabase.auth.getUser();
       
-      if (!user) {
+      if (!user || !user.id) {
         // If no user, use mock data for demo
         setCartItems([
           {
@@ -77,15 +77,41 @@ const CartPage: React.FC = () => {
       // Then fetch cart items for this user
       const { data, error } = await supabase
         .from('cart_items')
-        .select(`
-          id, quantity,
-          supplement:supplement_id (id, name, brand, description, price_aed, image_url, tier)
-        `)
+        .select('id, quantity, supplement_id')
         .eq('user_id', user.id);
       
       if (error) throw error;
       
-      setCartItems(data || []);
+      // Fetch supplement details for each cart item
+      if (data && data.length > 0) {
+        const supplementIds = data.map(item => item.supplement_id);
+        
+        const { data: supplements, error: suppError } = await supabase
+          .from('supplements')
+          .select('id, name, brand, description, price_aed, image_url, tier')
+          .in('id', supplementIds);
+        
+        if (suppError) throw suppError;
+        
+        // Combine cart items with supplement details
+        const cartWithDetails = data.map(cartItem => {
+          const supplement = supplements?.find(s => s.id === cartItem.supplement_id) || {
+            id: cartItem.supplement_id,
+            name: 'Unknown Supplement',
+            price_aed: 0
+          };
+          
+          return {
+            id: cartItem.id,
+            supplement,
+            quantity: cartItem.quantity
+          };
+        });
+        
+        setCartItems(cartWithDetails);
+      } else {
+        setCartItems([]);
+      }
     } catch (err) {
       console.error('Error fetching cart items:', err);
       setError('Failed to load your cart items');
