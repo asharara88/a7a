@@ -132,7 +132,7 @@ const Navigation: React.FC<NavigationProps> = ({
           >
             <Link 
               to={item.href}
-              className="flex items-center flex-1"
+              className="flex items-center flex-1 tracking-wide"
               onClick={(e) => {
                 if (hasChildren) {
                   e.preventDefault();
@@ -165,7 +165,7 @@ const Navigation: React.FC<NavigationProps> = ({
           </div>
           
           {hasChildren && isSubmenuOpen && (
-            <div className="mt-1 mb-1 space-y-1 animate-slideDown">
+            <div className="mt-2 mb-2 space-y-2 animate-slideDown pl-2 border-l-2 border-gray-100 dark:border-gray-700">
               {item.children.map(child => renderNavItem(child, depth + 1))}
             </div>
           )}
@@ -177,7 +177,7 @@ const Navigation: React.FC<NavigationProps> = ({
   return (
     <nav className={cn(
       "flex flex-col space-y-1",
-      isMobile ? "w-full" : "hidden md:flex md:space-x-6 md:flex-row md:space-y-0"
+      isMobile ? "w-full" : "hidden md:flex md:space-x-8 md:flex-row md:space-y-0"
     )}>
       {navigation.map(item => renderNavItem(item))}
     </nav>

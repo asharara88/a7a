@@ -284,7 +284,7 @@ const MyCoach: React.FC = () => {
           <Sparkles className="w-6 h-6 mr-2" />
           <h2 className="text-lg font-semibold">MyCoach™</h2>
         </div>
-            className="h-9 w-auto mr-4 object-contain" 
+        <div className="flex items-center">
           <button
             onClick={() => setVoiceSettings(prev => ({ ...prev, enabled: !prev.enabled }))}
             className={cn(
@@ -326,7 +326,7 @@ const MyCoach: React.FC = () => {
             message={message}
             isLoading={false}
           />
-          <h2 className="text-lg font-semibold tracking-tight">AI Health Coach</h2>
+        ))}
         {isLoading && (
           <div className="flex items-center space-x-3 text-gray-700 dark:text-white p-4 bg-white dark:bg-gray-600 rounded-xl w-fit shadow-md">
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -366,8 +366,6 @@ const MyCoach: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.08 }}
               >
-                <span 
-                  className={`absolute left-0 top-0 h-full w-1 ${getCategoryColor(questionObj.category)}`}
                 <span className={`absolute left-0 top-0 h-full w-1.5 ${getCategoryColor(questionObj.category)}`}></span>
                 <span className="pl-5 tracking-wide">{questionObj.text}</span>
               </motion.button>
