@@ -85,3 +85,5 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
 };
 
 export default MobileNav;
+  )
+}
