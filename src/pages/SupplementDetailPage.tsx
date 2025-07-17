@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Star, ShoppingCart, Heart, Shield, Award, ArrowLeft, Info, Check } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Shield, Award, ArrowLeft, Info, Check, AlertCircle, X, ShieldCheck } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -97,24 +97,38 @@ const SupplementDetailPage: React.FC = () => {
   const getTierColor = (tier?: string) => {
     switch (tier) {
       case 'green':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border border-green-200 dark:border-green-800';
       case 'yellow':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800';
       case 'orange':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300';
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 border border-orange-200 dark:border-orange-800';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300';
     }
   };
 
+  const getTierIcon = (tier?: string) => {
+    switch (tier) {
+      case 'green':
+        return <ShieldCheck className="w-4 h-4 mr-2" />;
+      case 'yellow':
+        return <AlertCircle className="w-4 h-4 mr-2" />;
+      case 'orange':
+        return <Info className="w-4 h-4 mr-2" />;
+      case 'red':
+        return <X className="w-4 h-4 mr-2" />;
+      default:
+        return null;
+    }
+  };
   const getTierDescription = (tier?: string) => {
     switch (tier) {
       case 'green':
-        return "Strong evidence – Supported by multiple high-quality human clinical trials and major scientific consensus.";
+        return "Strong evidence – Supported by multiple high-quality human clinical trials and major scientific consensus (e.g., creatine, vitamin D).";
       case 'yellow':
-        return "Moderate/emerging evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus.";
+        return "Moderate/emerging evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus (e.g., ashwagandha, beta-alanine).";
       case 'orange':
-        return "Limited/preliminary evidence – Mostly early-stage or animal/lab-based research, few or low-quality human trials, or anecdotal support.";
+        return "Limited/preliminary evidence – Mostly early-stage or animal/lab-based research, few or low-quality human trials, or anecdotal support (e.g., tongkat ali, shilajit).";
       default:
         return "";
     }
@@ -188,7 +202,8 @@ const SupplementDetailPage: React.FC = () => {
               <div className="mt-4">
                 <div className="flex items-center mb-2">
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getTierColor(supplement.tier)}`}>
-                    {supplement.tier.charAt(0).toUpperCase() + supplement.tier.slice(1)} Tier
+                    {getTierIcon(supplement.tier)}
+                    <span>{supplement.tier.charAt(0).toUpperCase() + supplement.tier.slice(1)} Tier</span>
                   </span>
                   <button 
                     className="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
@@ -242,8 +257,34 @@ const SupplementDetailPage: React.FC = () => {
                 
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Description</h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">
-                  {supplement.detailed_description || supplement.description}
+                  {supplement.detailed_description || supplement.description || `${supplement.name} is a dietary supplement that supports overall health and wellness.`}
                 </p>
+                
+                {supplement.evidence_summary && (
+                  <div className="mt-4 mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Evidence Summary</h3>
+                    <div className={`p-4 rounded-lg ${
+                      supplement.tier === 'green' ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' :
+                      supplement.tier === 'yellow' ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800' :
+                      'bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800'
+                    }`}>
+                      <div className="flex items-start">
+                        {getTierIcon(supplement.tier)}
+                        <p className="text-gray-700 dark:text-gray-300">{supplement.evidence_summary}</p>
+                      </div>
+                      {supplement.source_link && (
+                        <a 
+                          href={supplement.source_link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:text-primary-dark text-sm mt-2 inline-block"
+                        >
+                          View Source Research
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Pricing Section */}
@@ -259,7 +300,7 @@ const SupplementDetailPage: React.FC = () => {
                   {supplement.subscription_discount_percent > 0 && (
                     <div className="text-right">
                       <p className="text-sm text-gray-600 dark:text-gray-400">Subscription Price</p>
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                      <p className="text-2xl font-bold text-primary dark:text-primary-light">
                         {calculateDiscountedPrice(
                           supplement.price_aed, 
                           supplement.subscription_discount_percent

@@ -77,6 +77,7 @@ const MyCoach: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Health metrics for context (would come from user profile in a real app)
   const healthContext = {
@@ -473,6 +474,20 @@ const MyCoach: React.FC = () => {
         </div>
       </form>
     </div>
+    
+    // Show typing indicator to user
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+    
+    if (e.target.value.length > 0) {
+      // Set typing timeout
+      const timeout = setTimeout(() => {
+        // Could implement a typing indicator here
+      }, 1000);
+      
+      setTypingTimeout(timeout as any);
+    }
   );
   
   // Helper function to get color based on category
@@ -506,6 +521,12 @@ const MyCoach: React.FC = () => {
         return 'bg-teal-500';
       default:
         return 'bg-gray-500';
+      
+      // Clear typing timeout
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        setTypingTimeout(null);
+      }
     }
   }
 };

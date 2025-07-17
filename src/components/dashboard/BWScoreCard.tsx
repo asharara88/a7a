@@ -122,9 +122,10 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
                   <div 
                     key={metric.name}
                     className={cn(
-                      "cursor-pointer p-4 rounded-xl transition-colors",
+                      "cursor-pointer p-4 rounded-xl transition-all",
                       "hover:bg-gray-50 dark:hover:bg-gray-800",
-                      "border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+                      "border border-transparent hover:border-gray-200 dark:hover:border-gray-700",
+                      "hover:shadow-sm"
                     )}
                     onClick={() => onMetricClick?.(metric.name)}
                   >
@@ -155,12 +156,15 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
               </div>
                
                {/* Add total weighted score explanation */}
-               <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+               <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
                  <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                    About Your BW Score
                  </h4>
+                 <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+                   Your BioWell Score is a weighted average of key health metrics. Some factors like Sleep and Fitness have higher impact (1.5x weight) while others like Hydration have lower impact (0.8x weight).
+                 </p>
                  <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                   Your BioWell Score is a weighted average of key health metrics. Some factors like Sleep and Fitness have higher impact (1.5x weight) while others like Hydration have lower impact (0.8x weight). This provides a more accurate picture of your overall health.
+                  Improve your score by focusing on the metrics with the lowest values or the highest weights to see the biggest impact on your overall health.
                  </p>
                </div>
             </div>

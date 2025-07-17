@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingCart, Heart, Info, Star } from 'lucide-react';
+import { ShoppingCart, Heart, Info, Star, Check, AlertCircle, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -63,6 +63,20 @@ const SupplementCard: React.FC<SupplementCardProps> = ({
     return colors[tier] || colors.yellow;
   };
 
+  const getTierIcon = () => {
+    switch (tier) {
+      case 'green':
+        return <Check className="w-3.5 h-3.5 mr-1" />;
+      case 'yellow':
+        return <AlertCircle className="w-3.5 h-3.5 mr-1" />;
+      case 'orange':
+        return <Info className="w-3.5 h-3.5 mr-1" />;
+      case 'red':
+        return <X className="w-3.5 h-3.5 mr-1" />;
+      default:
+        return null;
+    }
+  };
   const getTierDescription = (tier: string) => {
     switch (tier) {
       case 'green':
@@ -107,7 +121,8 @@ const SupplementCard: React.FC<SupplementCardProps> = ({
             title={getTierDescription(tier)}
           >
             {getTierIcon()}
-            {tier.charAt(0).toUpperCase() + tier.slice(1)} Tier
+            {getTierIcon()}
+            <span>{tier.charAt(0).toUpperCase() + tier.slice(1)}</span>
           </span>
         </div>
         
@@ -175,7 +190,7 @@ const SupplementCard: React.FC<SupplementCardProps> = ({
           <div className="flex space-x-2">
             <Button
               variant="outline"
-              size="sm"
+              size="sm" 
               className="flex-1"
               onClick={() => onAddToStack && onAddToStack(id)}
               aria-label={`Add ${name} to stack`}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Filter, Check } from 'lucide-react';
+import { Filter, Check, Shield, AlertCircle, Info } from 'lucide-react';
 import SupplementCard from './SupplementCard';
 import { Button } from '../ui/Button';
 
@@ -88,25 +88,34 @@ const SupplementGrid: React.FC<SupplementGridProps> = ({
             <Button
               size="sm"
               variant={tierFilter === 'green' ? 'default' : 'outline'}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className={tierFilter === 'green' ? 
+                "bg-green-600 hover:bg-green-700 text-white" : 
+                "text-green-800 dark:text-green-300 hover:bg-green-100/50 dark:hover:bg-green-900/30"}
               onClick={() => setTierFilter('green')}
             >
+              <Shield className="w-4 h-4 mr-1.5" />
               Green
             </Button>
             <Button
               size="sm"
               variant={tierFilter === 'yellow' ? 'default' : 'outline'}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white"
+              className={tierFilter === 'yellow' ? 
+                "bg-yellow-500 hover:bg-yellow-600 text-white" : 
+                "text-yellow-800 dark:text-yellow-300 hover:bg-yellow-100/50 dark:hover:bg-yellow-900/30"}
               onClick={() => setTierFilter('yellow')}
             >
+              <AlertCircle className="w-4 h-4 mr-1.5" />
               Yellow
             </Button>
             <Button
               size="sm"
               variant={tierFilter === 'orange' ? 'default' : 'outline'}
-              className="bg-orange-500 hover:bg-orange-600 text-white"
+              className={tierFilter === 'orange' ? 
+                "bg-orange-500 hover:bg-orange-600 text-white" : 
+                "text-orange-800 dark:text-orange-300 hover:bg-orange-100/50 dark:hover:bg-orange-900/30"}
               onClick={() => setTierFilter('orange')}
             >
+              <Info className="w-4 h-4 mr-1.5" />
               Orange
             </Button>
           </div>
