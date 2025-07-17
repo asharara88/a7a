@@ -5,7 +5,6 @@ import {
   Sparkles,
   Info,
   Utensils,
-  BookOpen,
   Activity,
   Pill,
   LayoutDashboard,
@@ -14,8 +13,8 @@ import {
   ShoppingCart,
   User,
   Settings,
-  MessageSquare,
-  Package
+  Package,
+  Moon
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 

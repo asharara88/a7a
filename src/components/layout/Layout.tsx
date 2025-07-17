@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ShoppingCart, User, Menu, X, Sparkles, Moon, Sun, X as Close } from 'lucide-react'
+import { ShoppingCart, User, Menu, X, Sparkles, Moon, Sun } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
 import MobileNav from '../ui/MobileNav'
