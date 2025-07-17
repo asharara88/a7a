@@ -62,13 +62,13 @@ const SupplementsPage: React.FC = () => {
     try {
       setAddingToCart(supplementId);
       
-      // In a real app, this would call an API to add to cart
+      // Add to cart
       setCartItems(prev => [...prev, supplementId]);
       
       // Clear adding state after a delay
       setTimeout(() => {
         setAddingToCart(null);
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.error('Error adding to cart:', error);
       setAddingToCart(null);

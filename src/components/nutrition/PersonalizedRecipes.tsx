@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronRight } from 'lucide-react';
 import { recipeApi, Recipe, RecipeSearchParams } from '../../api/recipeApi';
 import RecipeCard from './RecipeCard';
 import { Button } from '../ui/Button';
@@ -69,19 +69,16 @@ const PersonalizedRecipes: React.FC = () => {
     }
   };
 
-
-
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex-1">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommended For You</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Recipes tailored to your preferences and health goals
           </p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           <Link to="/saved-recipes" className="text-primary hover:text-primary-dark text-sm font-medium">
             Saved Recipes
           </Link>
@@ -94,9 +91,10 @@ const PersonalizedRecipes: React.FC = () => {
           />
         </div>
       </div>
+
       {isLoading ? (
-        <div className="flex justify-center items-center py-12">
-          <Loader2 className="animate-spin w-8 h-8 text-primary" />
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : error ? (
         <div className="text-center py-12">
@@ -131,19 +129,20 @@ const PersonalizedRecipes: React.FC = () => {
             </div>
           )}
         </div>
-      )}
-      
-      {recipes.length > 0 && (
-        <div className="mt-8 text-center">
-          <Link 
-            to="/recipes"
-            className="inline-flex items-center text-primary hover:text-primary-dark font-medium"
-          >
-            View more recipes
-          </Link>
-        </div>
-      )}
-    </div>
+        
+        {recipes.length > 0 && (
+          <div className="mt-8 text-center">
+            <Link 
+              to="/recipes"
+              className="inline-flex items-center text-primary hover:text-primary-dark font-medium"
+            >
+              View more recipes
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Link>
+          </div>
+        )}
+      </div>
+    )}
   );
 };
 

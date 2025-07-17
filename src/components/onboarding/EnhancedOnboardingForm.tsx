@@ -151,51 +151,60 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
   const validateCurrentStep = (): boolean => {
     const errors: Record<string, string> = {};
 
+    // Get current step data with fallback to profile data for validation
+    const stepData = {
+      ...((profile || {}) as Partial<UserProfile>),
+      ...currentStepData,
+    };
+
     switch (currentStep.id) {
       case 1: // Personal Information
-        if (!currentStepData.firstName?.trim()) {
+        if (!stepData.firstName?.trim()) {
           errors.firstName = 'First name is required';
         }
-        if (!currentStepData.lastName?.trim()) {
+        if (!stepData.lastName?.trim()) {
           errors.lastName = 'Last name is required';
         }
-        if (!currentStepData.email?.trim()) {
+        if (!stepData.email?.trim()) {
           errors.email = 'Email is required';
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(currentStepData.email)) {
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(stepData.email)) {
           errors.email = 'Please enter a valid email address';
         }
         break;
 
       case 2: // Health Goals
-        if (!currentStepData.primaryHealthGoals?.length) {
+        if (!stepData.primaryHealthGoals?.length) {
           errors.primaryHealthGoals = 'Please select at least one health goal';
         }
         break;
 
       case 3: // Physical Profile
-        if (currentStepData.height && (!currentStepData.height.value || currentStepData.height.value <= 0)) {
+        if (stepData.height && (!stepData.height.value || stepData.height.value <= 0)) {
           errors.height = 'Please enter a valid height';
         }
-        if (currentStepData.weight && (!currentStepData.weight.value || currentStepData.weight.value <= 0)) {
+        if (stepData.weight && (!stepData.weight.value || stepData.weight.value <= 0)) {
           errors.weight = 'Please enter a valid weight';
         }
         break;
 
       case 4: // Sleep & Recovery
-        if (currentStepData.sleepHours && (currentStepData.sleepHours < 1 || currentStepData.sleepHours > 12)) {
+        if (stepData.sleepHours && (stepData.sleepHours < 1 || stepData.sleepHours > 12)) {
           errors.sleepHours = 'Sleep hours should be between 1 and 12';
         }
         break;
 
       case 6: // Mental Health & Stress
-        if (currentStepData.stressLevel && (currentStepData.stressLevel < 1 || currentStepData.stressLevel > 10)) {
+        if (stepData.stressLevel && (stepData.stressLevel < 1 || stepData.stressLevel > 10)) {
           errors.stressLevel = 'Stress level should be between 1 and 10';
         }
         break;
     }
 
     setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    
+    // Return true if no errors
+    const isValid = Object.keys(errors).length === 0;
+    return isValid;
   };
 
   const handleNext = async () => {

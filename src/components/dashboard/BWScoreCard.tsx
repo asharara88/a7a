@@ -128,9 +128,9 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
                       <div className="flex items-center">
                         <div className={cn(
                           "p-2 rounded-full mr-3",
-                          "bg-opacity-20 dark:bg-opacity-20"
+                         "bg-opacity-20 dark:bg-opacity-20"
                         )} style={{ backgroundColor: metric.color, color: metric.color }}>
-                          {metric.icon}
+                        <span className="text-current">{metric.icon}</span>
                         </div>
                         <span className="font-medium text-gray-900 dark:text-white">{metric.name}</span>
                       </div>
@@ -139,10 +139,10 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <motion.div 
                         className="h-2 rounded-full"
-                        style={{ backgroundColor: metric.color, width: `${metric.score}%` }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${metric.score}%` }}
+                        style={{ backgroundColor: metric.color }}
+                        initial={{ width: "0%" }}
                         transition={{ duration: 1, ease: "easeOut" }}
+                        animate={{ width: `${metric.score}%` }}
                       />
                     </div>
                     <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">{metric.description}</p>
