@@ -9,6 +9,7 @@ const LoginPage = React.lazy(() => import('./pages/auth/LoginPage'))
 const SignupPage = React.lazy(() => import('./pages/auth/SignupPage'))
 const OnboardingPage = React.lazy(() => import('./pages/auth/OnboardingPage'))
 const DashboardPage = React.lazy(() => import('./pages/DashboardPage'))
+const MyCoachPage = React.lazy(() => import('./pages/MyCoachPage'))
 const NutritionPage = React.lazy(() => import('./pages/NutritionPage'))
 const FitnessPage = React.lazy(() => import('./pages/FitnessPage'))
 const RecipesPage = React.lazy(() => import('./pages/RecipesPage'))
@@ -32,6 +33,7 @@ const App: React.FC = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/mycoach" element={<MyCoachPage />} />
           <Route path="/nutrition" element={<NutritionPage />} />
           <Route path="/nutrition/dashboard" element={<NutritionDashboardPage />} />
           <Route path="/fitness" element={<FitnessPage />} />

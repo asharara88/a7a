@@ -210,11 +210,7 @@ const MyCoach: React.FC = () => {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white p-4 flex items-center justify-between rounded-t-lg shadow-sm">
         <div className="flex items-center">
-          <img
-            src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
-            alt="Biowell Logo" 
-            className="h-8 w-auto mr-3 object-contain" 
-          />
+          <Sparkles className="w-6 h-6 mr-2" />
           <h2 className="text-lg font-semibold">MyCoach™</h2>
         </div>
         <div className="flex items-center space-x-2">

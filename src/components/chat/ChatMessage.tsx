@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Bot } from 'lucide-react';
+import { User, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '../../utils/cn';
 
@@ -28,7 +28,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isLoading = false })
               ? "bg-gradient-to-r from-primary to-secondary text-white" 
               : "bg-white dark:bg-gray-700 text-primary dark:text-white"
           )}>
-            {isUser ? <User size={16} /> : <Bot size={16} />}
+            {isUser ? <User size={16} /> : <Sparkles size={16} />}
           </div>
         </div>
         

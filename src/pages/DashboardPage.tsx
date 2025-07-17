@@ -1,6 +1,5 @@
 import React from 'react'
 import { Activity, Heart, Moon, Zap, Droplet, Utensils, Pill, Target } from 'lucide-react'
-import MyCoach from '../components/chat/MyCoach'
 import MetricsCard from '../components/dashboard/MetricsCard'
 import TrendsChart from '../components/dashboard/TrendsChart'
 import StatisticsGrid from '../components/dashboard/StatisticsGrid'
@@ -310,10 +309,6 @@ const DashboardPage: React.FC = () => {
           </div>
         </div>
         
-        {/* AI Health Coach */}
-        <div className="mt-6">
-          <MyCoach />
-        </div>
       </div>
     </div>
   )
