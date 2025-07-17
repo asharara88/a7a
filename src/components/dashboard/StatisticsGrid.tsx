@@ -2,11 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../ui/Card';
 import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Colors } from 'chart.js';
 import ProgressRing from './ProgressRing';
 
 // Register Chart.js components
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, Colors);
 
 interface StatisticsGridProps {
   nutritionData: {
@@ -34,16 +34,17 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
           nutritionData.macros.fat * 9      // 9 calories per gram
         ],
         backgroundColor: [
-          'hsl(var(--color-primary) / 0.8)',
-          'hsl(var(--color-secondary) / 0.8)',
-          'hsl(var(--color-tertiary) / 0.8)'
+          'rgba(59, 130, 246, 0.8)', // blue-500
+          'rgba(16, 185, 129, 0.8)', // green-500
+          'rgba(239, 68, 68, 0.8)'   // red-500
         ],
         borderColor: [
-          'hsl(var(--color-primary))',
-          'hsl(var(--color-secondary))',
-          'hsl(var(--color-tertiary))'
+          'rgba(59, 130, 246, 1)',
+          'rgba(16, 185, 129, 1)',
+          'rgba(239, 68, 68, 1)'
         ],
-        borderWidth: 1
+        borderWidth: 2,
+        hoverOffset: 15
       }
     ]
   };
@@ -59,16 +60,17 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
           sleepData.hours - sleepData.deepSleep - sleepData.remSleep
         ],
         backgroundColor: [
-          'rgba(75, 192, 192, 0.8)',
-          'rgba(153, 102, 255, 0.8)',
-          'rgba(201, 203, 207, 0.8)'
+          'rgba(79, 70, 229, 0.8)', // indigo-600
+          'rgba(139, 92, 246, 0.8)', // violet-500
+          'rgba(165, 180, 252, 0.8)' // indigo-300
         ],
         borderColor: [
-          'rgb(75, 192, 192)',
-          'rgb(153, 102, 255)',
-          'rgb(201, 203, 207)'
+          'rgba(79, 70, 229, 1)',
+          'rgba(139, 92, 246, 1)',
+          'rgba(165, 180, 252, 1)'
         ],
-        borderWidth: 1
+        borderWidth: 2,
+        hoverOffset: 15
       }
     ]
   };
@@ -76,28 +78,55 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
   const chartOptions = {
     responsive: true,
     plugins: {
+      tooltip: {
+        backgroundColor: 'rgba(17, 24, 39, 0.8)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1,
+        padding: 12,
+        boxPadding: 5,
+        usePointStyle: true,
+        callbacks: {
+          label: function(context: any) {
+            let label = context.label || '';
+            let value = context.raw || 0;
+            let sum = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+            let percentage = Math.round((value / sum) * 100);
+            return `${label}: ${value} (${percentage}%)`;
+          }
+        }
+      },
       legend: {
         position: 'bottom' as const,
         labels: {
           padding: 20,
           usePointStyle: true,
           font: {
-            size: 11
+            size: 12,
+            weight: '500'
           }
+        },
+        onClick: (e: any, legendItem: any, legend: any) => {
+          const index = legendItem.index;
+          const ci = legend.chart;
+          
+          // Toggle visibility
+          if (ci.getDatasetMeta(0).data[index].hidden) {
+            ci.getDatasetMeta(0).data[index].hidden = false;
+          } else {
+            ci.getDatasetMeta(0).data[index].hidden = true;
+          }
+          ci.update();
         }
-      },
-      tooltip: {
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        titleColor: '#111827',
-        bodyColor: '#111827',
-        borderColor: 'rgba(0, 0, 0, 0.1)',
-        borderWidth: 1,
-        padding: 10,
-        boxPadding: 5,
-        usePointStyle: true
       }
     },
-    cutout: '70%'
+    cutout: '70%',
+    animation: {
+      animateScale: true,
+      animateRotate: true,
+      duration: 1000
+    }
   };
 
   // Calculate percentages
@@ -111,12 +140,18 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
       <Card className="p-5">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Calories</h3>
         <div className="flex justify-center mb-4">
-          <ProgressRing progress={caloriePercentage} color="hsl(var(--color-primary))">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{caloriePercentage}%</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">of goal</p>
-            </div>
-          </ProgressRing>
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
+          >
+            <ProgressRing progress={caloriePercentage} color="rgba(59, 130, 246, 1)">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{caloriePercentage}%</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400">of goal</p>
+              </div>
+            </ProgressRing>
+          </motion.div>
         </div>
         <div className="flex justify-between text-sm">
           <div className="text-center">
@@ -138,7 +173,15 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
       <Card className="p-5">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Macronutrients</h3>
         <div className="h-48 flex items-center justify-center">
-          <Doughnut data={macroChartData} options={chartOptions} />
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1, type: "spring", stiffness: 100 }}
+            className="w-full h-full"
+            whileHover={{ scale: 1.03 }}
+          >
+            <Doughnut data={macroChartData} options={chartOptions} />
+          </motion.div>
         </div>
         <div className="grid grid-cols-3 gap-2 mt-4 text-center">
           <div>
@@ -160,21 +203,40 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
       <Card className="p-5">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Sleep Analysis</h3>
         <div className="flex items-center justify-between mb-4">
-          <div>
+          <motion.div
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <p className="text-3xl font-bold text-gray-900 dark:text-white">{sleepData.hours}h</p>
             <p className="text-sm text-gray-600 dark:text-gray-400">Total Sleep</p>
-          </div>
-          <ProgressRing 
-            progress={sleepQualityPercentage} 
-            size={80} 
-            strokeWidth={6}
-            color="hsl(var(--color-secondary))"
+          </motion.div>
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            whileHover={{ scale: 1.05 }}
           >
-            <p className="text-sm font-bold">{sleepQualityPercentage}%</p>
-          </ProgressRing>
+            <ProgressRing 
+              progress={sleepQualityPercentage} 
+              size={80} 
+              strokeWidth={6}
+              color="rgba(79, 70, 229, 1)"
+            >
+              <p className="text-sm font-bold">{sleepQualityPercentage}%</p>
+            </ProgressRing>
+          </motion.div>
         </div>
         <div className="h-32 flex items-center justify-center">
-          <Doughnut data={sleepChartData} options={chartOptions} />
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3, type: "spring", stiffness: 100 }}
+            className="w-full h-full"
+            whileHover={{ scale: 1.03 }}
+          >
+            <Doughnut data={sleepChartData} options={chartOptions} />
+          </motion.div>
         </div>
       </Card>
 
@@ -182,20 +244,31 @@ const StatisticsGrid: React.FC<StatisticsGridProps> = ({ nutritionData, sleepDat
       <Card className="p-5 md:col-span-2 lg:col-span-1">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Water Intake</h3>
         <div className="flex justify-center mb-4">
-          <ProgressRing progress={waterPercentage} color="hsl(var(--color-tertiary))">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{nutritionData.water.consumed}L</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">of {nutritionData.water.goal}L</p>
-            </div>
-          </ProgressRing>
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4, type: "spring", stiffness: 100 }}
+            whileHover={{ scale: 1.05 }}
+          >
+            <ProgressRing progress={waterPercentage} color="rgba(14, 165, 233, 1)">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{nutritionData.water.consumed}L</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400">of {nutritionData.water.goal}L</p>
+              </div>
+            </ProgressRing>
+          </motion.div>
         </div>
         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-4">
           <motion.div 
-            className="bg-tertiary h-2.5 rounded-full"
+            className="bg-sky-500 h-2.5 rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${waterPercentage}%` }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
           />
+        </div>
+        <div className="flex justify-between mt-2 text-xs text-gray-500">
+          <span>0L</span>
+          <span>{nutritionData.water.goal}L</span>
         </div>
       </Card>
     </div>

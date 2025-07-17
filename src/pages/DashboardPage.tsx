@@ -36,18 +36,20 @@ const DashboardPage: React.FC = () => {
       {
         label: 'Steps',
         data: [7500, 8200, 6800, 9300, 8700, 10200, 9100],
-        borderColor: 'hsl(var(--color-primary))',
-        backgroundColor: 'hsla(var(--color-primary), 0.1)',
+        borderColor: 'rgba(59, 130, 246, 1)', // blue-500
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
         fill: true,
-        tension: 0.4
+        tension: 0.4,
+        yAxisID: 'y'
       },
       {
         label: 'Heart Rate',
         data: [68, 72, 70, 74, 71, 73, 69],
-        borderColor: 'hsl(var(--color-secondary))',
-        backgroundColor: 'hsla(var(--color-secondary), 0.1)',
+        borderColor: 'rgba(239, 68, 68, 1)', // red-500
+        backgroundColor: 'rgba(239, 68, 68, 0.1)',
         fill: true,
-        tension: 0.4
+        tension: 0.4,
+        yAxisID: 'y1'
       }
     ]
   };
@@ -258,7 +260,8 @@ const DashboardPage: React.FC = () => {
             {/* Trends Chart */}
             <TrendsChart 
               title="Weekly Activity Trends" 
-              data={trendsData} 
+              data={trendsData}
+              chartType="mixed"
               height={250}
             />
             
