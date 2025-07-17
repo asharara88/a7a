@@ -2,11 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../ui/Card';
 import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Colors } from 'chart.js';
 import ProgressRing from './ProgressRing';
-
-// Register Chart.js components
-ChartJS.register(ArcElement, Tooltip, Legend, Colors);
 
 interface StatisticsGridProps {
   nutritionData: {

@@ -4,11 +4,7 @@ import { Utensils, TrendingUp, Apple, Salad, Clock } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { cn } from '../../utils/cn';
-
-// Register Chart.js components
-ChartJS.register(ArcElement, Tooltip, Legend);
 
 const NutritionDashboard: React.FC = () => {
   // Mock data for the dashboard

@@ -1,34 +1,7 @@
 import React from 'react';
 import { Line, Bar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  Interaction
-} from 'chart.js';
 import { Card } from '../ui/Card';
 import { motion } from 'framer-motion';
-
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  Interaction
-);
 
 interface TrendsChartProps {
   title: string;
