@@ -42,7 +42,8 @@ const SupplementsPage: React.FC = () => {
       const { data, error } = await supabase
         .from('supplements')
         .select('*')
-        .not('tier', 'eq', 'red');
+        .not('tier', 'eq', 'red')
+        .eq('is_available', true);
       
       if (error) throw error;
       
@@ -62,8 +63,23 @@ const SupplementsPage: React.FC = () => {
     try {
       setAddingToCart(supplementId);
       
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        // For demo mode without authentication
+        setTimeout(() => {
+          setAddingToCart(null);
+        }, 1000);
+        return;
+      }
+      
       // Add to cart
-      setCartItems(prev => [...prev, supplementId]);
+      await supabase.from('cart_items').upsert({
+        user_id: user.id,
+        supplement_id: supplementId,
+        quantity: 1
+      });
       
       // Clear adding state after a delay
       setTimeout(() => {

@@ -78,7 +78,7 @@ export const recipeApi = {
   getRecipeById: async (recipeId: number): Promise<Recipe | null> => {
     try {
       const { data, error } = await supabase.functions.invoke('get-personalized-recipes', {
-        body: { ids: [recipeId] }
+        body: { ids: [recipeId] },
         headers: {
           'Content-Type': 'application/json'
         }

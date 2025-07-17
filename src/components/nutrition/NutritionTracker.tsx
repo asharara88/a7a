@@ -346,28 +346,21 @@ const NutritionTracker: React.FC = () => {
                           </div>
                           <div className="text-right">
                             <p className="font-medium">{food.calories} cal</p>
-               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Daily Goal: 2000</p>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
-             <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
                             </p>
                           </div>
                         </div>
                       ))}
-               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Daily Goal: 150g</p>
                     </div>
-             <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
                 )}
                 
                 <div className="flex justify-end space-x-2 mt-4">
                   <Button variant="outline" onClick={() => setShowAddMeal(false)}>
-               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Daily Goal: 250g</p>
                     Cancel
-             <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
                   <Button onClick={handleSearch} disabled={!searchQuery.trim() || isSearching}>
                     Search
                   </Button>
                 </div>
-               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Daily Goal: 65g</p>
               </Card>
             </div>
           )}
