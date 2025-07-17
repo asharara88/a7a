@@ -1,5 +1,6 @@
 import React from 'react'
 import { Activity, Heart, Moon, Zap, Droplet, Utensils, Pill, Target, Dumbbell, Brain, Gauge, Weight } from 'lucide-react'
+import DashboardCards from '../components/dashboard/DashboardCards'
 import MetricsCard from '../components/dashboard/MetricsCard'
 import TrendsChart from '../components/dashboard/TrendsChart'
 import StatisticsGrid from '../components/dashboard/StatisticsGrid'
@@ -296,7 +297,7 @@ const DashboardPage: React.FC = () => {
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <MetricsCard
             title="Heart Rate"
             value="72 BPM"
@@ -325,6 +326,11 @@ const DashboardPage: React.FC = () => {
             icon={<Droplet className="w-6 h-6" />}
             color="tertiary"
           />
+        </div>
+
+        {/* New Dashboard Cards */}
+        <div className="mb-8">
+          <DashboardCards />
         </div>
 
         {/* BW Score */}
