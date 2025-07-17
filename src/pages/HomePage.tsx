@@ -180,8 +180,8 @@ const HomePage: React.FC = () => {
               Ready to optimize your health?
             </span>
           </motion.h2>
-          <motion.p 
-            className="text-xl sm:text-2xl text-gray-700 dark:text-gray-300 mb-8 sm:mb-10 max-w-3xl mx-auto"
+          <p className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+            Optimize your Wellness Everyday
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
