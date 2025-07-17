@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Mic, MicOff, Volume2, VolumeX, Loader2, Settings } from 'lucide-react';
+import { Send, Mic, MicOff, Volume2, VolumeX, Loader2, Settings, Sparkles, X } from 'lucide-react';
 import { Button } from '../ui/Button';
 import ChatMessage from './ChatMessage';
 import { createClient } from '@supabase/supabase-js';
