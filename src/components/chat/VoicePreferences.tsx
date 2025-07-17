@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Play, Loader2 } from 'lucide-react';
+import { X, Play, Loader2, Volume2, VolumeX, Info } from 'lucide-react';
 import { elevenlabsApi, Voice } from '../../api/elevenlabsApi';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/Button'; 
 import { Card } from '../ui/Card';
 
 interface VoiceSettings {
@@ -20,6 +20,7 @@ interface VoicePreferencesProps {
 }
 
 const VoicePreferences: React.FC<VoicePreferencesProps> = ({
+  
   settings,
   onSettingsChange,
   onClose,
@@ -33,6 +34,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
   const [stability, setStability] = useState(settings.stability);
   const [similarityBoost, setSimilarityBoost] = useState(settings.similarity_boost);
   const [isConfigured, setIsConfigured] = useState(false);
+  const [testPhrase, setTestPhrase] = useState("Hello, I'm your Biowell health assistant.");
 
   useEffect(() => {
     const checkConfiguration = async () => {
@@ -84,15 +86,14 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
   const handleTestVoice = async () => {
     if (isTestingVoice || isPlayingAudio) return;
     
-    setIsTestingVoice(true);
+    setIsTestingVoice(true); 
     try {
       // Stop any currently playing audio
       stopAudio();
       
       // Generate test audio
-      const testText = "Hello, I'm your Biowell health assistant. How can I help you today?";
       const audioData = await elevenlabsApi.textToSpeech(
-        testText,
+        testPhrase,
         selectedVoice,
         { stability, similarity_boost: similarityBoost }
       );
@@ -101,7 +102,19 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
         throw new Error('Failed to generate test audio');
       }
       
-      // Play the audio
+      // Create animated dots during playback
+      const showPlayingAnimation = () => {
+        const dots = document.getElementById('playing-animation');
+        if (dots) {
+          dots.innerHTML = '.';
+          setTimeout(() => { if (dots) dots.innerHTML = '..'; }, 500);
+          setTimeout(() => { if (dots) dots.innerHTML = '...'; }, 1000);
+          setTimeout(() => { if (dots) dots.innerHTML = ''; }, 1500);
+          setTimeout(showPlayingAnimation, 2000);
+        }
+      };
+      
+      // Play the audio with animation
       const blob = new Blob([audioData], { type: 'audio/mpeg' });
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
@@ -109,6 +122,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
       audio.onended = () => {
         URL.revokeObjectURL(url);
         setIsTestingVoice(false);
+        clearTimeout(showPlayingAnimation as any);
       };
       
       audio.onerror = () => {
@@ -118,6 +132,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
       };
       
       await audio.play();
+      showPlayingAnimation();
     } catch (error) {
       console.error('Error testing voice:', error);
       setIsTestingVoice(false);
@@ -156,7 +171,9 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
   return (
     <Card className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-all duration-200">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Voice Preferences</h3>
+        <div className="flex items-center">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Voice Preferences</h3>
+        </div>
         <button
           onClick={onClose}
           className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400"
@@ -177,6 +194,27 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
         </div>
       ) : (
         <div className="space-y-4">
+          {/* Info message */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg mb-4 text-sm">
+            <div className="flex items-start">
+              <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 mr-2 flex-shrink-0" />
+              <p className="text-blue-700 dark:text-blue-300">
+                Voice responses use your ElevenLabs credits. Adjust settings to balance quality and usage.
+              </p>
+            </div>
+          </div>
+          
+          {/* Test phrase input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Test Phrase
+            </label>
+            <input
+              value={testPhrase}
+              onChange={(e) => setTestPhrase(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Enable Voice Responses
@@ -187,7 +225,11 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
                 checked={settings.enabled}
                 onChange={(e) => onSettingsChange({ ...settings, enabled: e.target.checked })}
                 className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                id="enable-voice"
               />
+              {settings.enabled ? 
+                <Volume2 className="h-4 w-4 text-primary ml-2 mr-1" /> : 
+                <VolumeX className="h-4 w-4 text-gray-500 ml-2 mr-1" />}
               <span className="ml-2 text-gray-700 dark:text-gray-300">
                 {settings.enabled ? 'Voice responses enabled' : 'Voice responses disabled'}
               </span>
@@ -304,8 +346,9 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   Testing Voice...
                 </>
+                <span id="playing-animation"></span>
               ) : (
-                <>
+                <> 
                   <Play className="w-4 h-4 mr-2" />
                   Test Voice
                 </>

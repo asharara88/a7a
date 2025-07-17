@@ -282,24 +282,6 @@ const MinimalNav: React.FC = () => {
               )}
             </div>
             
-            <Link 
-              to="/supplements"
-              className={cn(
-                "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                "hover:scale-105 transition-transform duration-150",
-                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              )}
-              aria-label="Supplements"
-            >
-              <Pill size={20} />
-              {isActive('/supplements') && (
-                <motion.div 
-                  className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
-                  layoutId="activeIndicator"
-                  transition={{ duration: 0.15 }}
-                />
-              )}
-            </Link>
             
             {/* My Supplements */}
             <div className="relative">
@@ -310,11 +292,11 @@ const MinimalNav: React.FC = () => {
                   "hover:scale-105 transition-transform duration-150",
                   "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 )}
-                aria-label="My Supplements"
+                aria-label="Supplements"
                 aria-expanded={openSubmenu === 'supplements'}
               >
                 <Pill size={20} />
-                {(isActive('/my-stacks') || isActive('/supplements')) && (
+                {(isActive('/my-stacks') || isActive('/supplements') || isActive('/supplement-store')) && (
                   <motion.div 
                     className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
                     layoutId="activeIndicator"
@@ -332,13 +314,21 @@ const MinimalNav: React.FC = () => {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
+                  <Link to="/supplements" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Pill size={18} className="text-gray-700 dark:text-gray-300" />
+                    <span className="ml-3 text-gray-700 dark:text-gray-300">Explore Supplements</span>
+                  </Link>
                   <Link to="/my-stacks" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Package size={18} className="text-gray-700 dark:text-gray-300" />
                     <span className="ml-3 text-gray-700 dark:text-gray-300">My Stacks</span>
                   </Link>
-                  <Link to="/supplements" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Pill size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Explore Supplements</span>
+                  <Link to="/supplement-store" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Store size={18} className="text-gray-700 dark:text-gray-300" />
+                    <span className="ml-3 text-gray-700 dark:text-gray-300">Supplement Store</span>
+                  </Link>
+                  <Link to="/recommendations" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
+                    <span className="ml-3 text-gray-700 dark:text-gray-300">Recommendations</span>
                   </Link>
                 </motion.div>
               )}
