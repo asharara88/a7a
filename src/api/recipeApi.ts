@@ -55,7 +55,10 @@ export const recipeApi = {
   searchRecipes: async (params: RecipeSearchParams): Promise<RecipeSearchResponse> => {
     try {
       const { data, error } = await supabase.functions.invoke('get-personalized-recipes', {
-        body: params
+        body: params,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       
       if (error) throw new Error(error.message);
@@ -76,6 +79,9 @@ export const recipeApi = {
     try {
       const { data, error } = await supabase.functions.invoke('get-personalized-recipes', {
         body: { ids: [recipeId] }
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       
       if (error) throw new Error(error.message);
@@ -253,7 +259,31 @@ export const recipeApi = {
       
       // Get personalized recipes
       const { recipes } = await recipeApi.searchRecipes(searchParams);
-      return recipes;
+      
+      // Sort recipes by relevance to user's goals
+      const sortedRecipes = [...recipes].sort((a, b) => {
+        // Prioritize recipes with high health scores for users with health goals
+        if (profileData.primary_health_goals?.includes('better health')) {
+          return (b.healthScore || 0) - (a.healthScore || 0);
+        }
+        
+        // Prioritize high protein recipes for muscle building goals
+        if (profileData.primary_health_goals?.includes('muscle building') && 
+            a.nutrition && b.nutrition) {
+          return (b.nutrition.protein || 0) - (a.nutrition.protein || 0);
+        }
+        
+        // Prioritize low calorie recipes for weight management
+        if (profileData.primary_health_goals?.includes('weight management') && 
+            a.nutrition && b.nutrition) {
+          return (a.nutrition.calories || 0) - (b.nutrition.calories || 0);
+        }
+        
+        // Default sorting by health score
+        return (b.healthScore || 0) - (a.healthScore || 0);
+      });
+      
+      return sortedRecipes;
     } catch (error) {
       console.error('Error getting personalized recommendations:', error);
       return getMockRecipeData();

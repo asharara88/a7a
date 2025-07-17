@@ -57,13 +57,14 @@ Deno.serve(async (req) => {
     // Build query parameters
     const params = new URLSearchParams();
     params.append("apiKey", apiKey);
-    params.append("number", "10"); // Number of results to return
+    params.append("number", "12"); // Increased number of results
     params.append("addRecipeNutrition", "true"); // Include nutrition info
     
     if (diet) params.append("diet", diet);
     if (intolerances) params.append("intolerances", intolerances);
     if (excludeIngredients) params.append("excludeIngredients", excludeIngredients);
     if (includeIngredients) params.append("includeIngredients", includeIngredients);
+    if (query) params.append("query", query);
     if (maxReadyTime) params.append("maxReadyTime", maxReadyTime.toString());
     if (minProtein) params.append("minProtein", minProtein.toString());
     if (maxCalories) params.append("maxCalories", maxCalories.toString());
@@ -75,21 +76,26 @@ Deno.serve(async (req) => {
     
     // Process and return the data
     const recipes = response.data.results.map(recipe => ({
-      id: recipe.id,
-      title: recipe.title,
-      image: recipe.image,
-      readyInMinutes: recipe.readyInMinutes,
-      servings: recipe.servings,
-      sourceUrl: recipe.sourceUrl,
-      summary: recipe.summary,
-      healthScore: recipe.healthScore,
-      diets: recipe.diets,
+      id: recipe.id || 0,
+      title: recipe.title || "Unnamed Recipe",
+      image: recipe.image || "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=300",
+      readyInMinutes: recipe.readyInMinutes || 30,
+      servings: recipe.servings || 4,
+      sourceUrl: recipe.sourceUrl || "",
+      summary: recipe.summary || "No summary available",
+      healthScore: recipe.healthScore || 50,
+      diets: recipe.diets || [],
       nutrition: recipe.nutrition ? {
         calories: recipe.nutrition.nutrients.find(n => n.name === "Calories")?.amount || 0,
         protein: recipe.nutrition.nutrients.find(n => n.name === "Protein")?.amount || 0,
         fat: recipe.nutrition.nutrients.find(n => n.name === "Fat")?.amount || 0,
         carbs: recipe.nutrition.nutrients.find(n => n.name === "Carbohydrates")?.amount || 0,
-      } : null
+      } : {
+        calories: 0,
+        protein: 0, 
+        fat: 0,
+        carbs: 0
+      }
     }));
     
     return new Response(

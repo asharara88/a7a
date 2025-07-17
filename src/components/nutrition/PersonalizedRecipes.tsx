@@ -5,12 +5,20 @@ import RecipeCard from './RecipeCard';
 import { Button } from '../ui/Button';
 import RecipeFilters from './RecipeFilters';
 import { Link } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
+import { Card } from '../ui/Card';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const PersonalizedRecipes: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [savedRecipes, setSavedRecipes] = useState<number[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Filter states
   const [searchParams, setSearchParams] = useState<RecipeSearchParams>({
@@ -29,10 +37,16 @@ const PersonalizedRecipes: React.FC = () => {
   }, []);
 
   const loadRecipes = async () => {
+    // Combine search query with other filters
+    const combinedParams = {
+      ...searchParams,
+      query: searchQuery.trim() || undefined
+    };
+    
     setIsLoading(true);
     setError(null);
     try {
-      const { recipes } = await recipeApi.searchRecipes(searchParams);
+      const { recipes } = await recipeApi.searchRecipes(combinedParams);
       setRecipes(recipes);
     } catch (error) {
       console.error('Error loading recipes:', error);
@@ -69,26 +83,68 @@ const PersonalizedRecipes: React.FC = () => {
     }
   };
 
+  // Filter recipes by search query (client-side filtering for immediate response)
+  const filteredRecipes = recipes.filter(recipe => 
+    !searchQuery.trim() || recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommended For You</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Recipes tailored to your preferences and health goals
-          </p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex-1">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommended For You</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Recipes tailored to your preferences and health goals
+              </p>
+            </div>
+          </div>
+          
+          {/* Search input */}
+          <div className="relative mb-6">
+            <input
+              type="text"
+              placeholder="Search recipes..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && loadRecipes()}
+              className="w-full px-4 py-3 pl-10 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-800 dark:text-white"
+            />
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <Button 
+              onClick={loadRecipes}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2"
+            >
+              Search
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center space-x-3">
-          <Link to="/saved-recipes" className="text-primary hover:text-primary-dark text-sm font-medium">
-            Saved Recipes
-          </Link>
-          <RecipeFilters 
-            initialFilters={searchParams}
-            onApplyFilters={(filters) => {
-              setSearchParams(filters);
-              loadRecipes();
-            }}
-          />
+        
+        <div>
+          <Card className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Filter Options</h3>
+              <RecipeFilters 
+                initialFilters={searchParams}
+                onApplyFilters={(filters) => {
+                  setSearchParams(filters);
+                  loadRecipes();
+                }}
+              />
+            </div>
+            
+            <div className="flex justify-between items-center mb-2 border-t border-gray-200 dark:border-gray-700 pt-3 mt-2">
+              <Link to="/saved-recipes" className="text-primary hover:text-primary-dark text-sm font-medium flex items-center">
+                View Saved Recipes
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </Card>
         </div>
       </div>
 
@@ -103,7 +159,7 @@ const PersonalizedRecipes: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recipes.map((recipe) => (
+          {filteredRecipes.map((recipe) => (
             <RecipeCard
               as={Link}
               to={`/recipes/${recipe.id}`}
@@ -114,10 +170,16 @@ const PersonalizedRecipes: React.FC = () => {
             />
           ))}
           
-          {recipes.length === 0 && (
+          {filteredRecipes.length === 0 && (
             <div className="col-span-full text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400 mb-4">No recipes found matching your criteria.</p>
-              <Button onClick={() => {
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                {searchQuery.trim() 
+                  ? `No recipes found matching "${searchQuery}"` 
+                  : "No recipes found matching your criteria."}
+              </p>
+              <Button 
+                onClick={() => {
+                  setSearchQuery('');
                 setSearchParams({
                   diet: '',
                   intolerances: '',

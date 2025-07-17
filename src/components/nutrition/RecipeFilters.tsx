@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Filter, X } from 'lucide-react';
+import { Filter, X, Search, Check } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { Input } from '../ui/Input';
 import { RecipeSearchParams } from '../../api/recipeApi';
+import { cn } from '../../utils/cn';
 
 interface RecipeFiltersProps {
   initialFilters: RecipeSearchParams;
@@ -13,9 +14,17 @@ interface RecipeFiltersProps {
 const RecipeFilters: React.FC<RecipeFiltersProps> = ({ initialFilters, onApplyFilters }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filters, setFilters] = useState<RecipeSearchParams>(initialFilters);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const handleChange = (key: keyof RecipeSearchParams, value: any) => {
     setFilters(prev => ({ ...prev, [key]: value }));
+    
+    // Track which filters are active for the badge
+    if (value && !activeFilters.includes(key)) {
+      setActiveFilters(prev => [...prev, key]);
+    } else if (!value && activeFilters.includes(key)) {
+      setActiveFilters(prev => prev.filter(filter => filter !== key));
+    }
   };
 
   const handleApply = () => {
@@ -27,10 +36,13 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({ initialFilters, onApplyFi
     const resetFilters: RecipeSearchParams = {
       diet: '',
       intolerances: '',
+      excludeIngredients: '',
+      includeIngredients: '',
       maxReadyTime: 60,
       maxCalories: 800
     };
     setFilters(resetFilters);
+    setActiveFilters([]);
     onApplyFilters(resetFilters);
     setIsOpen(false);
   };
@@ -47,14 +59,20 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({ initialFilters, onApplyFi
   ];
 
   return (
-    <div>
+    <div className="relative">
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        variant="outline"
-        className="flex items-center"
+        variant={activeFilters.length > 0 ? "default" : "outline"}
+        className="flex items-center relative"
+        aria-label="Filter recipes"
       >
-        <Filter className="w-4 h-4 mr-2" />
+        <Filter className={`w-4 h-4 ${activeFilters.length > 0 ? 'mr-1.5' : 'mr-2'}`} />
         Filters
+        {activeFilters.length > 0 && (
+          <span className="ml-1.5 bg-white text-primary text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {activeFilters.length}
+          </span>
+        )}
       </Button>
 
       {isOpen && (
@@ -84,7 +102,7 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({ initialFilters, onApplyFi
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2">Intolerances</label>
+                <label className="block text-sm font-medium mb-2">Intolerances/Allergies</label>
                 <Input
                   type="text"
                   placeholder="e.g., dairy, gluten"
@@ -117,7 +135,7 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({ initialFilters, onApplyFi
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2">Include Ingredients</label>
+                <label className="block text-sm font-medium mb-2">Must Include</label>
                 <Input
                   type="text"
                   placeholder="e.g., chicken, broccoli"
@@ -128,7 +146,7 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({ initialFilters, onApplyFi
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2">Exclude Ingredients</label>
+                <label className="block text-sm font-medium mb-2">Must Exclude</label>
                 <Input
                   type="text"
                   placeholder="e.g., peanuts, shellfish"
@@ -145,9 +163,36 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({ initialFilters, onApplyFi
               </Button>
               <Button onClick={handleApply}>
                 Apply Filters
-              </Button>
+              <Check className="w-4 h-4 mr-1.5" />
+              Apply
             </div>
           </Card>
+        </div>
+      )}
+
+      {/* Active filters indicator */}
+      {activeFilters.length > 0 && !isOpen && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {filters.diet && (
+            <div className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300 px-2 py-1 rounded-full">
+              Diet: {filters.diet}
+            </div>
+          )}
+          {filters.intolerances && (
+            <div className="text-xs bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 px-2 py-1 rounded-full">
+              Avoiding: {filters.intolerances}
+            </div>
+          )}
+          {filters.maxReadyTime && filters.maxReadyTime < 60 && (
+            <div className="text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 px-2 py-1 rounded-full">
+              Quick: ≤{filters.maxReadyTime} min
+            </div>
+          )}
+          {filters.maxCalories && (
+            <div className="text-xs bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300 px-2 py-1 rounded-full">
+              ≤{filters.maxCalories} cal
+            </div>
+          )}
         </div>
       )}
     </div>

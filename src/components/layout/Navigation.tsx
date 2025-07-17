@@ -14,7 +14,10 @@ import {
   User,
   Settings,
   Package,
-  Moon
+  Moon,
+  DollarSign,
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
@@ -88,8 +91,41 @@ const Navigation: React.FC<NavigationProps> = ({
       ]
     }
   ];
+
+  // Define navigation items based on authentication state
+  const getNavigationItems = (): NavigationItem[] => {
+    if (!isLoggedIn) {
+      if (type === 'main') {
+        return [
+          { name: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
+          { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> },
+          { name: 'Pricing', href: '/pricing', icon: <DollarSign className="w-4 h-4" /> }
+        ];
+      } else {
+        return [
+          { 
+            name: 'Account', 
+            href: '/login', 
+            icon: <User className="w-5 h-5" />,
+            children: [
+              { name: 'Login', href: '/login', icon: <LogIn className="w-4 h-4" /> },
+              { name: 'Sign Up', href: '/signup', icon: <UserPlus className="w-4 h-4" /> }
+            ]
+          }
+        ];
+      }
+    }
+    
+    // Return the default navigation for logged-in users
+    if (type === 'main') {
+      return mainNavigation;
+    } else {
+      return accountNavigation;
+    }
+  };
   
-  const navigation = type === 'main' ? mainNavigation : accountNavigation;
+  // Get the navigation items based on authentication state
+  const navigation = getNavigationItems();
 
   const toggleSubmenu = (name: string) => {
     setOpenSubmenu(prev => prev === name ? null : name);
@@ -150,41 +186,33 @@ const Navigation: React.FC<NavigationProps> = ({
             </Link>
             
             {hasChildren && (
-  // Define navigation items based on authentication state
-  const getNavigationItems = (): NavigationItem[] => {
-    if (!isLoggedIn) {
-      if (type === 'main') {
-        return [
-          { name: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
-          { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> },
-          { name: 'Pricing', href: '/pricing', icon: <DollarSign className="w-4 h-4" /> }
-        ];
-      } else {
-        return [
-          { 
-            name: 'Account', 
-            href: '/login', 
-            icon: <User className="w-5 h-5" />,
-            children: [
-              { name: 'Login', href: '/login', icon: <LogIn className="w-4 h-4" /> },
-              { name: 'Sign Up', href: '/signup', icon: <UserPlus className="w-4 h-4" /> }
-            ]
-          }
-        ];
-      }
-    }
-    
-    // Return the default navigation for logged-in users
-    if (type === 'main') {
-      return mainNavigation;
-    } else {
-      return accountNavigation;
-    }
-  };
-                 e.preventDefault();
-  // Get the navigation items based on authentication state
-  const navigation = getNavigationItems();
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  toggleSubmenu(item.name);
+                }}
+                className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+              >
+                {isSubmenuOpen ? (
+                  <ChevronDown className="w-4 h-4" />
+                ) : (
+                  <ChevronRight className="w-4 h-4" />
+                )}
+              </button>
+            )}
+          </div>
+          
+          {hasChildren && isSubmenuOpen && (
+            <div className="mt-1 space-y-1">
+              {item.children?.map(child => renderNavItem(child, depth + 1))}
+            </div>
+          )}
+        </div>
+      </div>
     );
+  };
+
   return (
     <nav className={cn(
       "flex flex-col space-y-1",
