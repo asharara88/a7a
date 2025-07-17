@@ -189,16 +189,7 @@ const NutritionDashboard: React.FC = () => {
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-all duration-200 bg-white dark:bg-gray-800">
               <div className="h-32 bg-gradient-to-r from-primary/20 via-tertiary/20 to-secondary/20 dark:from-primary/30 dark:via-tertiary/30 dark:to-secondary/30"></div>
-              <div className="p-4">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Recommended Recipe {i + 1}</h4>
-                <div className="flex justify-between text-sm text-gray-800 dark:text-gray-200 font-medium">
-                  <div className="flex items-center">
-                    <Clock className="w-4 h-4 mr-1 text-primary" />
-                    <span>30 min</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Utensils className="w-4 h-4 mr-1 text-secondary" />
-                    <span>400 cal</span>
+                    <span className="text-sm text-gray-500">Daily Goal</span>
                   </div>
                 </div>
               </div>

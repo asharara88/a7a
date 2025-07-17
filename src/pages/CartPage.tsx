@@ -88,16 +88,16 @@ const CartPage: React.FC = () => {
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>{subtotal.toFixed(2)} AED</span>
                   </div>
                   <div className="flex justify-between">
-                     <span>{shipping.toFixed(2)} AED</span>
-                    <span>${shipping.toFixed(2)}</span>
+                    <span className="text-gray-600">Shipping</span>
+                    <span>{shipping.toFixed(2)} AED</span>
                   </div>
                   <div className="border-t pt-2">
                     <div className="flex justify-between font-semibold">
-                       <span>{total.toFixed(2)} AED</span>
-                     <span>{subtotal.toFixed(2)} AED</span>
+                      <span className="text-gray-600">Total</span>
+                      <span>{total.toFixed(2)} AED</span>
                     </div>
                   </div>
                 </div>
