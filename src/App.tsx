@@ -57,6 +57,8 @@ const CartPage = React.lazy(() => import('./pages/CartPage'))
 const SettingsPage = React.lazy(() => import('./pages/SettingsPage'))
 const MetabolismPage = React.lazy(() => import('./pages/MetabolismPage'))
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'))
+const FertilityPartnerPage = React.lazy(() => import('./pages/FertilityPartnerPage'))
+const ParticipationSelectionPage = React.lazy(() => import('./pages/ParticipationSelectionPage'))
 
 const App: React.FC = () => {
   return (
@@ -85,6 +87,8 @@ const App: React.FC = () => {
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/metabolism" element={<ProtectedRoute><MetabolismPage /></ProtectedRoute>} />
+          <Route path="/fertility/partner" element={<ProtectedRoute><FertilityPartnerPage /></ProtectedRoute>} />
+          <Route path="/participation" element={<ProtectedRoute><ParticipationSelectionPage /></ProtectedRoute>} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </React.Suspense>
