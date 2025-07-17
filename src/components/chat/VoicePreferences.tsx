@@ -133,7 +133,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
       
       await audio.play();
       showPlayingAnimation();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error testing voice:', error);
       setIsTestingVoice(false);
     }
@@ -344,9 +344,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
               {isTestingVoice ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Testing Voice...
-                </>
-                <span id="playing-animation"></span>
+              Testing Voice<span id="playing-animation"></span>
               ) : (
                 <> 
                   <Play className="w-4 h-4 mr-2" />

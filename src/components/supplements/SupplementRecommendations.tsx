@@ -5,7 +5,21 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Link } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import { supplementApi } from '../../api/supplementApi';
+
+// Helper function to get tier badge component
+const getTierBadge = (tier: string) => {
+  const colors = {
+    green: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+    yellow: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+    orange: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300'
+  };
+  
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colors[tier] || colors.orange}`}>
+      {tier.charAt(0).toUpperCase() + tier.slice(1)} Tier
+    </span>
+  );
+};
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
@@ -33,11 +47,15 @@ const SupplementRecommendations: React.FC = () => {
       // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       
-      if (!user) {
-        throw new Error('User not authenticated');
+      let userId = user?.id;
+      
+      // For demo purposes, use a fallback if no user is authenticated
+      if (!userId) {
+        console.warn('No authenticated user, using demo mode');
+        userId = 'demo-user-id';
       }
       
-      const data = await supplementApi.getPersonalizedRecommendations(user.id);
+      const data = await supplementApi.getPersonalizedRecommendations(userId);
       setRecommendations(data);
     } catch (error) {
       console.error('Error loading recommendations:', error);
@@ -45,8 +63,8 @@ const SupplementRecommendations: React.FC = () => {
       
       // Set mock data for development
       setRecommendations({
-        supplements: [],
-        stacks: [],
+        supplements: getMockSupplements(),
+        stacks: getMockStacks(),
         personalized_message: "We're preparing your personalized recommendations."
       });
     } finally {
@@ -255,5 +273,82 @@ const SupplementRecommendations: React.FC = () => {
     </div>
   );
 };
+
+// Mock supplements for development/fallback
+function getMockSupplements(): Supplement[] {
+  return [
+    {
+      id: '1',
+      name: 'Creatine Monohydrate',
+      brand: 'Biowell',
+      description: 'Increases strength and power output during high-intensity exercise.',
+      detailed_description: 'Increases intramuscular phosphocreatine for rapid ATP regeneration, enhancing strength and power output.',
+      tier: 'green',
+      use_case: 'Muscle strength & power',
+      price_aed: 85.00,
+      subscription_discount_percent: 15,
+      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
+      is_available: true,
+      is_featured: true,
+      is_bestseller: true
+    },
+    {
+      id: '2',
+      name: 'Vitamin D3',
+      brand: 'Biowell',
+      description: 'Essential fat-soluble vitamin that supports immune function, bone health, and mood regulation.',
+      tier: 'green',
+      use_case: 'Immune & bone health',
+      price_aed: 40.00,
+      subscription_discount_percent: 10,
+      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
+      is_available: true,
+      is_featured: false,
+      is_bestseller: false
+    },
+    {
+      id: '3',
+      name: 'Magnesium Glycinate',
+      brand: 'Biowell',
+      description: 'Highly bioavailable form of magnesium that supports sleep, muscle recovery, and nervous system function.',
+      tier: 'yellow',
+      use_case: 'Sleep & recovery',
+      price_aed: 75.00,
+      subscription_discount_percent: 12,
+      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
+      is_available: true,
+      is_featured: false,
+      is_bestseller: false
+    }
+  ];
+}
+
+// Mock stacks for development/fallback
+function getMockStacks(): SupplementStack[] {
+  return [
+    {
+      id: '1',
+      name: 'Sleep & Recovery Stack',
+      category: 'Sleep',
+      total_price: 215.00,
+      components: [
+        { name: 'Magnesium Glycinate', dosage: '400mg', price: 75.00 },
+        { name: 'L-Theanine', dosage: '200mg', price: 65.00 },
+        { name: 'Ashwagandha', dosage: '600mg', price: 75.00 }
+      ]
+    },
+    {
+      id: '2',
+      name: 'Cognitive Performance Stack',
+      category: 'Cognition',
+      total_price: 255.00,
+      components: [
+        { name: 'Bacopa Monnieri', dosage: '300mg', price: 85.00 },
+        { name: 'Lion\'s Mane', dosage: '500mg', price: 95.00 },
+        { name: 'Rhodiola Rosea', dosage: '300mg', price: 75.00 }
+      ]
+    }
+  ];
+}
 
 export default SupplementRecommendations;
