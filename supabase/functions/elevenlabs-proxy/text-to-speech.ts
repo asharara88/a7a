@@ -17,6 +17,12 @@ export async function handleTextToSpeechRequest(req: Request, apiKey: string, co
     }
 
     // Limit text length to prevent abuse
+    const MAX_TEXT_LENGTH = 300; // Limit text length to avoid excessive API usage
+    const trimmedText = text.length > MAX_TEXT_LENGTH 
+      ? text.substring(0, MAX_TEXT_LENGTH) + "..."
+      : text;
+
+    // Limit text length to prevent abuse
     const trimmedText = text.length > MAX_TEXT_LENGTH 
       ? text.substring(0, MAX_TEXT_LENGTH) + "..."
       : text;

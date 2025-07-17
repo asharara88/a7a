@@ -90,12 +90,22 @@ export const elevenlabsApi = {
     try {
       // First check if we have a cached version
       const cacheKey = `${voiceId}_${text}_${settings?.stability || 0.5}_${settings?.similarity_boost || 0.75}`;
-      const { data: cacheData } = await supabase
+      const { data: user } = await supabase.auth.getUser();
+      
+      if (!user.user) {
+        throw new Error('User not authenticated');
+      }
+      
+      const { data: cacheData, error: cacheError } = await supabase
         .from('audio_cache')
         .select('audio_data')
         .eq('cache_key', cacheKey)
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id || 'anonymous')
+        .eq('user_id', user.user.id)
         .single();
+      
+      if (cacheError && cacheError.code !== 'PGRST116') {
+        console.error('Error checking audio cache:', cacheError);
+      }
       
       if (cacheData?.audio_data) {
         // Convert base64 to ArrayBuffer
@@ -123,35 +133,37 @@ export const elevenlabsApi = {
       // Cache the result
       const audioData = response.data;
       if (audioData) {
-        // Get current user
-        const user = await supabase.auth.getUser();
+        // Convert ArrayBuffer to base64
+        const bytes = new Uint8Array(audioData);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        const base64 = btoa(binary);
         
-        // Only cache if we have a valid user
-        if (user.data.user) {
-          // Convert ArrayBuffer to base64
-          const bytes = new Uint8Array(audioData);
-          let binary = '';
-          for (let i = 0; i < bytes.byteLength; i++) {
-            binary += String.fromCharCode(bytes[i]);
-          }
-          const base64 = btoa(binary);
-          
-          // Check if cache entry already exists
-          const { data: existingCache } = await supabase
-            .from('audio_cache')
-            .select('id')
-            .eq('user_id', user.data.user.id)
-            .eq('cache_key', cacheKey)
-            .maybeSingle();
-          
-          // Use upsert to handle both insert and update cases
-          await supabase.from('audio_cache').upsert({
-            id: existingCache?.id,
-            user_id: user.data.user.id, 
-            cache_key: cacheKey,
-            audio_data: base64,
-            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
-          });
+        // Check if cache entry already exists
+        const { data: existingCache, error: checkError } = await supabase
+          .from('audio_cache')
+          .select('id')
+          .eq('user_id', user.user.id)
+          .eq('cache_key', cacheKey)
+          .maybeSingle();
+        
+        if (checkError && checkError.code !== 'PGRST116') {
+          console.error('Error checking existing cache:', checkError);
+        }
+        
+        // Use upsert to handle both insert and update cases
+        const { error: upsertError } = await supabase.from('audio_cache').upsert({
+          id: existingCache?.id,
+          user_id: user.user.id, 
+          cache_key: cacheKey,
+          audio_data: base64,
+          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+        });
+        
+        if (upsertError) {
+          console.error('Error caching audio:', upsertError);
         }
       }
       
