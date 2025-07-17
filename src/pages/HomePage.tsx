@@ -35,28 +35,28 @@ const HomePage: React.FC = () => {
       <section className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white py-24 sm:py-32 md:py-40 relative overflow-hidden">
         <div className="mobile-container max-w-6xl mx-auto">
           <motion.div 
-            className="text-center max-w-4xl mx-auto"
+            className="max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
             <a 
               href="#evidence-based-health" 
-              className="inline-block bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-1 mb-6 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+              className="inline-block bg-gray-100 dark:bg-gray-800 rounded-lg px-4 py-1 mb-6 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
             >
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Evidence-based health optimization</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 tracking-wide">Evidence-based health optimization</span>
             </a>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 tracking-normal text-left">
               <span>Your Personal </span>
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
                 Health Coach
               </span>
             </h1>
-            <p className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl tracking-wide text-left">
               Optimize your everyday.
             </p>
             <motion.div 
-              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-12"
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
@@ -80,7 +80,7 @@ const HomePage: React.FC = () => {
               </motion.div>
             </motion.div>
             
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex flex-wrap gap-6 text-sm text-gray-600 dark:text-gray-400 tracking-wide">
               <div className="flex items-center">
                 <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
                 <span>Personalized recommendations</span>
@@ -106,18 +106,18 @@ const HomePage: React.FC = () => {
         
         <div className="mobile-container">
           <motion.div 
-            className="text-center mb-12 sm:mb-16"
+            className="mb-12 sm:mb-16 text-left"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 tracking-normal">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
               Why Choose Biowell?
               </span>
             </h2>
-            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl tracking-wide">
               Experience the future of personalized wellness
             </p>
           </motion.div>
@@ -132,11 +132,11 @@ const HomePage: React.FC = () => {
             {features.map((feature, index) => (
               <motion.div 
                 key={index} 
-                className={`text-center p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${
-                  index % 4 === 0 ? 'bg-gradient-to-br from-blue-700 to-blue-600' : 
-                  index % 4 === 1 ? 'bg-gradient-to-br from-blue-600 to-blue-500' : 
-                  index % 4 === 2 ? 'bg-gradient-to-br from-blue-500 to-blue-400' :
-                  'bg-gradient-to-br from-blue-600 to-blue-500'
+                className={`p-8 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 ${
+                  index % 4 === 0 ? 'bg-blue-700' : 
+                  index % 4 === 1 ? 'bg-blue-600' : 
+                  index % 4 === 2 ? 'bg-blue-500' :
+                  'bg-blue-600'
                 }`}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
@@ -147,15 +147,15 @@ const HomePage: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="flex justify-center mb-6">
-                  <div className="p-4 rounded-full bg-white/20 inline-flex">
+                <div className="flex mb-6">
+                  <div className="p-4 rounded-lg bg-white/20 inline-flex">
                     {feature.icon}
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-2xl font-bold text-white mb-4 text-left tracking-normal">
                   {feature.title}
                 </h3>
-                <p className="text-white dark:text-white text-base">
+                <p className="text-white dark:text-white text-base text-left tracking-wide">
                   {feature.description}
                 </p>
               </motion.div>
@@ -173,9 +173,9 @@ const HomePage: React.FC = () => {
       <section className="py-16 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white transition-all duration-200 relative overflow-hidden">
         {/* Animated background elements */}
         
-        <div className="mobile-container text-center">
+        <div className="mobile-container">
           <motion.h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 tracking-normal text-left"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -186,7 +186,7 @@ const HomePage: React.FC = () => {
             </span>
           </motion.h2>
           <motion.p 
-            className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"
+            className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl tracking-wide text-left"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -203,8 +203,8 @@ const HomePage: React.FC = () => {
             whileTap={{ scale: 0.98 }}
           >
             <Link
-              to="/onboarding"
-              className="bg-blue-700 dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl text-lg"
+              to="/onboarding" 
+              className="bg-blue-700 dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center shadow-sm hover:shadow-md text-lg tracking-wide"
             >
               Start Your Journey
               <ArrowRight className="ml-2 w-6 h-6" />

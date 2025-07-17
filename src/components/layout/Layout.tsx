@@ -100,7 +100,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex md:items-center md:space-x-8">
+            <div className="hidden md:flex md:items-center md:space-x-6">
               <Navigation type="main" />
               <div className="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
               <Navigation type="account" />
@@ -194,10 +194,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white shadow-inner">
+      <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-4 md:mb-0">
+          <div className="flex flex-col md:flex-row justify-between items-start">
+            <div className="flex items-center mb-4 md:mb-0 text-left">
               <img 
                 src={darkMode 
                   ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
@@ -207,7 +207,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 className="h-10 w-auto" 
               />
             </div>
-            <div className="text-center md:text-right">
+            <div className="text-left md:text-right">
               <p className="font-medium">&copy; 2025 Biowell AI - Personal Digital Health Coach</p>
               <p className="text-gray-500 dark:text-white/70 mt-1">All rights reserved.</p>
             </div>

@@ -19,13 +19,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isLoading = false })
   const isUser = message.role === 'user';
   
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
+    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-5`}>
       <div className={`flex max-w-[90%] ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
         <div className={`flex-shrink-0 flex items-start mt-1 ${isUser ? 'ml-3' : 'mr-3'}`}>
           <div className={cn(
-            "w-8 h-8 rounded-full flex items-center justify-center shadow-sm",
+            "w-8 h-8 rounded-lg flex items-center justify-center shadow-sm",
             isUser 
-              ? "bg-gradient-to-r from-primary to-secondary text-white" 
+              ? "bg-primary text-white" 
               : "bg-white dark:bg-gray-700 text-primary dark:text-white"
           )}>
             {isUser ? <User size={16} /> : <Sparkles size={16} />}
@@ -33,12 +33,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isLoading = false })
         </div>
         
         <div className={cn(
-          "rounded-xl p-4 shadow-sm",
+          "rounded-lg p-4 shadow-sm text-left",
           isUser 
-            ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white" 
+            ? "bg-primary text-white" 
             : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
         )}>
-          <div className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</div>
+          <div className="text-sm whitespace-pre-wrap leading-relaxed tracking-wide">{message.content}</div>
           <div className={cn(
             "text-xs mt-2",
             isUser 

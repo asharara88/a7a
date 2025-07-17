@@ -22,9 +22,9 @@ function DonutChart({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, go
 
 function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
   return (
-    <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
+    <div className="rounded-lg bg-white dark:bg-neutral-900 shadow-sm border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-2 text-left">
           <span className="text-xl font-medium text-gray-800 dark:text-gray-100">
             BW Score
           </span>
@@ -32,21 +32,21 @@ function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
         </div>
         <span className="text-3xl font-bold text-yellow-500">{score}</span>
       </div>
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-5 text-left">
         <span className="text-sm text-gray-500 dark:text-gray-400">/100</span>
         <span className="px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-700 text-xs font-medium ml-2">
           Good
         </span>
       </div>
-      <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 mt-2 space-y-2">
-        <div className="flex items-center justify-between">
+      <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 mt-2 space-y-3">
+        <div className="flex items-center justify-between text-left">
           <span className="flex items-center gap-1 text-sm text-purple-600 dark:text-purple-400 font-medium">
             Sleep
             <Info className="w-3 h-3 text-purple-400" title="Based on sleep duration, quality, and consistency." />
           </span>
           <span className="text-lg font-bold text-purple-500">{sleep}</span>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between text-left">
           <span className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 font-medium">
             Fitness
             <Info className="w-3 h-3 text-blue-400" title="Based on activity levels, workouts, and recovery." />
@@ -60,24 +60,24 @@ function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
 
 function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goalCarbs = 250, goalFat = 70 }) {
   return (
-    <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
-      <div className="flex items-center gap-2 mb-4">
+    <div className="rounded-lg bg-white dark:bg-neutral-900 shadow-sm border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
+      <div className="flex items-center gap-2 mb-4 text-left">
         <span className="text-xl font-medium text-gray-800 dark:text-gray-100">
           Macros
         </span>
         <Info className="w-4 h-4 text-green-500 cursor-pointer" title="Macronutrient breakdown based on daily intake and goals." />
       </div>
       <DonutChart protein={protein} carbs={carbs} fat={fat} />
-      <div className="flex flex-col gap-2 mt-4">
-        <div className="flex items-center justify-between text-sm">
+      <div className="flex flex-col gap-3 mt-4">
+        <div className="flex items-center justify-between text-sm text-left">
           <span className="text-indigo-600 dark:text-indigo-400">Protein</span>
           <span className="font-bold">{protein}g <span className="text-gray-400">/ {goalProtein}g</span></span>
         </div>
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center justify-between text-sm text-left">
           <span className="text-cyan-600 dark:text-cyan-400">Carbs</span>
           <span className="font-bold">{carbs}g <span className="text-gray-400">/ {goalCarbs}g</span></span>
         </div>
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center justify-between text-sm text-left">
           <span className="text-pink-600 dark:text-pink-400">Fat</span>
           <span className="font-bold">{fat}g <span className="text-gray-400">/ {goalFat}g</span></span>
         </div>
@@ -89,20 +89,20 @@ function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goa
 function SleepCard({ totalSleep = 7.5, deepSleep = 1.2, remSleep = 1.0, sleepGoal = 8 }) {
   const percent = Math.round((totalSleep / sleepGoal) * 100);
   return (
-    <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
-      <div className="flex items-center gap-2 mb-4">
+    <div className="rounded-lg bg-white dark:bg-neutral-900 shadow-sm border border-neutral-100 dark:border-neutral-800 p-6 w-full h-full">
+      <div className="flex items-center gap-2 mb-4 text-left">
         <span className="text-xl font-medium text-gray-800 dark:text-gray-100">
           Sleep Analysis
         </span>
         <Info className="w-4 h-4 text-purple-500 cursor-pointer" title="Total, Deep, and REM sleep compared to optimal targets." />
       </div>
-      <div className="flex items-center gap-4">
-        <div>
+      <div className="flex items-start gap-4 text-left">
+        <div className="text-left">
           <span className="text-3xl font-bold text-purple-500">{totalSleep}h</span>
           <div className="text-xs text-gray-500 dark:text-gray-400">Total Sleep</div>
         </div>
         <div className="flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-left">
             <span className="text-sm text-indigo-600 dark:text-indigo-400">Deep</span>
             <span className="font-bold">{deepSleep}h</span>
             <span className="text-sm text-pink-600 dark:text-pink-400">REM</span>

@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Poppins font */
-@import '@fontsource/poppins/300.css';
-@import '@fontsource/poppins/400.css';
-@import '@fontsource/poppins/500.css';
-@import '@fontsource/poppins/600.css';
-@import '@fontsource/poppins/700.css';
-
 /* Base design system variables */
 :root {
   /* Primary colors */
@@ -115,7 +108,9 @@
 
 @layer base {
   html {
-    font-family: 'Poppins', system-ui, sans-serif;
+    font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0.01em;
+    word-spacing: 0.025em;
   }
   
   body {
@@ -129,35 +124,35 @@
 
 @layer components {
   .container {
-    @apply px-4 sm:px-6 lg:px-8 mx-auto max-w-6xl w-full;
+    @apply px-5 sm:px-6 lg:px-8 mx-auto max-w-6xl w-full;
   }
   
   .card {
-    @apply bg-surface-1 rounded-xl shadow-md overflow-hidden transition-all duration-200;
+    @apply bg-surface-1 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-200;
   }
 
   .card-hover {
-    @apply hover:shadow-lg hover:scale-[1.02] transition-all duration-300;
+    @apply hover:shadow-md hover:scale-[1.01] transition-all duration-300;
   }
 
   .feature-card {
-    @apply bg-gray-900 text-center p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center;
+    @apply bg-gray-900 p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex flex-col;
   }
 
   .feature-icon-container {
-    @apply p-4 rounded-full bg-white/20 inline-flex mb-5 shadow-md;
+    @apply p-4 rounded-full bg-white/20 inline-flex mb-4 shadow-sm;
   }
   
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all duration-200 shadow-sm;
+    @apply inline-flex items-center justify-center px-6 py-2 rounded-lg font-medium tracking-wide transition-all duration-200 shadow-sm;
   }
   
   .btn-primary {
-    @apply bg-gradient-to-r from-primary via-tertiary to-secondary text-white hover:opacity-90 shadow-sm hover:shadow-md;
+    @apply bg-primary text-white hover:bg-primary-dark shadow-sm hover:shadow-md;
   }
   
   .btn-secondary {
-    @apply bg-gradient-to-r from-secondary via-tertiary to-primary text-white hover:opacity-90 shadow-sm hover:shadow-md;
+    @apply bg-secondary text-white hover:bg-secondary-dark shadow-sm hover:shadow-md;
   }
 
   .btn-tertiary {
@@ -169,7 +164,7 @@
   }
 
   .mobile-container {
-    @apply px-4 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto transition-all duration-200 overflow-hidden;
+    @apply px-5 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto transition-all duration-200 overflow-hidden;
   }
   
   .text-shadow-sm {
@@ -214,33 +209,33 @@
 
   /* Consistent card styles */
   .content-card {
-    @apply bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-all duration-200;
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 transition-all duration-200;
   }
 
   /* Consistent text styles */
   .heading-1 {
-    @apply text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight;
+    @apply text-3xl sm:text-4xl md:text-5xl font-semibold tracking-normal;
   }
 
   .heading-2 {
-    @apply text-2xl sm:text-3xl font-semibold tracking-tight;
+    @apply text-2xl sm:text-3xl font-semibold tracking-normal;
   }
 
   .heading-3 {
-    @apply text-xl sm:text-2xl font-medium tracking-tight;
+    @apply text-xl sm:text-2xl font-medium tracking-normal;
   }
 
   .body-text {
-    @apply text-base text-gray-700 dark:text-gray-200 leading-relaxed;
+    @apply text-base text-gray-700 dark:text-gray-200 leading-relaxed tracking-wide;
   }
 
   .caption-text {
-    @apply text-sm text-gray-600 dark:text-gray-300 font-normal;
+    @apply text-sm text-gray-600 dark:text-gray-300 font-normal tracking-wide;
   }
   
   /* Navigation specific styles */
   .nav-item {
-    @apply relative flex items-center px-4 py-2 rounded-xl transition-all duration-200;
+    @apply relative flex items-center px-4 py-2 rounded-lg transition-all duration-200;
   }
   
   .nav-item-active {
