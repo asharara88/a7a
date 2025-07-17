@@ -10,7 +10,6 @@ const PersonalizedRecipes: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
   const [savedRecipes, setSavedRecipes] = useState<number[]>([]);
   
   // Filter states
@@ -71,20 +70,7 @@ const PersonalizedRecipes: React.FC = () => {
   };
 
 
-  const handleSearch = () => {
-    loadRecipes();
-  };
 
-  const dietOptions = [
-    { value: '', label: 'Any' },
-    { value: 'vegetarian', label: 'Vegetarian' },
-    { value: 'vegan', label: 'Vegan' },
-    { value: 'gluten-free', label: 'Gluten Free' },
-    { value: 'ketogenic', label: 'Keto' },
-    { value: 'paleo', label: 'Paleo' },
-    { value: 'pescetarian', label: 'Pescatarian' },
-    { value: 'mediterranean', label: 'Mediterranean' }
-  ];
 
   return (
     <div className="space-y-6">
