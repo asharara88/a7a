@@ -253,15 +253,15 @@ export const useUserProfileStore = create<UserProfileState>((set, get) => ({
   completeOnboarding: async (finalData) => {
     set({ saving: true, error: null });
     try {
-      const { profile } = get();
-      
-      if (!profile?.id) {
-        throw new Error('User not authenticated');
-      }
-
       // Update profile with final data if provided
       if (finalData) {
         await get().updateProfile(finalData);
+      }
+      
+      // Make sure we're using the right table
+      const profile = get().profile;
+      if (!profile?.id) {
+        throw new Error('User not authenticated');
       }
 
       // Mark onboarding as completed
