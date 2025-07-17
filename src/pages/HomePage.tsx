@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Heart, Shield, Zap, Brain, ChevronDown } from 'lucide-react'
+import { ArrowRight, Heart, Shield, Zap, Brain } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 // Features data
@@ -33,24 +33,6 @@ const HomePage: React.FC = () => {
       {/* Hero Section with consistent styling */}
       <section className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white py-16 sm:py-20 md:py-24 relative overflow-hidden">
         {/* Animated background elements */}
-        <motion.div 
-          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-primary opacity-10"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            x: [0, 20, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div 
-          className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-secondary opacity-10"
-          animate={{ 
-            scale: [1, 1.3, 1],
-            x: [0, -30, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 7, repeat: Infinity, delay: 1 }}
-        />
         
         <div className="mobile-container">
           <motion.div 
@@ -59,10 +41,12 @@ const HomePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 sm:mb-8 text-shadow-sm">
-              Your Digital Wellness Coach
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 sm:mb-8">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-600">
+                Your Digital Wellness Coach
+              </span>
             </h1>
-            <p className="text-xl sm:text-2xl md:text-3xl mb-8 sm:mb-10 text-white/90">
+            <p className="text-xl sm:text-2xl md:text-3xl mb-8 sm:mb-10 text-gray-700 dark:text-gray-300">
               Personalized supplement recommendations powered by science
             </p>
             <motion.div 
@@ -87,26 +71,6 @@ const HomePage: React.FC = () => {
                 >
                   Learn More
                 </Link>
-              </motion.div>
-            </motion.div>
-            
-            {/* Scroll indicator */}
-            <motion.div 
-              className="mt-16 hidden md:flex justify-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 1 }}
-            >
-              <motion.div 
-                animate={{ y: [0, 10, 0] }} 
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="cursor-pointer"
-                onClick={() => window.scrollTo({
-                  top: window.innerHeight,
-                  behavior: 'smooth'
-                })}
-              >
-                <ChevronDown className="w-8 h-8 text-white/70" />
               </motion.div>
             </motion.div>
           </motion.div>
