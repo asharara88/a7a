@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Plus, Minus, Check, Info, AlertCircle } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
-import Select from 'react-select';
+import Select from 'react-select'; 
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { Input } from '../ui/Input';
@@ -94,10 +94,57 @@ const StackBuilderModal: React.FC<StackBuilderModalProps> = ({
       {
         supplement,
         dosage: supplement.dosage || 'As directed',
-        timing: 'Morning',
+        timing: getDosageTiming(supplement),
         notes: ''
       }
     ]);
+  };
+  
+  // Get appropriate timing based on supplement type
+  const getDosageTiming = (supplement: Supplement) => {
+    const name = supplement.name.toLowerCase();
+    const description = (supplement.description || '').toLowerCase();
+    const category = (supplement.category || '').toLowerCase();
+    
+    if (
+      name.includes('melatonin') || 
+      name.includes('magnesium') || 
+      name.includes('glycine') || 
+      name.includes('valerian') ||
+      name.includes('zinc') ||
+      category.includes('sleep')
+    ) {
+      return 'Before bed';
+    }
+    
+    if (
+      name.includes('caffeine') || 
+      name.includes('ginseng') ||
+      category.includes('energy') ||
+      description.includes('energy')
+    ) {
+      return 'Morning';
+    }
+    
+    if (
+      name.includes('protein') ||
+      name.includes('enzyme') ||
+      category.includes('digestion') ||
+      description.includes('digestion')
+    ) {
+      return 'With meals';
+    }
+    
+    if (
+      name.includes('creatine') ||
+      name.includes('beta-alanine') ||
+      name.includes('citrulline') ||
+      category.includes('performance')
+    ) {
+      return 'Before workout';
+    }
+    
+    return 'Morning';
   };
   
   const removeSupplementFromStack = (index: number) => {
@@ -275,6 +322,23 @@ const StackBuilderModal: React.FC<StackBuilderModalProps> = ({
             />
           </div>
           
+          <div className="mt-6 mb-2 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+            <div className="flex items-center text-blue-800 dark:text-blue-300 mb-2">
+              <Info className="w-5 h-5 mr-2" />
+              <h3 className="font-semibold">Evidence-Based Recommendations</h3>
+            </div>
+            <p className="text-sm text-blue-700 dark:text-blue-400">
+              For optimal results, consider these evidence-based guidelines:
+            </p>
+            <ul className="text-sm text-blue-700 dark:text-blue-400 mt-2 list-disc pl-5 space-y-1">
+              <li>Start with 1-3 supplements to assess individual responses</li>
+              <li>Green tier supplements have the strongest scientific support</li>
+              <li>Take fat-soluble supplements (Vitamin D, Omega-3s) with meals containing fat</li>
+              <li>Check for interactions if you're taking medications</li>
+              <li>Some supplements work best when cycled (e.g., adaptogenic herbs)</li>
+            </ul>
+          </div>
+          
           <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Supplements in Stack</h3>
@@ -287,7 +351,7 @@ const StackBuilderModal: React.FC<StackBuilderModalProps> = ({
               <div className="text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
                 <p className="text-gray-500 dark:text-gray-400 mb-4">No supplements added yet</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Add supplements from the list below to build your stack
+                  Add supplements from the list below to build your personalized stack
                 </p>
               </div>
             ) : (
@@ -302,6 +366,7 @@ const StackBuilderModal: React.FC<StackBuilderModalProps> = ({
                         <div className="flex items-center">
                           <h4 className="font-semibold text-gray-900 dark:text-white mr-2">
                             {item.supplement.name}
+                            <span className="text-xs ml-2 text-gray-500">{item.supplement.brand || 'Biowell'}</span>
                           </h4>
                           {getTierBadge(item.supplement.tier)}
                         </div>
