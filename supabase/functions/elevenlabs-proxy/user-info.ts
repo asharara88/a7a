@@ -27,11 +27,16 @@ export async function handleUserInfoRequest(req: Request, apiKey: string, corsHe
     );
   } catch (error) {
     console.error("Error fetching user info:", error);
+    
+    // Safely handle error object
+    const errorMessage = error instanceof Error ? error.message : String(error) || "Failed to fetch user info";
+    const errorType = error instanceof Error ? error.name : "UnknownError";
+    
     return new Response(
       JSON.stringify({ 
         error: {
-          message: error.message || "Failed to fetch user info",
-          type: error.name || "UnknownError"
+          message: errorMessage,
+          type: errorType
         }
       }),
       { 

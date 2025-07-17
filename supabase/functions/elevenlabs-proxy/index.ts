@@ -57,10 +57,14 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("Error processing request:", error);
     
+    // Safely handle error object
+    const errorMessage = error instanceof Error ? error.message : String(error) || "Failed to process request";
+    const errorType = error instanceof Error ? error.name : "UnknownError";
+    
     return new Response(
       JSON.stringify({ 
-        error: error.message || "Failed to process request",
-        type: error.name || "UnknownError"
+        error: errorMessage,
+        type: errorType
       }),
       { 
         status: 500, 
