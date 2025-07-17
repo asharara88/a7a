@@ -75,6 +75,7 @@ const MyCoach: React.FC = () => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isFetching, setIsFetching] = useState(false); 
   const [typingText, setTypingText] = useState('');
+  const [typingTimeout, setTypingTimeout] = useState<number | null>(null);
   const typingTimeoutRef = useRef<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -384,6 +385,36 @@ const MyCoach: React.FC = () => {
     };
   }, []);
 
+  // Helper function to get color based on category
+  function getCategoryColor(category: string): string {
+    switch (category) {
+      case 'sleep':
+        return 'bg-purple-500';
+      case 'supplements':
+        return 'bg-green-500';
+      case 'nutrition':
+        return 'bg-blue-500';
+      case 'fitness':
+        return 'bg-orange-500';
+      case 'metabolism':
+        return 'bg-red-500';
+      case 'hydration':
+        return 'bg-cyan-500';
+      case 'stress':
+        return 'bg-pink-500';
+      case 'energy':
+        return 'bg-yellow-500';
+      case 'recovery':
+        return 'bg-indigo-500';
+      case 'cognitive':
+        return 'bg-emerald-500';
+      case 'longevity':
+        return 'bg-violet-500';
+      default:
+        return 'bg-gray-500';
+    }
+  }
+
   return (
     <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-200 dark:border-gray-700">
       {/* Header */}
@@ -538,33 +569,13 @@ const MyCoach: React.FC = () => {
             type="submit"
             disabled={isLoading || !input.trim()}
             className="h-12 w-12 p-0 flex items-center justify-center rounded-full bg-gradient-to-r from-primary via-tertiary to-secondary shadow-lg"
-  // Helper function to get color based on category
-  function getCategoryColor(category: string): string {
-    switch (category) {
-      case 'sleep':
-        return 'bg-purple-500';
-      case 'supplements':
-        return 'bg-green-500';
-      case 'nutrition':
-        return 'bg-blue-500';
-      case 'fitness':
-        return 'bg-orange-500';
-      case 'metabolism':
-        return 'bg-red-500';
-      case 'hydration':
-        return 'bg-cyan-500';
-      case 'stress':
-        return 'bg-pink-500';
-      case 'energy':
-        return 'bg-yellow-500';
-      case 'recovery':
-        return 'bg-indigo-500';
-      case 'cognitive':
-        return 'bg-emerald-500';
-      case 'longevity':
-        return 'bg-violet-500';
-    }
-  }
+          >
+            <Send size={20} />
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default MyCoach;

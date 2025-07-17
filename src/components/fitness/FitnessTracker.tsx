@@ -11,6 +11,7 @@ const FitnessTracker: React.FC = () => {
   const [workoutHistory, setWorkoutHistory] = useState<WorkoutSession[]>([]);
   const [fitnessSummary, setFitnessSummary] = useState<FitnessSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [showAddWorkout, setShowAddWorkout] = useState(false);
   const [timeRange, setTimeRange] = useState(7); // days
   
@@ -31,6 +32,7 @@ const FitnessTracker: React.FC = () => {
 
   const loadFitnessData = async () => {
     setIsLoading(true);
+    setLoadError(null);
     try {
       const history = await fitnessApi.getWorkoutHistory(userId, timeRange);
       const summary = await fitnessApi.getFitnessSummary(userId, timeRange);
@@ -39,6 +41,7 @@ const FitnessTracker: React.FC = () => {
       setFitnessSummary(summary);
     } catch (error) {
       console.error('Error loading fitness data:', error);
+      setLoadError('Failed to load fitness data. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -143,7 +146,10 @@ const FitnessTracker: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Fitness Tracker</h2>
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Fitness Tracker</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Track your workouts and monitor your progress</p>
+        </div>
         <div className="flex items-center space-x-2">
           <select
             value={timeRange}
@@ -167,6 +173,13 @@ const FitnessTracker: React.FC = () => {
       {isLoading ? (
         <div className="flex justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : loadError ? (
+        <div className="p-6 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg shadow-sm">
+          <p className="mb-4">{loadError}</p>
+          <Button onClick={loadFitnessData}>
+            Try Again
+          </Button>
         </div>
       ) : (
         <>

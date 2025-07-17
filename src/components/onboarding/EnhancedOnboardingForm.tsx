@@ -176,6 +176,7 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
         if (!stepData.primaryHealthGoals?.length) {
           errors.primaryHealthGoals = 'Please select at least one health goal';
         }
+       // We don't need to validate other fields in this step as they're optional
         break;
 
       case 3: // Physical Profile
@@ -191,6 +192,13 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
         if (stepData.sleepHours && (stepData.sleepHours < 1 || stepData.sleepHours > 12)) {
           errors.sleepHours = 'Sleep hours should be between 1 and 12';
         }
+       // Check time format if provided
+       if (stepData.bedTime && !/^\d{2}:\d{2}$/.test(stepData.bedTime)) {
+         errors.bedTime = 'Please enter a valid time (HH:MM)';
+       }
+       if (stepData.wakeTime && !/^\d{2}:\d{2}$/.test(stepData.wakeTime)) {
+         errors.wakeTime = 'Please enter a valid time (HH:MM)';
+       }
         break;
 
       case 6: // Mental Health & Stress
@@ -805,6 +813,11 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
                 </label>
               </div>
             </div>
+
+           <div className="mt-6 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+             <p className="mb-2 font-medium">Your data is secure with us</p>
+             <p>We use industry-standard encryption to protect your information. Your health data is only used to provide personalized recommendations and is never shared with third parties without your explicit consent.</p>
+           </div>
           </div>
         );
 

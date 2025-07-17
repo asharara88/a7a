@@ -11,6 +11,7 @@ const NutritionTracker: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<FoodItem[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
   const [mealLogs, setMealLogs] = useState<MealLog[]>([]);
   const [nutritionSummary, setNutritionSummary] = useState<NutritionSummary | null>(null);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
@@ -44,11 +45,14 @@ const NutritionTracker: React.FC = () => {
     if (!searchQuery.trim()) return;
     
     setIsSearching(true);
+    setSearchError(null);
     try {
       const results = await nutritionApi.searchFoods(searchQuery);
       setSearchResults(results);
     } catch (error) {
       console.error('Error searching foods:', error);
+      setSearchError('Failed to search foods. Please try again.');
+      setSearchResults([]);
     } finally {
       setIsSearching(false);
     }
@@ -222,13 +226,15 @@ const NutritionTracker: React.FC = () => {
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Today's Meals</h3>
             {mealLogs.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                <p>No meals logged for today</p>
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                <p className="mb-4 text-lg">No meals logged for today</p>
+                <p className="mb-6 text-sm">Track your nutrition by logging your meals and snacks</p>
                 <Button 
                   onClick={() => setShowAddMeal(true)}
                   variant="outline"
-                  className="mt-4"
+                  className="flex items-center shadow-sm hover:shadow-lg transition-all duration-300"
                 >
+                  <Plus className="w-4 h-4 mr-2" />
                   Add Your First Meal
                 </Button>
               </div>
@@ -296,8 +302,10 @@ const NutritionTracker: React.FC = () => {
                   <label className="block text-sm font-medium mb-2">Search Food</label>
                   <div className="flex space-x-2">
                     <Input
+                      type="search"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                       placeholder="Search for a food..."
                       className="flex-1"
                     />
@@ -309,6 +317,12 @@ const NutritionTracker: React.FC = () => {
                       )}
                     </Button>
                   </div>
+                  
+                  {searchError && (
+                    <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
+                      {searchError}
+                    </div>
+                  )}
                 </div>
                 
                 {searchResults.length > 0 && (

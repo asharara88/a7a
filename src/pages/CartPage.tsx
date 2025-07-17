@@ -191,7 +191,7 @@ const CartPage: React.FC = () => {
           </Link>
         </div>
 
-        cartItems.length === 0 ? (
+        {cartItems.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
             {isLoading ? (
               <div className="flex justify-center items-center py-10">
@@ -281,10 +281,11 @@ const CartPage: React.FC = () => {
                           <p className="font-medium text-gray-900 dark:text-white">{(item.supplement.price_aed * item.quantity).toFixed(2)} AED</p>
                           <button 
                             className={`text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-500 mt-1 ${
-                              removingItem === item.id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              removingItem === item.id ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
                             onClick={() => handleRemoveItem(item.id)}
                             disabled={removingItem === item.id}
-                            }`}
+                          >
                             {removingItem === item.id ? (
                               <Loader2 className="w-4 h-4 animate-spin" />
                             ) : (
