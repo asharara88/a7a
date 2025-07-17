@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { format, parseISO } from 'date-fns';
-import { Activity, Calendar, Plus, Clock, Flame, BarChart2 } from 'lucide-react';
+import { format, parseISO, subDays } from 'date-fns';
+import { Activity, Calendar, Plus, Clock, Flame, BarChart2, Award, TrendingUp } from 'lucide-react';
 import { fitnessApi, WorkoutSession, FitnessSummary } from '../../api/fitnessApi';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { Input } from '../ui/Input';
-import { Line } from 'react-chartjs-2';
+import { Line, Bar } from 'react-chartjs-2';
 
 const FitnessTracker: React.FC = () => {
   const [workoutHistory, setWorkoutHistory] = useState<WorkoutSession[]>([]);
@@ -144,6 +144,51 @@ const FitnessTracker: React.FC = () => {
     'CrossFit'
   ];
 
+  // Calculate streak and fitness score
+  const calculateFitnessMetrics = () => {
+    if (!workoutHistory.length) return { streak: 0, score: 0 };
+    
+    // Calculate streak
+    let streak = 0;
+    const today = new Date();
+    const dates = workoutHistory.map(w => new Date(w.timestamp).setHours(0,0,0,0));
+    dates.sort((a, b) => b - a); // Sort descending
+    
+    // Check if worked out today
+    const todayDate = today.setHours(0,0,0,0);
+    if (dates.includes(todayDate)) {
+      streak = 1;
+      
+      // Check for consecutive days
+      for (let i = 1; i < 30; i++) {
+        const prevDate = new Date(today);
+        prevDate.setDate(today.getDate() - i);
+        prevDate.setHours(0,0,0,0);
+        
+        if (dates.includes(prevDate.getTime())) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+    }
+    
+    // Calculate fitness score (mock algorithm)
+    const workoutsLast30Days = workoutHistory.filter(w => 
+      new Date(w.timestamp) > subDays(new Date(), 30)
+    ).length;
+    
+    const averageCalories = workoutHistory.reduce((sum, w) => sum + w.caloriesBurned, 0) / 
+      (workoutHistory.length || 1);
+    
+    // Score calculation (example algorithm)
+    const score = Math.min(100, Math.round((workoutsLast30Days * 3) + (streak * 2) + (averageCalories / 20)));
+    
+    return { streak, score };
+  };
+
+  const { streak, score } = calculateFitnessMetrics();
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -185,7 +230,7 @@ const FitnessTracker: React.FC = () => {
       ) : (
         <>
           {/* Fitness Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <Card className="p-4 flex items-center">
               <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900 mr-4">
                 <Activity className="w-6 h-6 text-blue-500 dark:text-blue-300" />
@@ -233,6 +278,30 @@ const FitnessTracker: React.FC = () => {
                 </p>
               </div>
             </Card>
+            
+            <Card className="p-4 flex items-center">
+              <div className="p-3 rounded-full bg-amber-100 dark:bg-amber-900 mr-4">
+                <Award className="w-6 h-6 text-amber-500 dark:text-amber-300" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Streak</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {streak} days
+                </p>
+              </div>
+            </Card>
+            
+            <Card className="p-4 flex items-center">
+              <div className="p-3 rounded-full bg-indigo-100 dark:bg-indigo-900 mr-4">
+                <TrendingUp className="w-6 h-6 text-indigo-500 dark:text-indigo-300" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Fitness Score</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {score}/100
+                </p>
+              </div>
+            </Card>
           </div>
 
           {/* Activity Chart */}
@@ -240,6 +309,35 @@ const FitnessTracker: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Activity Trends</h3>
             <div className="h-64">
               <Line data={activityChartData} options={chartOptions} />
+              
+              <div className="mt-4 flex justify-center">
+                <div className="inline-flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+                  <button
+                    className={`px-3 py-1 text-sm font-medium rounded-md ${
+                      timeRange === 7 ? 'bg-primary text-white' : 'text-gray-700 dark:text-gray-300'
+                    }`}
+                    onClick={() => setTimeRange(7)}
+                  >
+                    Week
+                  </button>
+                  <button
+                    className={`px-3 py-1 text-sm font-medium rounded-md ${
+                      timeRange === 14 ? 'bg-primary text-white' : 'text-gray-700 dark:text-gray-300'
+                    }`}
+                    onClick={() => setTimeRange(14)}
+                  >
+                    2 Weeks
+                  </button>
+                  <button
+                    className={`px-3 py-1 text-sm font-medium rounded-md ${
+                      timeRange === 30 ? 'bg-primary text-white' : 'text-gray-700 dark:text-gray-300'
+                    }`}
+                    onClick={() => setTimeRange(30)}
+                  >
+                    Month
+                  </button>
+                </div>
+              </div>
             </div>
           </Card>
 
@@ -247,8 +345,9 @@ const FitnessTracker: React.FC = () => {
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Recent Workouts</h3>
             {workoutHistory.length === 0 ? (
-              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                <p className="mb-4 text-lg">No workouts logged in this period</p>
+             <div className="text-center py-12 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm">
+                <p className="mb-4 text-lg text-gray-500 dark:text-gray-400">No workouts logged in this period</p>
+                <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">Start tracking your fitness progress today</p>
                 <Button 
                   onClick={() => setShowAddWorkout(true)}
                   variant="outline"
