@@ -259,6 +259,7 @@ const FitnessTracker: React.FC = () => {
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400 tracking-wide">
                         {format(parseISO(workout.timestamp), 'MMM d, yyyy • h:mm a')}
+                      </p>
                       {workout.notes && (
                         <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{workout.notes}</p>
                       )}
