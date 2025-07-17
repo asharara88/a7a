@@ -16,11 +16,13 @@ import {
   Sparkles,
   Store,
   Moon,
+  Sun,
   Gauge
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
+import { useTheme } from '../../hooks/useTheme';
 
 // Initialize Supabase client for auth
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
@@ -35,6 +37,7 @@ const MinimalNav: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [cartCount, setCartCount] = useState(2); // Mock cart count
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const { theme, setTheme, effectiveTheme } = useTheme();
   
   const wellnessRef = useRef<HTMLDivElement>(null);
   const utilitiesRef = useRef<HTMLDivElement>(null);
@@ -124,9 +127,9 @@ const MinimalNav: React.FC = () => {
   const breadcrumbs = generateBreadcrumbs();
   
   return (
-    <>
+    <div className="sticky top-0 z-50 w-full">
       <nav className="h-12 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between relative">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
@@ -140,7 +143,7 @@ const MinimalNav: React.FC = () => {
           </Link>
           
           {/* Main Navigation Icons */}
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-2">
             {!user && (
               <>
                 <Link to="/login" className="relative px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-primary font-medium">
@@ -394,6 +397,19 @@ const MinimalNav: React.FC = () => {
               </>
             )}
             
+            {/* Theme Toggle */}
+            <button
+              onClick={() => setTheme(effectiveTheme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label={`Switch to ${effectiveTheme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {effectiveTheme === 'dark' ? (
+                <Sun className="h-5 w-5 text-gray-200" />
+              ) : (
+                <Moon className="h-5 w-5 text-gray-800" />
+              )}
+            </button>
+            
             <div ref={utilitiesRef} className="relative">
               <button 
                 onClick={() => setUtilitiesDropdownOpen(!utilitiesDropdownOpen)}
@@ -497,7 +513,7 @@ const MinimalNav: React.FC = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
