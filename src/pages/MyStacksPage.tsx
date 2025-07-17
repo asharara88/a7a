@@ -31,11 +31,11 @@ const MyStacksPage: React.FC = () => {
           name: 'Morning Energy Stack',
           description: 'Supplements to boost energy and focus in the morning',
           supplements: [
-            { name: 'Vitamin B Complex', dosage: '1 capsule', timing: 'With breakfast' },
-            { name: 'Omega-3', dosage: '1000mg', timing: 'With breakfast' },
-            { name: 'Rhodiola Rosea', dosage: '500mg', timing: 'Morning' }
+            { name: 'Vitamin B Complex', dosage: '1 capsule', timing: 'With breakfast', price: 45.00 },
+            { name: 'Omega-3', dosage: '1000mg', timing: 'With breakfast', price: 65.00 },
+            { name: 'Rhodiola Rosea', dosage: '500mg', timing: 'Morning', price: 95.00 }
           ],
-          totalPrice: 89.97,
+          totalPrice: 205.00,
           isActive: true
         },
         {
@@ -43,11 +43,11 @@ const MyStacksPage: React.FC = () => {
           name: 'Sleep & Recovery',
           description: 'Supplements to improve sleep quality and recovery',
           supplements: [
-            { name: 'Magnesium Glycinate', dosage: '400mg', timing: 'Before bed' },
-            { name: 'L-Theanine', dosage: '200mg', timing: 'Before bed' },
-            { name: 'Zinc', dosage: '15mg', timing: 'With dinner' }
+            { name: 'Magnesium Glycinate', dosage: '400mg', timing: 'Before bed', price: 75.00 },
+            { name: 'L-Theanine', dosage: '200mg', timing: 'Before bed', price: 85.00 },
+            { name: 'Zinc', dosage: '15mg', timing: 'With dinner', price: 55.00 }
           ],
-          totalPrice: 74.99,
+          totalPrice: 215.00,
           isActive: true
         },
         {
@@ -55,11 +55,11 @@ const MyStacksPage: React.FC = () => {
           name: 'Immune Support',
           description: 'Supplements to boost immune system',
           supplements: [
-            { name: 'Vitamin D3', dosage: '5000 IU', timing: 'With breakfast' },
-            { name: 'Vitamin C', dosage: '1000mg', timing: 'With lunch' },
-            { name: 'Zinc', dosage: '15mg', timing: 'With dinner' }
+            { name: 'Vitamin D3', dosage: '5000 IU', timing: 'With breakfast', price: 40.00 },
+            { name: 'Vitamin C', dosage: '1000mg', timing: 'With lunch', price: 60.00 },
+            { name: 'Zinc', dosage: '15mg', timing: 'With dinner', price: 55.00 }
           ],
-          totalPrice: 64.97,
+          totalPrice: 155.00,
           isActive: false
         }
       ]);
@@ -133,16 +133,21 @@ const MyStacksPage: React.FC = () => {
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{stack.description}</p>
                   
                   <div className="space-y-2 mb-4">
-                    {stack.supplements.map((supplement, index) => (
-                      <div key={index} className="flex justify-between text-sm">
-                        <span className="font-medium text-gray-900 dark:text-white">{supplement.name}</span>
-                        <span className="text-gray-600 dark:text-gray-400">{supplement.dosage}</span>
-                      </div>
-                    ))}
+                    {stack.supplements.map((supplement, index) => {
+                      return (
+                        <div key={index} className="flex justify-between text-sm">
+                          <div>
+                            <span className="font-medium text-gray-900 dark:text-white">{supplement.name}</span>
+                            <span className="text-gray-600 dark:text-gray-400 ml-2">({supplement.dosage})</span>
+                          </div>
+                          <span className="text-gray-900 dark:text-white font-medium">{supplement.price.toFixed(2)} AED</span>
+                        </div>
+                      );
+                    })}
                   </div>
                   
                   <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <span className="font-bold text-gray-900 dark:text-white">{stack.totalPrice.toFixed(2)} AED</span>
+                    <span className="font-bold text-lg text-primary dark:text-primary-light">Total: {stack.totalPrice.toFixed(2)} AED</span>
                     <div className="flex items-center">
                       <span className="text-sm text-gray-600 dark:text-gray-400 mr-2">Active</span>
                       <button
