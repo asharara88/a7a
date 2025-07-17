@@ -65,6 +65,22 @@ export const nutritionApi = {
   
   // Log a meal
   logMeal: async (mealData: Omit<MealLog, 'id'>): Promise<MealLog> => {
+    // Handle null/invalid user ID by returning mock data
+    if (!mealData.userId || mealData.userId === 'demo-user-id') {
+      return {
+        id: 'mock-meal-id',
+        userId: 'demo-user-id',
+        foodName: mealData.foodName,
+        mealType: mealData.mealType,
+        calories: mealData.calories,
+        protein: mealData.protein,
+        carbs: mealData.carbs,
+        fat: mealData.fat,
+        servingSize: mealData.servingSize,
+        timestamp: mealData.timestamp
+      };
+    }
+    
     try {
       const { data, error } = await supabase
         .from('food_logs')
@@ -104,6 +120,11 @@ export const nutritionApi = {
   
   // Get meal logs for a user
   getMealLogs: async (userId: string, days: number = 7): Promise<MealLog[]> => {
+    // Handle null/invalid user ID by returning mock data
+    if (!userId || userId === 'demo-user-id') {
+      return mockMealLogs('demo-user-id', days);
+    }
+    
     try {
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
@@ -138,6 +159,11 @@ export const nutritionApi = {
   
   // Get nutrition summary
   getNutritionSummary: async (userId: string, days: number = 1): Promise<NutritionSummary> => {
+    // Handle null/invalid user ID by returning mock data
+    if (!userId || userId === 'demo-user-id') {
+      return mockNutritionSummary();
+    }
+    
     try {
       const logs = await nutritionApi.getMealLogs(userId, days);
       

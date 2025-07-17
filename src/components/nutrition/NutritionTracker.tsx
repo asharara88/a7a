@@ -19,8 +19,8 @@ const NutritionTracker: React.FC = () => {
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [selectedMealType, setSelectedMealType] = useState<'breakfast' | 'lunch' | 'dinner' | 'snack'>('breakfast');
 
-  // Mock user ID for demo purposes
-  const userId = 'demo-user-id';
+  // User ID - null for demo purposes to avoid UUID validation errors
+  const userId = null;
 
   useEffect(() => {
     loadNutritionData();

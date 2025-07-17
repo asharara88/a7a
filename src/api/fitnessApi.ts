@@ -47,6 +47,19 @@ export interface FitnessSummary {
 export const fitnessApi = {
   // Log a workout session
   logWorkout: async (workout: Omit<WorkoutSession, 'id'>): Promise<WorkoutSession> => {
+    // Handle null/invalid user ID by returning mock data
+    if (!workout.userId || workout.userId === 'demo-user-id') {
+      return {
+        id: 'mock-workout-id',
+        userId: 'demo-user-id',
+        workoutType: workout.workoutType,
+        duration: workout.duration,
+        caloriesBurned: workout.caloriesBurned,
+        timestamp: workout.timestamp,
+        notes: workout.notes
+      };
+    }
+    
     try {
       const { data, error } = await supabase
         .from('workout_sessions')
@@ -114,6 +127,11 @@ export const fitnessApi = {
   
   // Get workout history
   getWorkoutHistory: async (userId: string, days: number = 30): Promise<WorkoutSession[]> => {
+    // Handle null/invalid user ID by returning mock data
+    if (!userId || userId === 'demo-user-id') {
+      return mockWorkoutHistory('demo-user-id', days);
+    }
+    
     try {
       const startDate = subDays(new Date(), days);
       
@@ -144,6 +162,11 @@ export const fitnessApi = {
   
   // Get exercise details for a workout
   getExerciseDetails: async (workoutId: string): Promise<ExerciseSet[]> => {
+    // Handle null/invalid workout ID
+    if (!workoutId || workoutId === 'demo-workout-id') {
+      return [];
+    }
+    
     try {
       const { data, error } = await supabase
         .from('exercise_sets')
@@ -170,6 +193,11 @@ export const fitnessApi = {
   
   // Get fitness summary
   getFitnessSummary: async (userId: string, days: number = 30): Promise<FitnessSummary> => {
+    // Handle null/invalid user ID by returning mock data
+    if (!userId || userId === 'demo-user-id') {
+      return mockFitnessSummary(days);
+    }
+    
     try {
       const workouts = await fitnessApi.getWorkoutHistory(userId, days);
       
