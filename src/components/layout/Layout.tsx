@@ -4,7 +4,7 @@ import { ShoppingCart, User, Menu, X, Sparkles } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
 import MinimalNav from './MinimalNav'
-import MobileNav from '../ui/MobileNav'
+import MobileNav from './MobileNav'
 import { createClient } from '@supabase/supabase-js'
 import { useTheme } from '../../hooks/useTheme'
 

@@ -59,6 +59,9 @@ const MetabolismPage = React.lazy(() => import('./pages/MetabolismPage'))
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'))
 const FertilityPartnerPage = React.lazy(() => import('./pages/FertilityPartnerPage'))
 const ParticipationSelectionPage = React.lazy(() => import('./pages/ParticipationSelectionPage'))
+const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage'))
+const ResetPasswordPage = React.lazy(() => import('./pages/ResetPasswordPage'))
+const ProfileExportPage = React.lazy(() => import('./pages/ProfileExportPage'))
 
 const App: React.FC = () => {
   return (
@@ -88,7 +91,10 @@ const App: React.FC = () => {
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/metabolism" element={<ProtectedRoute><MetabolismPage /></ProtectedRoute>} />
           <Route path="/fertility/partner" element={<ProtectedRoute><FertilityPartnerPage /></ProtectedRoute>} />
+          <Route path="/export" element={<ProtectedRoute><ProfileExportPage /></ProtectedRoute>} />
           <Route path="/participation" element={<ProtectedRoute><ParticipationSelectionPage /></ProtectedRoute>} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </React.Suspense>
