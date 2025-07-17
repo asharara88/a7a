@@ -98,16 +98,43 @@ const EvidenceBasedHealthOptimization: React.FC<EvidenceBasedHealthOptimizationP
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                      <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 prose prose-sm max-w-none dark:prose-invert">
                         <p className="text-gray-700 dark:text-gray-300 mb-4">
                           All health recommendations are based on solid research. Whether it's about sleep, nutrition, 
                           fitness, or supplements, each method is grounded in evidence from clinical studies.
                         </p>
+                        
+                        <h4>Scientific Process Behind Recommendations</h4>
+                        
                         <p className="text-gray-700 dark:text-gray-300 mb-4">
                           We base our recommendations on the latest research, which is constantly evolving. For example, 
                           sleep studies highlight how deep sleep affects memory and overall health, while fitness research 
                           shows how strength training benefits your metabolism.
                         </p>
+                        
+                        <h4>Tiered Evidence System</h4>
+                        
+                        <ul className="space-y-2 mb-4">
+                          <li className="flex items-start">
+                            <span className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center mr-2 mt-0.5">
+                              <span className="text-green-800 text-xs font-bold">A</span>
+                            </span>
+                            <span><strong>Green Tier</strong>: Strong evidence from multiple randomized controlled trials or systematic reviews</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="w-5 h-5 rounded-full bg-yellow-100 flex items-center justify-center mr-2 mt-0.5">
+                              <span className="text-yellow-800 text-xs font-bold">B</span>
+                            </span>
+                            <span><strong>Yellow Tier</strong>: Moderate evidence from limited clinical trials or strong observational studies</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center mr-2 mt-0.5">
+                              <span className="text-orange-800 text-xs font-bold">C</span>
+                            </span>
+                            <span><strong>Orange Tier</strong>: Preliminary evidence from animal studies or small human trials</span>
+                          </li>
+                        </ul>
+                        
                         <p className="text-gray-700 dark:text-gray-300">
                           We draw from reputable sources like peer-reviewed journals and clinical trials to ensure that 
                           you're getting information that works and is backed by science.

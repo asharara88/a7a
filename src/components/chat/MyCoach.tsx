@@ -73,11 +73,12 @@ const MyCoach: React.FC = () => {
   const [availableVoices, setAvailableVoices] = useState<Voice[]>([]);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(false); 
+  const [typingText, setTypingText] = useState('');
+  const typingTimeoutRef = useRef<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Health metrics for context (would come from user profile in a real app)
   const healthContext = {
@@ -144,6 +145,11 @@ const MyCoach: React.FC = () => {
         audioRef.current.pause();
         URL.revokeObjectURL(audioRef.current.src);
       }
+      
+      // Clear any active typing timeouts
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
     };
   }, []);
 
@@ -167,6 +173,9 @@ const MyCoach: React.FC = () => {
     setIsLoading(true);
     setError(null);
     setIsFetching(true);
+    
+    // Start typing animation
+    startTypingAnimation();
 
     try {
       // Call OpenAI proxy function
@@ -219,6 +228,13 @@ const MyCoach: React.FC = () => {
         playTextToSpeech(data.result);
       }
       
+      // Stop typing animation
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        setTypingTimeout(null);
+      }
+      setTypingText('');
+      
       // Update question set after each response
       setCurrentQuestionSetIndex((prevIndex) => 
         (prevIndex + 1) % QUESTION_SETS.length
@@ -227,10 +243,38 @@ const MyCoach: React.FC = () => {
     } catch (err) {
       console.error('Error sending message:', err);
       setError('Failed to get a response. Please try again.');
+      // Stop typing animation
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        setTypingTimeout(null);
+      }
+      setTypingText('');
       setIsFetching(false);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const startTypingAnimation = () => {
+    const texts = [
+      "Thinking",
+      "Analyzing your question",
+      "Checking health data",
+      "Researching evidence",
+      "Formulating response"
+    ];
+    
+    let index = 0;
+    
+    const updateTypingText = () => {
+      setTypingText(texts[index % texts.length]);
+      index++;
+      
+      const timeout = setTimeout(updateTypingText, 3000);
+      setTypingTimeout(timeout);
+    };
+    
+    updateTypingText();
   };
 
   const handleQuestionClick = (question: string) => (e: React.MouseEvent) => {
@@ -300,19 +344,45 @@ const MyCoach: React.FC = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  };
-
   const stopAudio = () => {
     if (audioRef.current) {
       audioRef.current.pause();
       setIsPlayingAudio(false);
     }
   };
+  
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    
+    // Show typing indicator
+    if (typingTimeoutRef.current) {
+      window.clearTimeout(typingTimeoutRef.current);
+    }
+    
+    if (e.target.value.length > 0) {
+      // Set typing timeout - could be used for typing indicators
+      typingTimeoutRef.current = window.setTimeout(() => {
+        typingTimeoutRef.current = null;
+        // Additional typing indicator logic could go here
+      }, 1000);
+    }
+  };
+  
+  // Clean up any timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        window.clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-200 dark:border-gray-700">
@@ -380,11 +450,18 @@ const MyCoach: React.FC = () => {
         )}
         {!isLoading && isFetching && (
           <div className="flex flex-col space-y-2 text-gray-700 dark:text-white p-4 bg-white dark:bg-gray-600 rounded-xl w-fit shadow-md">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <Sparkles className="w-4 h-4" />
-              <span className="tracking-wide">MyCoach<sup className="text-xs">™</sup> is thinking...</span>
+              <span className="tracking-wide">
+                MyCoach<sup className="text-xs">™</sup> {typingText ? typingText : 'is thinking...'}
+                <span className="inline-block animate-pulse">...</span>
+              </span>
             </div>
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <div className="flex space-x-1 ml-6">
+              <div className="w-2 h-2 rounded-full bg-primary/70 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 rounded-full bg-primary/70 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 rounded-full bg-primary/70 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
           </div>
         )}
         {error && (
@@ -449,7 +526,7 @@ const MyCoach: React.FC = () => {
             <textarea
               ref={inputRef}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder="Ask about your health, supplements, or wellness goals..."
               className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-300 transition-all duration-300 shadow-inner tracking-wide"
@@ -461,35 +538,6 @@ const MyCoach: React.FC = () => {
             type="submit"
             disabled={isLoading || !input.trim()}
             className="h-12 w-12 p-0 flex items-center justify-center rounded-full bg-gradient-to-r from-primary via-tertiary to-secondary shadow-lg"
-          >
-            {isLoading ? (
-              <Loader2 className="w-6 h-6 animate-spin" />
-            ) : (
-              <Send className="w-6 h-6" />
-            )}
-          </Button>
-        </div>
-        <div className="mt-3 text-xs text-gray-700 dark:text-gray-300 transition-all duration-300 font-medium tracking-wide">
-          <p className="leading-relaxed">Your MyCoach<sup className="text-xs">™</sup> provides science-driven wellness guidance based on your inputs. Not medical advice.</p>
-        </div>
-      </form>
-    </div>
-    
-    // Show typing indicator to user
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-    }
-    
-    if (e.target.value.length > 0) {
-      // Set typing timeout
-      const timeout = setTimeout(() => {
-        // Could implement a typing indicator here
-      }, 1000);
-      
-      setTypingTimeout(timeout as any);
-    }
-  );
-  
   // Helper function to get color based on category
   function getCategoryColor(category: string): string {
     switch (category) {
@@ -515,18 +563,6 @@ const MyCoach: React.FC = () => {
         return 'bg-emerald-500';
       case 'longevity':
         return 'bg-violet-500';
-      case 'tracking':
-        return 'bg-amber-500';
-      case 'health':
-        return 'bg-teal-500';
-      default:
-        return 'bg-gray-500';
-      
-      // Clear typing timeout
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
-        setTypingTimeout(null);
-      }
     }
   }
 };

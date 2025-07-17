@@ -82,17 +82,17 @@ const ActivityTimeline: React.FC<ActivityTimelineProps> = ({ events }) => {
         {events.map((event) => (
           <motion.div 
             key={event.id}
-            className="flex items-start"
+            className="flex items-start group"
             variants={item}
           >
             <div className="flex flex-col items-center mr-4">
               <div className="text-xs font-medium text-gray-500 dark:text-gray-400">
                 {event.time}
               </div>
-              <div className="h-full w-px bg-gray-200 dark:bg-gray-700 my-2"></div>
+              <div className="h-full w-px bg-gray-200 dark:bg-gray-700 my-2 group-hover:bg-primary transition-colors duration-300"></div>
             </div>
             
-            <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-3 border border-gray-100 dark:border-gray-700">
+            <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md p-3 border border-gray-100 dark:border-gray-700 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-300">
               <div className="flex items-center">
                 <div className={`p-2 rounded-full mr-3 ${getEventColor(event.type)}`}>
                   {getEventIcon(event.type)}

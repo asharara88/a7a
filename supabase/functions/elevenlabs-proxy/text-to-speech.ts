@@ -1,10 +1,8 @@
 // This file contains the handler for text-to-speech requests
 
 const MAX_TEXT_LENGTH = 300; // Limit text length to avoid excessive API usage
-const MAX_TEXT_LENGTH = 300; // Limit text length to avoid excessive API usage
-
-export async function handleTextToSpeechRequest(req: Request, apiKey: string, corsHeaders: Record<string, string>) {
   try {
+export async function handleTextToSpeechRequest(req: Request, apiKey: string, corsHeaders: Record<string, string>) {
     const { text, voiceId, stability, similarity_boost } = await req.json();
 
     if (!text || !voiceId) {
@@ -16,16 +14,6 @@ export async function handleTextToSpeechRequest(req: Request, apiKey: string, co
         }
       );
     }
-
-    // Limit text length to prevent abuse
-    const trimmedText = text.length > MAX_TEXT_LENGTH 
-      ? text.substring(0, MAX_TEXT_LENGTH) + "..."
-      : text;
-    // Limit text length to prevent abuse
-    const MAX_TEXT_LENGTH = 300; // Limit text length to avoid excessive API usage
-    const trimmedText = text.length > MAX_TEXT_LENGTH 
-      ? text.substring(0, MAX_TEXT_LENGTH) + "..."
-      : text;
 
     // Limit text length to prevent abuse
     const trimmedText = text.length > MAX_TEXT_LENGTH 

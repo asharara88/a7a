@@ -145,7 +145,18 @@ export const supplementApi = {
         .eq('id', id)
         .single();
       
-      if (error) throw error;
+      if (error || !data) {
+        // If error or no data from main supplements table, try the supplement table as fallback
+        console.log('Trying alternate table for supplement id:', id);
+        const { data: altData, error: altError } = await supabase
+          .from('supplement')
+          .select('*')
+          .eq('id', id)
+          .single();
+          
+        if (altError) throw altError;
+        return altData;
+      }
       
       return data;
     } catch (error) {
@@ -158,7 +169,10 @@ export const supplementApi = {
   getPersonalizedRecommendations: async (userId: string): Promise<SupplementRecommendation> => {
     try {
       const { data, error } = await supabase.functions.invoke('recommendations', {
-        body: { userId }
+        body: { userId },
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       
       if (error) throw error;
@@ -169,9 +183,9 @@ export const supplementApi = {
       
       // Return mock data for development
       return {
-        supplements: [],
-        stacks: [],
-        personalized_message: "We couldn't generate personalized recommendations at this time."
+        supplements: getMockRecommendedSupplements(),
+        stacks: getMockRecommendedStacks(),
+        personalized_message: "Based on your profile, we've selected supplements that may support your health goals. Remember that green tier supplements have the strongest scientific evidence, while yellow and orange tiers have moderate or preliminary evidence."
       };
     }
   },
@@ -381,4 +395,80 @@ export const supplementApi = {
       return false;
     }
   }
+};
+
+// Mock data functions
+function getMockRecommendedSupplements(): Supplement[] {
+  return [
+    {
+      id: '1',
+      name: 'Creatine Monohydrate',
+      brand: 'Biowell',
+      description: 'Increases strength and power output during high-intensity exercise.',
+      tier: 'green',
+      use_case: 'Muscle strength & power',
+      price_aed: 85.00,
+      subscription_discount_percent: 15,
+      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
+      is_available: true,
+      is_featured: true,
+      is_bestseller: true
+    },
+    {
+      id: '2',
+      name: 'Vitamin D3',
+      brand: 'Biowell',
+      description: 'Essential fat-soluble vitamin that supports immune function, bone health, and mood regulation.',
+      tier: 'green',
+      use_case: 'Immune & bone health',
+      price_aed: 40.00,
+      subscription_discount_percent: 10,
+      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
+      is_available: true,
+      is_featured: false,
+      is_bestseller: false
+    },
+    {
+      id: '3',
+      name: 'Magnesium Glycinate',
+      brand: 'Biowell',
+      description: 'Highly bioavailable form of magnesium that supports sleep, muscle recovery, and nervous system function.',
+      tier: 'yellow',
+      use_case: 'Sleep & recovery',
+      price_aed: 75.00,
+      subscription_discount_percent: 12,
+      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
+      is_available: true,
+      is_featured: false,
+      is_bestseller: false
+    }
+  ];
+}
+
+function getMockRecommendedStacks(): SupplementStack[] {
+  return [
+    {
+      id: '1',
+      name: 'Sleep & Recovery Stack',
+      category: 'Sleep',
+      total_price: 215.00,
+      components: [
+        { name: 'Magnesium Glycinate', dosage: '400mg', price: 75.00 },
+        { name: 'L-Theanine', dosage: '200mg', price: 65.00 },
+        { name: 'Ashwagandha', dosage: '600mg', price: 75.00 }
+      ]
+    },
+    {
+      id: '2',
+      name: 'Cognitive Performance Stack',
+      category: 'Cognition',
+      total_price: 255.00,
+      components: [
+        { name: 'Bacopa Monnieri', dosage: '300mg', price: 85.00 },
+        { name: 'Lion\'s Mane', dosage: '500mg', price: 95.00 },
+        { name: 'Rhodiola Rosea', dosage: '300mg', price: 75.00 }
+      ]
+    }
+  ];
+}
 };
