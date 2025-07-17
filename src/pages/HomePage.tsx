@@ -75,7 +75,7 @@ const HomePage: React.FC = () => {
                  to="/login"
                   className="bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 border border-gray-200 dark:border-gray-700 px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg min-w-[200px] tracking-wide"
                 >
-             Create Account
+             Sign In
                 </Link>
               </motion.div>
             </motion.div>
