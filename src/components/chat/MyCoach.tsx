@@ -97,7 +97,12 @@ const MyCoach: React.FC = () => {
 
   // Scroll to bottom of messages
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      // Use setTimeout to ensure DOM is fully updated before scrolling
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+      }, 50);
+    }
   }, [messages]);
 
   // Load available voices on mount
@@ -130,25 +135,16 @@ const MyCoach: React.FC = () => {
   // Add initial greeting message
   useEffect(() => {
     if (messages.length === 0) {
-      // Include system message with context for better responses
-      const systemContext = {
-        username: profile?.firstName || "there",
-        primaryGoal: healthContext.primaryGoal,
-        sleepAverage: healthContext.sleepAverage,
-        stressLevel: healthContext.stressLevel,
-        evidenceStandard: "We only recommend green (strong evidence) and yellow (moderate evidence) tier supplements"
-      };
-      
       setMessages([
         {
           id: 'welcome',
           role: 'assistant',
-          content: `Hi ${systemContext.username}! I'm your MyCoach™ health assistant. I see your primary goal is ${systemContext.primaryGoal} with an average of ${systemContext.sleepAverage} of sleep. How can I help you optimize your wellness today?`,
+          content: `Hello! I'm your MyCoach™ health assistant. How can I help you optimize your wellness today?`,
           timestamp: new Date()
         }
       ]);
     }
-  }, [messages.length, profile?.firstName]);
+  }, [messages.length]);
 
   // Clean up audio on unmount
   useEffect(() => {
@@ -207,6 +203,9 @@ const MyCoach: React.FC = () => {
             ...messages.map(m => ({ role: m.role, content: m.content })),
             { role: 'user', content: messageText }
           ]
+        },
+        headers: {
+          'Content-Type': 'application/json'
         }
       });
 
@@ -443,7 +442,7 @@ const MyCoach: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-200 dark:border-gray-700">
+    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-200 dark:border-gray-700 relative">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white p-4 flex items-center justify-between rounded-t-xl shadow-md relative overflow-hidden">
         {/* Background pattern for header */}
