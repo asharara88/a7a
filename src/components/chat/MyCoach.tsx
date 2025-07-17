@@ -3,41 +3,41 @@ import { Send, Volume2, VolumeX, Loader2, Settings, Sparkles, X, HelpCircle } fr
 import { Button } from '../ui/Button';
 import ChatMessage from './ChatMessage';
 import { createClient } from '@supabase/supabase-js';
-import { cn } from '../../utils/cn';
+import { cn } from '../../utils/cn'; 
 import { elevenlabsApi } from '../../api/elevenlabsApi';
 import VoicePreferences from './VoicePreferences';
 
 // Sample question sets that will rotate after each response
 const QUESTION_SETS = [
   [
-    "How can I sleep better?",
-    "What supplements should I take?",
-    "How can I boost my metabolism?",
-    "What's a good fitness routine?"
+    { text: "How can I sleep better?", category: "sleep" },
+    { text: "What supplements should I take?", category: "supplements" },
+    { text: "How can I boost my metabolism?", category: "metabolism" },
+    { text: "What's a good fitness routine?", category: "fitness" }
   ],
   [
-    "What foods are good for my brain?",
-    "How much protein do I need?",
-    "How can I track my health?",
-    "How important is hydration?"
+    { text: "What foods are good for my brain?", category: "nutrition" },
+    { text: "How much protein do I need?", category: "nutrition" },
+    { text: "How can I track my health?", category: "tracking" },
+    { text: "How important is hydration?", category: "hydration" }
   ],
   [
-    "How can I reduce stress?",
-    "How do I know if I have a deficiency?",
-    "What's a balanced meal?",
-    "How can I get more energy?"
+    { text: "How can I reduce stress?", category: "stress" },
+    { text: "How do I know if I have a deficiency?", category: "health" },
+    { text: "What's a balanced meal?", category: "nutrition" },
+    { text: "How can I get more energy?", category: "energy" }
   ],
   [
-    "How does sleep affect hormones?",
-    "How can I eat better for weight loss?",
-    "Why is strength training important?",
-    "How can I recover faster from a workout?"
+    { text: "How does sleep affect hormones?", category: "sleep" },
+    { text: "How can I eat better for weight loss?", category: "nutrition" },
+    { text: "Why is strength training important?", category: "fitness" },
+    { text: "How can I recover faster from a workout?", category: "recovery" }
   ],
   [
-    "What vitamins should I take?",
-    "How can I stay healthy long-term?",
-    "What's the best time to exercise?",
-    "How can I improve my mental focus?"
+    { text: "What vitamins should I take?", category: "supplements" },
+    { text: "How can I stay healthy long-term?", category: "longevity" },
+    { text: "What's the best time to exercise?", category: "fitness" },
+    { text: "How can I improve my mental focus?", category: "cognitive" }
   ]
 ];
 
@@ -62,6 +62,7 @@ const MyCoach: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentQuestionSetIndex, setCurrentQuestionSetIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [recentlyClickedQuestion, setRecentlyClickedQuestion] = useState<string | null>(null);
   const [voiceSettings, setVoiceSettings] = useState<VoiceSettings>({
     enabled: false,
     voiceId: 'EXAVITQu4vr4xnSDxMaL', // Rachel voice ID
@@ -188,7 +189,13 @@ const MyCoach: React.FC = () => {
 
   const handleQuestionClick = (question: string) => (e: React.MouseEvent) => {
     e.preventDefault();
+    setRecentlyClickedQuestion(question);
     handleSubmit(e, question);
+    
+    // Clear the recently clicked question after a delay
+    setTimeout(() => {
+      setRecentlyClickedQuestion(null);
+    }, 2000);
   };
 
   const playTextToSpeech = async (text: string) => {
@@ -323,22 +330,35 @@ const MyCoach: React.FC = () => {
         {/* Suggested Questions */}
         {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
           <div className="flex flex-wrap gap-2 mt-4 mb-2">
-            <div className="w-full flex items-center mb-1">
+            <div className="w-full flex items-center mb-2">
               <HelpCircle className="w-4 h-4 text-primary mr-2" />
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Suggested questions:
               </span>
             </div>
-            {currentQuestions.map((question, index) => (
-              <button
+            {currentQuestions.map((questionObj, index) => (
+              <motion.button
                 key={index}
-                onClick={handleQuestionClick(question)}
-                className="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 
-                         text-gray-800 dark:text-gray-200 rounded-lg text-sm font-medium transition-colors 
-                         shadow-sm hover:shadow flex-grow md:flex-grow-0"
+                onClick={handleQuestionClick(questionObj.text)}
+                className={cn(
+                  "px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow",
+                  "flex-grow md:flex-grow-0 relative overflow-hidden",
+                  recentlyClickedQuestion === questionObj.text 
+                    ? "bg-primary text-white" 
+                    : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200"
+                )}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: index * 0.05 }}
               >
-                {question}
-              </button>
+                <span className={cn(
+                  "absolute left-0 top-0 h-full w-1",
+                  getCategoryColor(questionObj.category)
+                )}></span>
+                <span className="pl-1">{questionObj.text}</span>
+              </motion.button>
             ))}
           </div>
         )}
@@ -391,6 +411,40 @@ const MyCoach: React.FC = () => {
       </form>
     </div>
   );
+  
+  // Helper function to get color based on category
+  function getCategoryColor(category: string): string {
+    switch (category) {
+      case 'sleep':
+        return 'bg-purple-500';
+      case 'supplements':
+        return 'bg-green-500';
+      case 'nutrition':
+        return 'bg-blue-500';
+      case 'fitness':
+        return 'bg-orange-500';
+      case 'metabolism':
+        return 'bg-red-500';
+      case 'hydration':
+        return 'bg-cyan-500';
+      case 'stress':
+        return 'bg-pink-500';
+      case 'energy':
+        return 'bg-yellow-500';
+      case 'recovery':
+        return 'bg-indigo-500';
+      case 'cognitive':
+        return 'bg-emerald-500';
+      case 'longevity':
+        return 'bg-violet-500';
+      case 'tracking':
+        return 'bg-amber-500';
+      case 'health':
+        return 'bg-teal-500';
+      default:
+        return 'bg-gray-500';
+    }
+  }
 };
 
 export default MyCoach;
