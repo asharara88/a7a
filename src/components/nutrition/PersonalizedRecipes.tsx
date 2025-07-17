@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Loader2, ChevronRight } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { recipeApi, Recipe, RecipeSearchParams } from '../../api/recipeApi';
 import RecipeCard from './RecipeCard';
 import { Button } from '../ui/Button';
@@ -93,18 +93,10 @@ const PersonalizedRecipes: React.FC = () => {
             }}
           />
         </div>
-                setSearchParams({
-                  diet: '',
-                  intolerances: '',
-                  maxReadyTime: 60,
-                  maxCalories: 800
-                });
-                loadRecipes();
-              }}
-            >
-              Reset Filters
-            </Button>
-          </div>
+      </div>
+      {isLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <Loader2 className="animate-spin w-8 h-8 text-primary" />
         </div>
       ) : error ? (
         <div className="text-center py-12">
@@ -139,18 +131,17 @@ const PersonalizedRecipes: React.FC = () => {
             </div>
           )}
         </div>
-        
-        {recipes.length > 0 && (
-          <div className="mt-8 text-center">
-            <Link 
-              to="/recipes"
-              className="inline-flex items-center text-primary hover:text-primary-dark font-medium"
-            >
-              View more recipes
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </Link>
-          </div>
-        )}
+      )}
+      
+      {recipes.length > 0 && (
+        <div className="mt-8 text-center">
+          <Link 
+            to="/recipes"
+            className="inline-flex items-center text-primary hover:text-primary-dark font-medium"
+          >
+            View more recipes
+          </Link>
+        </div>
       )}
     </div>
   );
