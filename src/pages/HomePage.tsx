@@ -43,11 +43,11 @@ const HomePage: React.FC = () => {
             <div className="inline-block bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-1 mb-6">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Evidence-based health optimization</span>
             </div>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
-              <div className="leading-tight">Your Personal</div>
-              <div className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
+              <span>Your Personal </span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
                 Health Coach
-              </div>
+              </span>
             </h1>
             <p className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
               Transform your health with personalized insights and evidence-based recommendations.
