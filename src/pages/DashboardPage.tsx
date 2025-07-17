@@ -1,6 +1,6 @@
 import React from 'react'
 import { Activity, Heart, Moon, Zap } from 'lucide-react'
-import AIHealthCoach from '../components/chat/AIHealthCoach'
+import MyCoach from '../components/chat/MyCoach'
 
 const DashboardPage: React.FC = () => {
   // Health metrics data
@@ -92,7 +92,7 @@ const DashboardPage: React.FC = () => {
           
           {/* AI Health Coach */}
           <div className="lg:col-span-2">
-            <AIHealthCoach />
+            <MyCoach />
           </div>
         </div>
       </div>
