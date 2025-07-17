@@ -85,7 +85,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 )}
                 aria-label="AI Coach"
               >
-                <Bot className="w-6 h-6" />
+                <Sparkles className="w-6 h-6" />
               </Link>
               <Link
                 to="/login"
