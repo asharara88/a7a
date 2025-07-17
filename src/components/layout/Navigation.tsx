@@ -66,6 +66,7 @@ const Navigation: React.FC<NavigationProps> = ({
       icon: <Package className="w-5 h-5" />,
       children: [
         { name: 'My Stacks', href: '/my-stacks', icon: <Package className="w-4 h-4" /> },
+        { name: 'Recommendations', href: '/recommendations', icon: <Sparkles className="w-4 h-4" /> },
         { name: 'Supplement Store', href: '/supplements', icon: <Pill className="w-4 h-4" /> },
         { name: 'My Cart', href: '/cart', icon: <ShoppingCart className="w-4 h-4" /> }
       ]
