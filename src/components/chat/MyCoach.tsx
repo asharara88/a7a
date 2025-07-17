@@ -223,29 +223,6 @@ const MyCoach: React.FC = () => {
         }
         
         throw new Error(errorMessage);
-              Their stress level is ${healthContext.stressLevel}.
-              Keep responses concise and actionable. 
-              When discussing supplements, only recommend green tier (strong evidence) or yellow tier (moderate evidence) options.
-              Always emphasize that supplements should complement, not replace, a healthy lifestyle.` },
-            ...recentMessages.map(m => ({ role: m.role, content: m.content })),
-            { role: 'user', content: messageText }
-          ]
-        },
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      console.log('OpenAI proxy response:', { data, error: apiError })
-      if (apiError) {
-        console.error('OpenAI proxy error:', apiError);
-        
-        throw new Error(`Edge Function Error: ${apiError.message || 'Unknown error occurred'}`);
-      }
-
-      // Check if the function returned an error in the response data
-      if (data && data.error) {
-        console.error('OpenAI proxy returned error:', data);
         
         // Handle specific error codes from the response
         if (data.code === 'MISSING_API_KEY') {
