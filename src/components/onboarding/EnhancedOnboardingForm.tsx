@@ -322,7 +322,7 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
             <div>
               <label className="block text-sm font-medium mb-2">Gender</label>
               <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light"
                 value={currentStepData.gender || profile?.gender || ''}
                 onChange={(e) => handleFieldChange('gender', e.target.value)}
               >
@@ -849,11 +849,11 @@ const EnhancedOnboardingForm: React.FC<EnhancedOnboardingFormProps> = ({
       <Card className="p-8">
         <div className="flex items-center mb-6">
           <div className="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mr-4">
-            <currentStep.icon className="w-6 h-6 text-primary drop-shadow-sm" />
+            <currentStep.icon className="w-6 h-6 text-primary dark:text-primary-light drop-shadow-sm" />
           </div>
           <div>
-            <h3 className="text-xl font-semibold tracking-tight">{currentStep.title}</h3>
-            <p className="text-gray-600 dark:text-gray-400 tracking-wide">{currentStep.description}</p>
+            <h3 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{currentStep.title}</h3>
+            <p className="text-gray-600 dark:text-gray-300 tracking-wide">{currentStep.description}</p>
           </div>
         </div>
 

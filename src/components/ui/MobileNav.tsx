@@ -238,14 +238,14 @@ const MobileNav: React.FC<MobileNavProps> = ({
               <div className="flex space-x-3">
                 <Link 
                   to="/login" 
-                  className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg font-medium text-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg font-medium text-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-all shadow-sm dark:shadow-dark-sm hover:shadow-md dark:hover:shadow-dark-md"
                   onClick={onClose}
                 >
                   Sign In
                 </Link>
                 <Link 
                   to="/signup" 
-                  className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium text-center transition-colors"
+                  className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium text-center transition-all shadow-sm dark:shadow-dark-sm hover:shadow-md dark:hover:shadow-dark-md"
                   onClick={onClose}
                 >
                   Sign Up

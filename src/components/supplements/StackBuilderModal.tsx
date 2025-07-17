@@ -359,7 +359,7 @@ const StackBuilderModal: React.FC<StackBuilderModalProps> = ({
                 {stackItems.map((item, index) => (
                   <div 
                     key={index} 
-                    className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800"
+                    className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm dark:shadow-dark-sm hover:shadow-md dark:hover:shadow-dark-md transition-shadow"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <div>
@@ -438,7 +438,7 @@ const StackBuilderModal: React.FC<StackBuilderModalProps> = ({
                   .map(supplement => (
                     <div 
                       key={supplement.id} 
-                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 hover:shadow-md transition-shadow cursor-pointer"
+                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 hover:shadow-md dark:hover:shadow-dark-md transition-all duration-200 cursor-pointer hover:border-primary/30 dark:hover:border-primary/30"
                       onClick={() => addSupplementToStack(supplement)}
                     >
                       <div className="flex justify-between items-start mb-2">

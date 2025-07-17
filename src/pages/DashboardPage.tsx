@@ -292,8 +292,8 @@ const DashboardPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 sm:py-8 transition-all duration-200">
       <div className="mobile-container">
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50">Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-300">Track your wellness journey</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-300 tracking-wide">Track your wellness journey</p>
         </div>
 
         {/* Key Metrics */}
@@ -335,7 +335,7 @@ const DashboardPage: React.FC = () => {
 
         {/* BW Score */}
         <div className="mb-8">
-          <BWScoreCard 
+          <BWScoreCard
             metrics={bwScoreMetrics}
             onMetricClick={handleMetricClick}
           />

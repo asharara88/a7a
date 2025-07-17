@@ -41,10 +41,13 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe, onSave, isSaved = f
       <div className="relative rounded-xl overflow-hidden">
         <img 
           src={recipe.image} 
-          alt={recipe.title} 
+          alt={recipe.title}
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
+          }}
           className="w-full h-64 sm:h-80 object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-6">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-6 shadow-inner">
           <div className="flex items-center space-x-2 mb-2">
             {recipe.healthScore >= 80 && (
               <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full flex items-center">
@@ -194,25 +197,25 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({ recipe, onSave, isSaved = f
         {activeTab === 'nutrition' && (
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Nutrition Information</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Per serving</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Per serving</p>
             
             {recipe.nutrition && (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <Card className="p-4 text-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Calories</p>
-                  <p className="text-xl font-bold">{Math.round(recipe.nutrition.calories)}</p>
+                <Card className="p-4 text-center hover:shadow-md dark:hover:shadow-dark-md transition-shadow">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Calories</p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">{Math.round(recipe.nutrition.calories)}</p>
                 </Card>
-                <Card className="p-4 text-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Protein</p>
-                  <p className="text-xl font-bold">{Math.round(recipe.nutrition.protein)}g</p>
+                <Card className="p-4 text-center hover:shadow-md dark:hover:shadow-dark-md transition-shadow">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Protein</p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">{Math.round(recipe.nutrition.protein)}g</p>
                 </Card>
-                <Card className="p-4 text-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Carbs</p>
-                  <p className="text-xl font-bold">{Math.round(recipe.nutrition.carbs)}g</p>
+                <Card className="p-4 text-center hover:shadow-md dark:hover:shadow-dark-md transition-shadow">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Carbs</p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">{Math.round(recipe.nutrition.carbs)}g</p>
                 </Card>
-                <Card className="p-4 text-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Fat</p>
-                  <p className="text-xl font-bold">{Math.round(recipe.nutrition.fat)}g</p>
+                <Card className="p-4 text-center hover:shadow-md dark:hover:shadow-dark-md transition-shadow">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Fat</p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">{Math.round(recipe.nutrition.fat)}g</p>
                 </Card>
               </div>
             )}
