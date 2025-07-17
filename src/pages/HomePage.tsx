@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Heart, Shield, Zap, Brain } from 'lucide-react'
+import { ArrowRight, Heart, Shield, Zap, Brain, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 // Features data
@@ -31,48 +31,65 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section with consistent styling */}
-      <section className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white py-16 sm:py-20 md:py-24 relative overflow-hidden">
-        {/* Animated background elements */}
-        
-        <div className="mobile-container">
+      <section className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white py-24 sm:py-32 md:py-40 relative overflow-hidden">
+        <div className="mobile-container max-w-6xl mx-auto">
           <motion.div 
-            className="text-center max-w-3xl mx-auto"
+            className="text-center max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 sm:mb-8">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-600">
-                Your Digital Wellness Coach
-              </span>
+            <div className="inline-block bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-1 mb-6">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Evidence-based health optimization</span>
+            </div>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
+              <div className="leading-tight">Your Personal</div>
+              <div className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300 leading-tight">
+                Health Coach
+              </div>
             </h1>
-            <p className="text-xl sm:text-2xl md:text-3xl mb-8 sm:mb-10 text-gray-700 dark:text-gray-300">
-              Personalized supplement recommendations powered by science
+            <p className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+              Transform your health with personalized insights and evidence-based recommendations.
             </p>
             <motion.div 
-              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center"
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
-                  to="/signup"
-                  className="bg-primary dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
+                  to="/dashboard"
+                  className="bg-blue-700 dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
                 >
-                  Get Started
+                  Go to Dashboard
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
-                  to="/about"
-                  className="bg-primary dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
+                  to="/signup"
+                  className="bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 border border-gray-200 dark:border-gray-700 px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
                 >
-                  Learn More
+                  Create Account
                 </Link>
               </motion.div>
             </motion.div>
+            
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center">
+                <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
+                <span>Personalized recommendations</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
+                <span>Science-backed approach</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
+                <span>AI-powered insights</span>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -80,8 +97,8 @@ const HomePage: React.FC = () => {
       {/* Features Section with responsive spacing */}
       <section className="py-16 sm:py-20 md:py-24 bg-white dark:bg-gray-900 transition-all duration-200 relative overflow-hidden">
         {/* Background accent */}
-        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-primary/5 to-tertiary/5 rounded-bl-full"></div>
-        <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-gradient-to-tr from-secondary/5 to-tertiary/5 rounded-tr-full"></div>
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-blue-500/5 to-blue-300/5 rounded-bl-full"></div>
+        <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-gradient-to-tr from-blue-600/5 to-blue-400/5 rounded-tr-full"></div>
         
         <div className="mobile-container">
           <motion.div 
@@ -91,8 +108,10 @@ const HomePage: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
               Why Choose Biowell?
+              </span>
             </h2>
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Experience the future of personalized wellness
@@ -110,10 +129,10 @@ const HomePage: React.FC = () => {
               <motion.div 
                 key={index} 
                 className={`text-center p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${
-                  index % 4 === 0 ? 'bg-gradient-to-br from-primary-dark to-primary' : 
-                  index % 4 === 1 ? 'bg-gradient-to-br from-secondary-dark to-secondary' : 
-                  index % 4 === 2 ? 'bg-gradient-to-br from-tertiary-dark to-tertiary' :
-                  'bg-gradient-to-br from-secondary-light to-secondary'
+                  index % 4 === 0 ? 'bg-gradient-to-br from-blue-700 to-blue-600' : 
+                  index % 4 === 1 ? 'bg-gradient-to-br from-blue-600 to-blue-500' : 
+                  index % 4 === 2 ? 'bg-gradient-to-br from-blue-500 to-blue-400' :
+                  'bg-gradient-to-br from-blue-600 to-blue-500'
                 }`}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
@@ -144,34 +163,18 @@ const HomePage: React.FC = () => {
       {/* CTA Section */}
       <section className="py-16 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white transition-all duration-200 relative overflow-hidden">
         {/* Animated background elements */}
-        <motion.div 
-          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary opacity-10"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            x: [0, -30, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 10, repeat: Infinity }}
-        />
-        <motion.div 
-          className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-secondary opacity-10"
-          animate={{ 
-            scale: [1, 1.3, 1],
-            x: [0, 20, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{ duration: 8, repeat: Infinity, delay: 0.5 }}
-        />
         
         <div className="mobile-container text-center">
           <motion.h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Ready to optimize your health?
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
+              Ready to optimize your health?
+            </span>
           </motion.h2>
           <motion.p 
             className="text-xl sm:text-2xl text-gray-700 dark:text-gray-300 mb-8 sm:mb-10 max-w-3xl mx-auto"
@@ -192,7 +195,7 @@ const HomePage: React.FC = () => {
           >
             <Link
               to="/onboarding"
-              className="bg-primary text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl text-lg"
+              className="bg-blue-700 dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl text-lg"
             >
               Start Your Journey
               <ArrowRight className="ml-2 w-6 h-6" />
