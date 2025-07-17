@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { CheckCircle, AlertCircle, Info, Loader2 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
+import StackBuilderModal from '../components/supplements/StackBuilderModal';
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
@@ -37,6 +38,8 @@ export default function SupplementStorePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [addingToCart, setAddingToCart] = useState(null);
+  const [showStackBuilder, setShowStackBuilder] = useState(false);
+  const [selectedSupplementId, setSelectedSupplementId] = useState(null);
 
   useEffect(() => {
     async function fetchSupplements() {
@@ -79,9 +82,18 @@ export default function SupplementStorePage() {
     }, 1000);
   };
 
-  const handleAddToStack = (suppId) => {
-    // TODO: Implement stack builder modal/functionality
-    alert(`Added ${suppId} to stack builder. This functionality will be implemented soon.`);
+  const handleAddToStack = (supplementId) => {
+    setSelectedSupplementId(supplementId);
+    setShowStackBuilder(true);
+  };
+
+  const handleSaveStack = async (stackData) => {
+    try {
+      await supplementApi.createSupplementStack(stackData);
+    } catch (error) {
+      console.error('Error saving stack:', error);
+      throw error;
+    }
   };
 
   const filteredSupps = tierFilter === "all"
@@ -270,6 +282,14 @@ export default function SupplementStorePage() {
           </div>
         )}
       </div>
+      
+      {/* Stack Builder Modal */}
+      <StackBuilderModal
+        isOpen={showStackBuilder}
+        onClose={() => setShowStackBuilder(false)}
+        initialSupplementId={selectedSupplementId || undefined}
+        onSaveStack={handleSaveStack}
+      />
     </div>
   );
 }
