@@ -17,7 +17,7 @@ export interface ToastProps {
 export const Toast: React.FC<ToastProps> = ({
   title,
   message,
-  icon,
+  icon = null,
   actionText,
   onAction,
   onDismiss,
@@ -30,7 +30,7 @@ export const Toast: React.FC<ToastProps> = ({
     if (duration > 0) {
       const timer = setTimeout(() => {
         setIsVisible(false);
-        if (onDismiss) setTimeout(onDismiss, 300);
+        if (onDismiss) setTimeout(onDismiss, 350);
       }, duration);
       
       return () => clearTimeout(timer);
@@ -44,7 +44,7 @@ export const Toast: React.FC<ToastProps> = ({
       case 'error':
         return 'border-red-500 dark:border-red-500';
       case 'warning':
-        return 'border-yellow-500 dark:border-yellow-500';
+        return 'border-yellow-500 dark:border-yellow-600';
       case 'info':
         return 'border-blue-500 dark:border-blue-500';
       default:
@@ -65,7 +65,7 @@ export const Toast: React.FC<ToastProps> = ({
       <div className="p-4">
         <div className="flex items-start">
           {icon && (
-            <div className="flex-shrink-0 mr-3">
+            <div className="flex-shrink-0 mr-3 flex-none">
               {icon}
             </div>
           )}
