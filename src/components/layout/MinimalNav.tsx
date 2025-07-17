@@ -6,7 +6,6 @@ import {
   Pill, 
   MoreHorizontal, 
   ShoppingCart,
-  Bell,
   User,
   ChevronRight,
   LayoutDashboard,
@@ -304,9 +303,9 @@ const MinimalNav: React.FC = () => {
                     </div>
                     <span className="ml-3 text-gray-700 dark:text-gray-300">Cart</span>
                   </Link>
-                  <Link to="/notifications" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Bell size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Notifications</span>
+                  <Link to="/mycoach" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
+                    <span className="ml-3 text-gray-700 dark:text-gray-300">MyCoach™</span>
                   </Link>
                   {user ? (
                     <Link to="/profile" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
