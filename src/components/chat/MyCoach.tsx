@@ -302,14 +302,58 @@ const MyCoach: React.FC = () => {
       
       let errorMessage = 'Failed to get a response from AI service.';
       
-      if (err instanceof Error) {
-        if (err.message.includes('AI service is not configured') || err.message.includes('Invalid OpenAI API key')) {
-          errorMessage = err.message;
-        } else if (err.message.includes('OpenAI API rate limit') || err.message.includes('insufficient credits')) {
-          errorMessage = err.message;
-        } else if (err.message.includes('Edge Function Error')) {
-          errorMessage = 'AI service deployment error. Please ensure the OpenAI proxy Edge Function is properly deployed with: supabase functions deploy openai-proxy';
-        } else {
+      // Try to parse error details from Edge Function response
+      try {
+        // Check if the error has details property (raw response from Edge Function)
+        if (err && typeof err === 'object' && 'details' in err) {
+          const details = err.details;
+          
+          // Try to parse the details as JSON
+          let parsedDetails;
+          if (typeof details === 'string') {
+            try {
+              parsedDetails = JSON.parse(details);
+            } catch {
+              // If JSON parsing fails, use the string as-is
+              parsedDetails = { error: details };
+            }
+          } else {
+            parsedDetails = details;
+          }
+          
+          // Extract error message and code from parsed details
+          if (parsedDetails && parsedDetails.error) {
+            const errorCode = parsedDetails.code;
+            const errorMsg = parsedDetails.error;
+            
+            // Handle specific error codes
+            if (errorCode === 'MISSING_API_KEY') {
+              errorMessage = 'OpenAI API key is not configured. Please run:\n\n1. supabase secrets set OPENAI_API_KEY=your-api-key\n2. supabase functions deploy openai-proxy';
+            } else if (errorCode === 'INVALID_API_KEY') {
+              errorMessage = 'Invalid OpenAI API key. Please verify your API key and run:\n\n1. supabase secrets set OPENAI_API_KEY=your-valid-key\n2. supabase functions deploy openai-proxy';
+            } else if (errorCode === 'RATE_LIMIT') {
+              errorMessage = 'OpenAI API rate limit exceeded. Please check your OpenAI account at https://platform.openai.com/usage';
+            } else if (errorCode === 'OPENAI_ERROR') {
+              errorMessage = `OpenAI service error: ${errorMsg}`;
+            } else {
+              errorMessage = errorMsg;
+            }
+          }
+        }
+        
+        // Fallback to checking error message if details parsing didn't work
+        if (errorMessage === 'Failed to get a response from AI service.' && err instanceof Error) {
+          if (err.message.includes('Edge Function returned a non-2xx status code')) {
+            errorMessage = 'AI service configuration error. Please check that your OpenAI API key is set with: supabase secrets list, and redeploy with: supabase functions deploy openai-proxy';
+          } else {
+            errorMessage = err.message;
+          }
+        }
+      } catch (parseError) {
+        console.error('Error parsing Edge Function error details:', parseError);
+        
+        // Final fallback - use the original error message
+        if (err instanceof Error) {
           errorMessage = err.message;
         }
       }
