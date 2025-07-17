@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronRight } from 'lucide-react';
 import { recipeApi, Recipe, RecipeSearchParams } from '../../api/recipeApi';
 import RecipeCard from './RecipeCard';
 import { Button } from '../ui/Button';
@@ -93,14 +93,17 @@ const PersonalizedRecipes: React.FC = () => {
             }}
           />
         </div>
-      </div>
-
-      {/* Recipes Grid */}
-      {isLoading ? (
-        <div className="flex justify-center py-12">
-          <div className="flex flex-col items-center">
-            <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
-            <p className="text-gray-600 dark:text-gray-400">Finding the perfect recipes for you...</p>
+                setSearchParams({
+                  diet: '',
+                  intolerances: '',
+                  maxReadyTime: 60,
+                  maxCalories: 800
+                });
+                loadRecipes();
+              }}
+            >
+              Reset Filters
+            </Button>
           </div>
         </div>
       ) : error ? (
@@ -136,6 +139,18 @@ const PersonalizedRecipes: React.FC = () => {
             </div>
           )}
         </div>
+        
+        {recipes.length > 0 && (
+          <div className="mt-8 text-center">
+            <Link 
+              to="/recipes"
+              className="inline-flex items-center text-primary hover:text-primary-dark font-medium"
+            >
+              View more recipes
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Link>
+          </div>
+        )}
       )}
     </div>
   );

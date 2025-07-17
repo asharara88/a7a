@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Volume2, VolumeX, Loader2, HelpCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from '../ui/Button';
 import ChatMessage from './ChatMessage';
 import { createClient } from '@supabase/supabase-js';
@@ -248,7 +249,7 @@ const AIHealthCoach: React.FC = () => {
             {currentQuestions.map((questionObj, index) => (
               <motion.button
                 key={index}
-                onClick={handleQuestionClick(questionObj.text)}
+                onClick={(e) => handleQuestionClick(questionObj.text)(e)}
                 className={cn(
                   "px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow",
                   "flex-grow md:flex-grow-0 relative overflow-hidden",

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Utensils, TrendingUp, Apple, Salad, Clock } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
+import { Button } from '../ui/Button';
 import { Doughnut } from 'react-chartjs-2';
 import { cn } from '../../utils/cn';
 
@@ -187,13 +188,17 @@ const NutritionDashboard: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Mock recipe recommendations */}
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-all duration-200 bg-white dark:bg-gray-800">
+            <Link 
+              to={`/recipes/${i + 1}`}
+              key={i} 
+              className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-all duration-200 bg-white dark:bg-gray-800"
+            >
               <div className="h-32 bg-gradient-to-r from-primary/20 via-tertiary/20 to-secondary/20 dark:from-primary/30 dark:via-tertiary/30 dark:to-secondary/30"></div>
               <div className="p-4">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Recipe {i + 1}</h4>
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Healthy Recipe {i + 1}</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Delicious and nutritious recipe recommendation</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </Card>

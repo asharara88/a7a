@@ -3,6 +3,7 @@ import { Card } from '../ui/Card';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, Info } from 'lucide-react';
 import ProgressRing from './ProgressRing';
+import { cn } from '../../utils/cn';
 
 export interface MetricScore {
   name: string;
@@ -121,11 +122,14 @@ const BWScoreCard: React.FC<BWScoreCardProps> = ({ metrics, onMetricClick }) => 
                   <div 
                     key={metric.name}
                     className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-3 rounded-lg transition-colors"
-                    onClick={() => onMetricClick && onMetricClick(metric.name)}
+                    onClick={() => onMetricClick?.(metric.name)}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
-                        <div className="p-2 rounded-full mr-3" style={{ backgroundColor: `${metric.color}20`, color: metric.color }}>
+                        <div className={cn(
+                          "p-2 rounded-full mr-3",
+                          "bg-opacity-20 dark:bg-opacity-20"
+                        )} style={{ backgroundColor: metric.color, color: metric.color }}>
                           {metric.icon}
                         </div>
                         <span className="font-medium text-gray-900 dark:text-white">{metric.name}</span>

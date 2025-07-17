@@ -91,7 +91,7 @@ const SupplementTracker: React.FC<SupplementTrackerProps> = ({ supplements, onMa
                   <motion.div 
                     key={supplement.id}
                     className={`flex items-center justify-between p-3 rounded-lg border ${
-                      supplement.taken 
+                      supplement.taken
                         ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-900/10' 
                         : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800'
                     }`}
@@ -113,13 +113,13 @@ const SupplementTracker: React.FC<SupplementTrackerProps> = ({ supplements, onMa
                     {supplement.taken ? (
                       <div className="flex items-center text-green-600 dark:text-green-400">
                         <Check className="w-5 h-5" />
-                        <span className="ml-1 text-sm font-medium">Taken</span>
+                        <span className="ml-1 text-sm font-medium">✓ Taken</span>
                       </div>
                     ) : (
                       <Button
                         size="sm"
                         onClick={() => onMarkTaken(supplement.id)}
-                        className="text-xs"
+                        className="text-xs bg-primary hover:bg-primary-dark"
                       >
                         Mark as Taken
                       </Button>

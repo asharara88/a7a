@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, ShoppingCart, Info, Filter } from 'lucide-react';
+import { Star, ShoppingCart, Info, Filter, Check } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -30,6 +30,7 @@ const SupplementsPage: React.FC = () => {
   const [activeTier, setActiveTier] = useState<'all' | 'green' | 'yellow' | 'orange'>('all');
   const [showTierInfo, setShowTierInfo] = useState(false);
   const [cartItems, setCartItems] = useState<string[]>([]);
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSupplements();
@@ -59,13 +60,18 @@ const SupplementsPage: React.FC = () => {
 
   const addToCart = async (supplementId: string) => {
     try {
+      setAddingToCart(supplementId);
+      
       // In a real app, this would call an API to add to cart
       setCartItems(prev => [...prev, supplementId]);
       
-      // Show success message
-      alert('Added to cart successfully!');
+      // Clear adding state after a delay
+      setTimeout(() => {
+        setAddingToCart(null);
+      }, 2000);
     } catch (error) {
       console.error('Error adding to cart:', error);
+      setAddingToCart(null);
     }
   };
 
@@ -276,9 +282,22 @@ const SupplementsPage: React.FC = () => {
                         >
                           View
                         </Link>
-                        <button className="px-3 py-2 text-sm bg-primary text-white rounded-md hover:bg-primary-dark transition-colors flex items-center justify-center flex-1">
-                          <ShoppingCart className="w-4 h-4 mr-1" />
-                          Add to Cart
+                        <button 
+                          className="px-3 py-2 text-sm bg-primary text-white rounded-md hover:bg-primary-dark transition-colors flex items-center justify-center flex-1"
+                          onClick={() => addToCart(supplement.id)}
+                          disabled={addingToCart === supplement.id}
+                        >
+                          {addingToCart === supplement.id ? (
+                            <>
+                              <Check className="w-4 h-4 mr-1" />
+                              Added!
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingCart className="w-4 h-4 mr-1" />
+                              Add to Cart
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
