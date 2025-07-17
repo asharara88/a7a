@@ -9,7 +9,7 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 5173, // Run on port 5173 instead of 3000
+    port: 5174, // Run on port 5174 to match webcontainer environment
     hmr: {
       overlay: true,
     },
