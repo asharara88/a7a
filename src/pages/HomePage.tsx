@@ -74,7 +74,7 @@ const HomePage: React.FC = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/signup"
-                  className="bg-primary text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
+                  className="bg-primary dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
                 >
                   Get Started
                   <ArrowRight className="ml-2 w-5 h-5" />
@@ -83,7 +83,7 @@ const HomePage: React.FC = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/about"
-                  className="bg-primary text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
+                  className="bg-primary dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-primary-dark dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
                 >
                   Learn More
                 </Link>
