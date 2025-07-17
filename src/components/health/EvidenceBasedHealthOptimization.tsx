@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, CheckCircle, BookOpen, Brain, Heart, Activity, Moon, Utensils } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 
-const EvidenceBasedHealthOptimization: React.FC = () => {
+interface EvidenceBasedHealthOptimizationProps {
+  expanded?: boolean;
+}
+
+const EvidenceBasedHealthOptimization: React.FC<EvidenceBasedHealthOptimizationProps> = ({ 
+  expanded = false 
+}) => {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(expanded);
+
+  useEffect(() => {
+    setIsExpanded(expanded);
+  }, [expanded]);
 
   const toggleSection = (section: string) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
   return (
-    <section className="py-16 bg-white dark:bg-gray-900">
+    <section className="py-16 bg-white dark:bg-gray-900 transition-all duration-300">
       <div className="mobile-container">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -25,43 +36,59 @@ const EvidenceBasedHealthOptimization: React.FC = () => {
             <p className="text-lg text-gray-700 dark:text-gray-300">
               Using scientifically proven methods to improve your health and wellness
             </p>
+            {!isExpanded && (
+              <Button 
+                onClick={() => setIsExpanded(true)} 
+                className="mt-6"
+              >
+                Learn More
+              </Button>
+            )}
           </div>
 
-          <Card className="p-8 mb-8">
-            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-              What is Evidence-Based Health Optimization?
-            </h3>
-            <p className="text-gray-700 dark:text-gray-300 mb-6">
-              Evidence-based health optimization means using scientifically proven methods to improve your health. 
-              It focuses on strategies that have been tested and validated through research, helping you make 
-              decisions that are more likely to be effective for long-term health.
-            </p>
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card className="p-8 mb-8">
+                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                    What is Evidence-Based Health Optimization?
+                  </h3>
+                  <p className="text-gray-700 dark:text-gray-300 mb-6">
+                    Evidence-based health optimization means using scientifically proven methods to improve your health. 
+                    It focuses on strategies that have been tested and validated through research, helping you make 
+                    decisions that are more likely to be effective for long-term health.
+                  </p>
 
-            <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
-              Key Principles:
-            </h4>
+                  <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                    Key Principles:
+                  </h4>
             
-            <div className="space-y-6">
-              {/* Scientific Backing */}
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                <div 
-                  className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  onClick={() => toggleSection('scientific')}
-                >
-                  <div className="flex items-center">
-                    <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 mr-3">
-                      <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <h5 className="font-semibold text-gray-900 dark:text-white">Scientific Backing</h5>
-                  </div>
-                  <div>
-                    {expandedSection === 'scientific' ? (
-                      <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                    )}
-                  </div>
-                </div>
+                  <div className="space-y-6">
+                    {/* Scientific Backing */}
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <div 
+                        className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        onClick={() => toggleSection('scientific')}
+                      >
+                        <div className="flex items-center">
+                          <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 mr-3">
+                            <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <h5 className="font-semibold text-gray-900 dark:text-white">Scientific Backing</h5>
+                        </div>
+                        <div>
+                          {expandedSection === 'scientific' ? (
+                            <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                          )}
+                        </div>
+                      </div>
                 
                 <AnimatePresence>
                   {expandedSection === 'scientific' && (
@@ -91,26 +118,26 @@ const EvidenceBasedHealthOptimization: React.FC = () => {
                 </AnimatePresence>
               </div>
 
-              {/* Whole-Person Health */}
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                <div 
-                  className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  onClick={() => toggleSection('whole-person')}
-                >
-                  <div className="flex items-center">
-                    <div className="p-2 rounded-full bg-green-100 dark:bg-green-900/30 mr-3">
-                      <Heart className="w-5 h-5 text-green-600 dark:text-green-400" />
-                    </div>
-                    <h5 className="font-semibold text-gray-900 dark:text-white">Whole-Person Health</h5>
-                  </div>
-                  <div>
-                    {expandedSection === 'whole-person' ? (
-                      <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                    )}
-                  </div>
-                </div>
+                    {/* Whole-Person Health */}
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <div 
+                        className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        onClick={() => toggleSection('whole-person')}
+                      >
+                        <div className="flex items-center">
+                          <div className="p-2 rounded-full bg-green-100 dark:bg-green-900/30 mr-3">
+                            <Heart className="w-5 h-5 text-green-600 dark:text-green-400" />
+                          </div>
+                          <h5 className="font-semibold text-gray-900 dark:text-white">Whole-Person Health</h5>
+                        </div>
+                        <div>
+                          {expandedSection === 'whole-person' ? (
+                            <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                          )}
+                        </div>
+                      </div>
                 
                 <AnimatePresence>
                   {expandedSection === 'whole-person' && (
@@ -133,26 +160,26 @@ const EvidenceBasedHealthOptimization: React.FC = () => {
                 </AnimatePresence>
               </div>
 
-              {/* Personalized Approach */}
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                <div 
-                  className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  onClick={() => toggleSection('personalized')}
-                >
-                  <div className="flex items-center">
-                    <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30 mr-3">
-                      <Brain className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                    </div>
-                    <h5 className="font-semibold text-gray-900 dark:text-white">Personalized Approach</h5>
-                  </div>
-                  <div>
-                    {expandedSection === 'personalized' ? (
-                      <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                    )}
-                  </div>
-                </div>
+                    {/* Personalized Approach */}
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <div 
+                        className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        onClick={() => toggleSection('personalized')}
+                      >
+                        <div className="flex items-center">
+                          <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30 mr-3">
+                            <Brain className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <h5 className="font-semibold text-gray-900 dark:text-white">Personalized Approach</h5>
+                        </div>
+                        <div>
+                          {expandedSection === 'personalized' ? (
+                            <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                          )}
+                        </div>
+                      </div>
                 
                 <AnimatePresence>
                   {expandedSection === 'personalized' && (
@@ -175,25 +202,25 @@ const EvidenceBasedHealthOptimization: React.FC = () => {
                 </AnimatePresence>
               </div>
             </div>
-          </Card>
+                </Card>
 
-          <Card className="p-8 mb-8">
-            <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
-              Research Behind Health Practices:
-            </h4>
-            <div className="space-y-4">
-              <div className="flex items-start">
-                <div className="p-2 rounded-full bg-indigo-100 dark:bg-indigo-900/30 mr-3 mt-1">
-                  <Moon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                </div>
-                <div>
-                  <h5 className="font-semibold text-gray-900 dark:text-white">Sleep</h5>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    Poor sleep is linked to various health issues, but better sleep quality improves your overall well-being.
-                    Research shows that consistent, quality sleep supports immune function, cognitive performance, and metabolic health.
-                  </p>
-                </div>
-              </div>
+                <Card className="p-8 mb-8">
+                  <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                    Research Behind Health Practices:
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <div className="p-2 rounded-full bg-indigo-100 dark:bg-indigo-900/30 mr-3 mt-1">
+                        <Moon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-gray-900 dark:text-white">Sleep</h5>
+                        <p className="text-gray-700 dark:text-gray-300">
+                          Poor sleep is linked to various health issues, but better sleep quality improves your overall well-being.
+                          Research shows that consistent, quality sleep supports immune function, cognitive performance, and metabolic health.
+                        </p>
+                      </div>
+                    </div>
               
               <div className="flex items-start">
                 <div className="p-2 rounded-full bg-green-100 dark:bg-green-900/30 mr-3 mt-1">
@@ -223,22 +250,22 @@ const EvidenceBasedHealthOptimization: React.FC = () => {
                 </div>
               </div>
             </div>
-          </Card>
+                </Card>
 
-          <Card className="p-8">
-            <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
-              Simple Tips to Optimize Your Health:
-            </h4>
-            <div className="space-y-4">
-              <div className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3 mt-1 flex-shrink-0" />
-                <div>
-                  <h5 className="font-semibold text-gray-900 dark:text-white">Sleep Better</h5>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    Stick to a sleep schedule, reduce screen time before bed, and make your bedroom comfortable.
-                  </p>
-                </div>
-              </div>
+                <Card className="p-8">
+                  <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                    Simple Tips to Optimize Your Health:
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3 mt-1 flex-shrink-0" />
+                      <div>
+                        <h5 className="font-semibold text-gray-900 dark:text-white">Sleep Better</h5>
+                        <p className="text-gray-700 dark:text-gray-300">
+                          Stick to a sleep schedule, reduce screen time before bed, and make your bedroom comfortable.
+                        </p>
+                      </div>
+                    </div>
               
               <div className="flex items-start">
                 <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3 mt-1 flex-shrink-0" />
@@ -261,23 +288,37 @@ const EvidenceBasedHealthOptimization: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-8">
-              <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
-                How Metrics Help:
-              </h4>
-              <p className="text-gray-700 dark:text-gray-300 mb-6">
-                Metrics like BMI, sleep scores, and fitness levels track your progress and help you see how well 
-                you're optimizing your health. By monitoring these, you can make smarter, data-driven decisions 
-                to improve your well-being.
-              </p>
+                  <div className="mt-8">
+                    <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                      How Metrics Help:
+                    </h4>
+                    <p className="text-gray-700 dark:text-gray-300 mb-6">
+                      Metrics like BMI, sleep scores, and fitness levels track your progress and help you see how well 
+                      you're optimizing your health. By monitoring these, you can make smarter, data-driven decisions 
+                      to improve your well-being.
+                    </p>
               
-              <div className="flex justify-center">
-                <Button>
-                  Start Your Health Optimization Journey
-                </Button>
-              </div>
-            </div>
-          </Card>
+                    <div className="flex justify-center">
+                      <Button>
+                        Start Your Health Optimization Journey
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+                
+                {isExpanded && (
+                  <div className="text-center mt-8">
+                    <Button 
+                      onClick={() => setIsExpanded(false)}
+                      variant="outline"
+                    >
+                      Show Less
+                    </Button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </section>

@@ -162,7 +162,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Evidence-Based Health Optimization Section */}
-      <EvidenceBasedHealthOptimization />
+      <EvidenceBasedHealthOptimization expanded={false} />
 
       {/* CTA Section */}
       <section className="py-16 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white transition-all duration-200 relative overflow-hidden">
@@ -180,8 +180,8 @@ const HomePage: React.FC = () => {
               Ready to optimize your health?
             </span>
           </motion.h2>
-          <p className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Optimize your Wellness Everyday
+          <motion.p 
+            className="text-xl sm:text-2xl mb-10 sm:mb-12 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
