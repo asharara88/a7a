@@ -128,7 +128,7 @@ const MinimalNav: React.FC = () => {
   
   return (
     <div className="sticky top-0 z-50 w-full">
-      <nav className="h-12 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-sm">
+      <nav className="h-12 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-surface-1 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between relative">
           {/* Logo */}
           <Link to="/" className="flex items-center">
@@ -490,7 +490,7 @@ const MinimalNav: React.FC = () => {
       
       {/* Breadcrumbs */}
       {showBreadcrumbs && (
-        <div className="h-10 bg-gray-50 dark:bg-gray-850 border-b border-gray-200 dark:border-gray-800">
+        <div className="h-10 bg-background-alt dark:bg-gray-850 border-b border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 h-full flex items-center">
             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             {breadcrumbs.map((crumb, index) => (

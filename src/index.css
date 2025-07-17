@@ -31,7 +31,7 @@
   
   /* Background colors */
   --color-background: 0deg 0% 100%;
-  --color-background-alt: 210deg 20% 96%;
+  --color-background-alt: 210deg 20% 98%;
   
   /* Surface colors */
   --color-surface-1: 0deg 0% 100%;
@@ -109,11 +109,11 @@
   --color-text-disabled: 0deg 0% 70%;
   
   /* Background colors */
-  --color-background: 222deg 47% 10%;
-  --color-background-alt: 223deg 47% 13%;
+  --color-background: 222deg 47% 11%;
+  --color-background-alt: 223deg 47% 15%;
   
   /* Surface colors */
-  --color-surface-1: 222deg 47% 12%;
+  --color-surface-1: 222deg 47% 13%;
   --color-surface-2: 223deg 47% 15%;
   --color-surface-3: 223deg 47% 18%;
 }
@@ -125,6 +125,11 @@
     word-spacing: 0.035em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  * {
+    -webkit-tap-highlight-color: transparent;
   }
   
   body {
