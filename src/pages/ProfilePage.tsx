@@ -48,7 +48,7 @@ const ProfilePage: React.FC = () => {
       
       // Get profile data
       const { data, error } = await supabase
-        .from('profiles')
+        .from('user_profile_signin')
         .select('*')
         .eq('id', user.id)
         .single();
@@ -110,7 +110,7 @@ const ProfilePage: React.FC = () => {
       };
       
       const { error } = await supabase
-        .from('profiles')
+        .from('user_profile_signin')
         .update(updates)
         .eq('id', user.id);
       
