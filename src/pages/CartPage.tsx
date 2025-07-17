@@ -160,6 +160,7 @@ const CartPage: React.FC = () => {
                     </>
                   )}
                 </Button>
+              </div>
             </div>
           </div>
         )}
