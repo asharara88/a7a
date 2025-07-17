@@ -36,6 +36,7 @@ const SupplementDetailPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isSubscription, setIsSubscription] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -151,6 +152,14 @@ const SupplementDetailPage: React.FC = () => {
     : supplement.price_aed;
   
   const totalPrice = finalPrice * quantity;
+
+  const handleAddToCart = () => {
+    // In a real app, this would call an API to add to cart
+    setAddedToCart(true);
+    setTimeout(() => {
+      setAddedToCart(false);
+    }, 2000);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
@@ -309,9 +318,22 @@ const SupplementDetailPage: React.FC = () => {
                 </div>
                 
                 <div className="flex space-x-4">
-                  <Button className="flex-1 flex items-center justify-center">
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Add to Cart
+                  <Button 
+                    className="flex-1 flex items-center justify-center"
+                    onClick={handleAddToCart}
+                    disabled={addedToCart}
+                  >
+                    {addedToCart ? (
+                      <>
+                        <Check className="w-5 h-5 mr-2" />
+                        Added to Cart
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        Add to Cart
+                      </>
+                    )}
                   </Button>
                   <Button variant="outline" className="px-4">
                     <Heart className="w-5 h-5" />

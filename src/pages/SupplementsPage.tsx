@@ -29,6 +29,7 @@ const SupplementsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTier, setActiveTier] = useState<'all' | 'green' | 'yellow' | 'orange'>('all');
   const [showTierInfo, setShowTierInfo] = useState(false);
+  const [cartItems, setCartItems] = useState<string[]>([]);
 
   useEffect(() => {
     fetchSupplements();
@@ -53,6 +54,18 @@ const SupplementsPage: React.FC = () => {
       setSupplements(getMockSupplements());
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const addToCart = async (supplementId: string) => {
+    try {
+      // In a real app, this would call an API to add to cart
+      setCartItems(prev => [...prev, supplementId]);
+      
+      // Show success message
+      alert('Added to cart successfully!');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
     }
   };
 

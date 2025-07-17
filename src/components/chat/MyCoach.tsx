@@ -337,7 +337,7 @@ const MyCoach: React.FC = () => {
                 Suggested questions:
               </span>
             </div>
-            {currentQuestions.map((questionObj, index) => (
+            {currentQuestions && currentQuestions.map((questionObj, index) => (
               <motion.button
                 key={index}
                 onClick={handleQuestionClick(questionObj.text)}
