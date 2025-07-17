@@ -227,7 +227,7 @@ async function getPersonalizedStacks(supabase, profile: UserProfile): Promise<Su
       if (relevantCategories.length > 0) {
         filteredStacks = filteredStacks.filter(stack => 
           relevantCategories.some(category => 
-            stack.category.toLowerCase().includes(category.toLowerCase())
+            stack.category && stack.category.toLowerCase().includes(category.toLowerCase())
           )
         );
       }
