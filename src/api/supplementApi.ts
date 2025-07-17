@@ -17,6 +17,9 @@ export interface Supplement {
   price_aed: number;
   subscription_discount_percent: number;
   image_url: string;
+  is_available?: boolean;
+  is_featured?: boolean;
+  is_bestseller?: boolean;
   form_type?: string;
   form_image_url?: string;
   benefits?: string[];
@@ -65,10 +68,35 @@ export const supplementApi = {
     search?: string;
   }): Promise<Supplement[]> => {
     try {
-      let query = supabase
-        .from('supplements')
-        .select('*')
-        .eq('is_available', true);
+      // First try to get supplements from supplements table
+      let query = supabase.from('supplements').select('*');
+      
+      if (filters) {
+        if (filters.tier && filters.tier !== 'all') {
+          query = query.eq('tier', filters.tier);
+        }
+        
+        if (filters.category) {
+          query = query.eq('category', filters.category);
+        }
+        
+        if (filters.featured) {
+          query = query.eq('is_featured', true);
+        }
+        
+        if (filters.search) {
+          query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+        }
+      }
+      
+      const { data: supplementsData, error: supplementsError } = await query.eq('is_available', true);
+      
+      if (supplementsData && supplementsData.length > 0) {
+        return supplementsData;
+      }
+      
+      // If no supplements found or error, try supplement table (older name)
+      query = supabase.from('supplement').select('*');
       
       // Apply filters
       if (filters) {
@@ -89,15 +117,23 @@ export const supplementApi = {
         }
       }
       
-      const { data, error } = await query;
+      const { data, error } = await query.eq('is_available', true);
       
-      if (error) throw error;
+      if (error) {
+        console.warn("Error fetching supplements:", error);
+        return [];
+      }
       
       return data || [];
     } catch (error) {
       console.error('Error getting supplements:', error);
       return [];
     }
+  },
+  
+  // Get supplements by tier
+  getSupplementsByTier: async (tier: 'green' | 'yellow' | 'orange' | 'all'): Promise<Supplement[]> => {
+    return supplementApi.getSupplements({ tier });
   },
   
   // Get supplement by ID

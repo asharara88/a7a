@@ -277,6 +277,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
                 onChange={handleStabilityChange}
                 disabled={!settings.enabled}
                 className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                aria-label="Adjust stability"
               />
               <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
                 <span>Variable</span>
@@ -315,6 +316,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
                 variant="outline"
                 onClick={() => applyPreset('standard')}
                 disabled={!settings.enabled}
+                title="Standard: Balanced stability and clarity"
               >
                 Standard
               </Button>
@@ -323,6 +325,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
                 variant="outline"
                 onClick={() => applyPreset('clear')}
                 disabled={!settings.enabled}
+                title="Clear: High stability, medium clarity"
               >
                 Clear
               </Button>
@@ -331,6 +334,7 @@ const VoicePreferences: React.FC<VoicePreferencesProps> = ({
                 variant="outline"
                 onClick={() => applyPreset('expressive')}
                 disabled={!settings.enabled}
+                title="Expressive: Low stability, high clarity"
               >
                 Expressive
               </Button>

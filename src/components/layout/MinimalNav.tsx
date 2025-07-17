@@ -365,7 +365,14 @@ const MinimalNav: React.FC = () => {
                 aria-label="Utilities"
                 aria-expanded={utilitiesDropdownOpen}
               >
-                <MoreHorizontal size={20} />
+                <MoreHorizontal size={18} />
+                {isActive('/cart') && (
+                  <motion.div 
+                    className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                    layoutId="activeIndicator"
+                    transition={{ duration: 0.15 }}
+                  />
+                )}
               </button>
               
               {/* Utilities Dropdown */}
@@ -379,7 +386,7 @@ const MinimalNav: React.FC = () => {
                 >
                   <Link to="/cart" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <div className="relative">
-                      <ShoppingCart size={18} className="text-gray-700 dark:text-gray-300" />
+                      <ShoppingCart size={16} className="text-gray-700 dark:text-gray-300" />
                       {cartCount > 0 && (
                         <motion.span 
                           className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
@@ -398,7 +405,7 @@ const MinimalNav: React.FC = () => {
                     <span className="ml-3 text-gray-700 dark:text-gray-300">Cart</span>
                   </Link>
                   <Link to="/mycoach" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
+                    <Sparkles size={16} className="text-gray-700 dark:text-gray-300" />
                     <span className="ml-3 text-gray-700 dark:text-gray-300">MyCoach™</span>
                   </Link>
                   {user ? (
