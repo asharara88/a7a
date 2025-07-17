@@ -134,6 +134,8 @@ const Navigation: React.FC<NavigationProps> = ({
               onClick={(e) => {
                 if (hasChildren) {
                   e.preventDefault();
+                 e.stopPropagation();
+                 toggleSubmenu(item.name);
                 } else if (onItemClick) {
                   onItemClick();
                 }
@@ -144,7 +146,14 @@ const Navigation: React.FC<NavigationProps> = ({
             </Link>
             
             {hasChildren && (
-              <span className="ml-2">
+             <span 
+               className="ml-2"
+               onClick={(e) => {
+                 e.preventDefault();
+                 e.stopPropagation();
+                 toggleSubmenu(item.name);
+               }}
+             >
                 {isSubmenuOpen ? 
                   <ChevronDown className="w-4 h-4 transition-transform duration-200" /> : 
                   <ChevronRight className="w-4 h-4 transition-transform duration-200" />

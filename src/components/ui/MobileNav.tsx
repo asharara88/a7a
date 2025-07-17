@@ -50,14 +50,14 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
             <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
               Main Menu
             </h3>
-            <Navigation isMobile onItemClick={onClose} type="main" />
+           <Navigation isMobile onItemClick={handleItemClick} type="main" />
           </div>
           
           <div>
             <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-4">
               Account
             </h3>
-            <Navigation isMobile onItemClick={onClose} type="account" />
+           <Navigation isMobile onItemClick={handleItemClick} type="account" />
           </div>
         </div>
         
