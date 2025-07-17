@@ -284,67 +284,64 @@ const SavedRecipesGrid: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedRecipes.map((recipe) => (
-            <React.Fragment key={recipe.id}>
-              <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 group h-full">
-                <div className="relative h-48">
-                  <img 
-                    src={recipe.image} 
-                    alt={recipe.title} 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-2 right-2 flex space-x-2">
-                    <button 
-                      onClick={() => handleRemoveRecipe(recipe.recipeId)}
-                      className={cn(
-                        "p-2 rounded-full bg-white/90 hover:bg-white shadow-md transition-colors",
-                        removingRecipe === recipe.recipeId ? "bg-gray-200" : "hover:bg-gray-100"
-                      )}
-                      disabled={removingRecipe === recipe.recipeId}
-                      aria-label="Remove from saved recipes"
-                    >
-                      <Heart className={cn(
-                        "w-4 h-4", 
-                        recipe.isFavorite ? "text-red-500 fill-current" : "text-gray-500"
-                      )} />
-                    </button>
+            <Card key={recipe.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group h-full">
+              <div className="relative h-48">
+                <img 
+                  src={recipe.image} 
+                  alt={recipe.title} 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-2 right-2 flex space-x-2">
+                  <button 
+                    onClick={() => handleRemoveRecipe(recipe.recipeId)}
+                    className={cn(
+                      "p-2 rounded-full bg-white/90 hover:bg-white shadow-md transition-colors",
+                      removingRecipe === recipe.recipeId ? "bg-gray-200" : "hover:bg-gray-100"
+                    )}
+                    disabled={removingRecipe === recipe.recipeId}
+                    aria-label="Remove from saved recipes"
+                  >
+                    <Heart className={cn(
+                      "w-4 h-4", 
+                      recipe.isFavorite ? "text-red-500 fill-current" : "text-gray-500"
+                    )} />
+                  </button>
+                </div>
+              </div>
+              
+              <div className="p-4 flex flex-col flex-grow">
+                <Link to={`/recipes/${recipe.recipeId}`} className="group-hover:text-primary transition-colors">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                    {recipe.title}
+                  </h3>
+                </Link>
+                
+                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-auto">
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-1 opacity-70" />
+                    <span>30 min</span>
+                  </div>
+                  <div className="mx-2">•</div>
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 mr-1 opacity-70" />
+                    <span>4 servings</span>
                   </div>
                 </div>
                 
-                <div className="p-4 flex flex-col flex-grow">
-                  <Link to={`/recipes/${recipe.recipeId}`} className="group-hover:text-primary transition-colors">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                      {recipe.title}
-                    </h3>
+                <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                  <Link
+                    to={`/recipes/${recipe.recipeId}`}
+                    className="text-primary hover:text-primary-dark font-medium text-sm flex items-center"
+                  >
+                    View Recipe
+                    <ExternalLink className="w-3.5 h-3.5 ml-1" />
                   </Link>
-                  
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-auto">
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-1 opacity-70" />
-                      <span>30 min</span>
-                    </div>
-                    <div className="mx-2">•</div>
-                    <div className="flex items-center">
-                      <Users className="w-4 h-4 mr-1 opacity-70" />
-                      <span>4 servings</span>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                    <Link
-                      to={`/recipes/${recipe.recipeId}`}
-                      className="text-primary hover:text-primary-dark font-medium text-sm flex items-center"
-                    >
-                      View Recipe
-                      <ExternalLink className="w-3.5 h-3.5 ml-1" />
-                    </Link>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {new Date(recipe.savedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                    </span>
-                  </div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {new Date(recipe.savedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  </span>
                 </div>
-              </Card>
-            </React.Fragment>
-          </div>
+              </div>
+            </Card>
         ))}
         </div>
       )}
