@@ -17,7 +17,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false,
+    sourcemap: process.env.NODE_ENV === 'development',
     minify: true,
     // Increase the chunk size warning limit
     chunkSizeWarningLimit: 1200,

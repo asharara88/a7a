@@ -7,11 +7,10 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:prod": "tsc && vite build --mode production",
+    "preview": "vite preview",
     "lint": "eslint . --max-warnings 0",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "replace-console-error": "node --loader ts-node/esm scripts/replaceConsoleErrorAndImport.ts",
-    "fetch:feeds": "node --loader ts-node/esm scripts/fetchFeeds.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
@@ -19,8 +18,7 @@
     "postinstall": "echo 'Skipping problematic native builds'",
     "predeploy": "npm run build:prod",
     "deploy": "netlify deploy --prod",
-    "import:supplements": "node --loader ts-node/esm src/scripts/importSupplements.ts",
-    "import:csv": "node --loader ts-node/esm src/scripts/importSupplementsFromCsv.ts"
+    "postbuild": "cp _redirects dist/"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.0.16",
