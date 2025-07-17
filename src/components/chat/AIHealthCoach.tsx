@@ -1,9 +1,43 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Mic, MicOff, Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { Send, Volume2, VolumeX, Loader2, HelpCircle } from 'lucide-react';
 import { Button } from '../ui/Button';
 import ChatMessage from './ChatMessage';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
+
+// Sample question sets that will rotate after each response
+const QUESTION_SETS = [
+  [
+    "How can I sleep better?",
+    "What supplements should I take?",
+    "How can I boost my metabolism?",
+    "What's a good fitness routine?"
+  ],
+  [
+    "What foods are good for my brain?",
+    "How much protein do I need?",
+    "How can I track my health?",
+    "How important is hydration?"
+  ],
+  [
+    "How can I reduce stress?",
+    "How do I know if I have a deficiency?",
+    "What's a balanced meal?",
+    "How can I get more energy?"
+  ],
+  [
+    "How does sleep affect hormones?",
+    "How can I eat better for weight loss?",
+    "Why is strength training important?",
+    "How can I recover faster from a workout?"
+  ],
+  [
+    "What vitamins should I take?",
+    "How can I stay healthy long-term?",
+    "What's the best time to exercise?",
+    "How can I improve my mental focus?"
+  ]
+];
 
 // Define message type
 interface Message {
@@ -18,6 +52,7 @@ const AIHealthCoach: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentQuestionSetIndex, setCurrentQuestionSetIndex] = useState(0);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -37,6 +72,9 @@ const AIHealthCoach: React.FC = () => {
     inputRef.current?.focus();
   }, []);
 
+  // Get current question set
+  const currentQuestions = QUESTION_SETS[currentQuestionSetIndex];
+
   // Add initial greeting message
   useEffect(() => {
     if (messages.length === 0) {
@@ -51,19 +89,22 @@ const AIHealthCoach: React.FC = () => {
     }
   }, [messages.length]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, questionText?: string) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    
+    // Use either the provided question or the input field value
+    const messageText = questionText || input.trim();
+    if (!messageText || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: input,
+      content: messageText,
       timestamp: new Date()
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
+    if (!questionText) setInput('');
     setIsLoading(true);
     setError(null);
 
@@ -73,7 +114,7 @@ const AIHealthCoach: React.FC = () => {
         body: {
           messages: [
             ...messages.map(m => ({ role: m.role, content: m.content })),
-            { role: 'user', content: input }
+            { role: 'user', content: messageText }
           ]
         }
       });
@@ -93,7 +134,7 @@ const AIHealthCoach: React.FC = () => {
       await supabase.from('chat_history').insert([
         {
           user_id: (await supabase.auth.getUser()).data.user?.id,
-          message: input,
+          message: messageText,
           response: data.result,
           role: 'user',
           timestamp: new Date().toISOString()
@@ -104,12 +145,23 @@ const AIHealthCoach: React.FC = () => {
       if (voiceEnabled) {
         playTextToSpeech(data.result);
       }
+      
+      // Update question set after each response
+      setCurrentQuestionSetIndex((prevIndex) => 
+        (prevIndex + 1) % QUESTION_SETS.length
+      );
+      
     } catch (err) {
       console.error('Error sending message:', err);
       setError('Failed to get a response. Please try again.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleQuestionClick = (question: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleSubmit(e, question);
   };
 
   const playTextToSpeech = async (text: string) => {
@@ -175,6 +227,30 @@ const AIHealthCoach: React.FC = () => {
             {error}
           </div>
         )}
+        
+        {/* Suggested Questions */}
+        {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
+          <div className="flex flex-wrap gap-2 mt-4 mb-2">
+            <div className="w-full flex items-center mb-1">
+              <HelpCircle className="w-4 h-4 text-primary mr-2" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Suggested questions:
+              </span>
+            </div>
+            {currentQuestions.map((question, index) => (
+              <button
+                key={index}
+                onClick={handleQuestionClick(question)}
+                className="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 
+                         text-gray-800 dark:text-gray-200 rounded-lg text-sm font-medium transition-colors 
+                         shadow-sm hover:shadow flex-grow md:flex-grow-0"
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+        )}
+        
         <div ref={messagesEndRef} />
       </div>
 
