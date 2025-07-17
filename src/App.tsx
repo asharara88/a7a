@@ -41,6 +41,7 @@ const SignupPage = React.lazy(() => import('./pages/auth/SignupPage'))
 const OnboardingPage = React.lazy(() => import('./pages/auth/OnboardingPage'))
 const DashboardPage = React.lazy(() => import('./pages/DashboardPage'))
 const MyCoachPage = React.lazy(() => import('./pages/MyCoachPage.tsx'))
+const FitnessPage = React.lazy(() => import('./pages/FitnessPage'))
 const NutritionPage = React.lazy(() => import('./pages/NutritionPage'))
 const FitnessPage = React.lazy(() => import('./pages/FitnessPage'))
 const RecipesPage = React.lazy(() => import('./pages/RecipesPage')) 
@@ -67,9 +68,9 @@ const App: React.FC = () => {
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/mycoach" element={<ProtectedRoute><MyCoachPage /></ProtectedRoute>} />
+          <Route path="/fitness" element={<ProtectedRoute><FitnessPage /></ProtectedRoute>} />
           <Route path="/nutrition" element={<ProtectedRoute><NutritionPage /></ProtectedRoute>} />
           <Route path="/nutrition/dashboard" element={<ProtectedRoute><NutritionDashboardPage /></ProtectedRoute>} />
-          <Route path="/fitness" element={<ProtectedRoute><FitnessPage /></ProtectedRoute>} />
           <Route path="/recipes" element={<ProtectedRoute><RecipesPage /></ProtectedRoute>} />
           <Route path="/recipes/:id" element={<ProtectedRoute><RecipeDetailPage /></ProtectedRoute>} />
           <Route path="/saved-recipes" element={<ProtectedRoute><SavedRecipesPage /></ProtectedRoute>} />
