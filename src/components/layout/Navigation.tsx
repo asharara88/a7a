@@ -47,7 +47,7 @@ const Navigation: React.FC<{
       icon: <Utensils className="w-5 h-5" />,
       children: [
         { name: 'Meal Tracker', href: '/nutrition', icon: <Utensils className="w-4 h-4" /> },
-        { name: 'Dashboard', href: '/nutrition/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> }
+        { name: 'Dashboard', href: '/nutrition/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
         { name: 'Personalized Recipes', href: '/recipes', icon: <BookOpen className="w-4 h-4" /> },
         { name: 'Saved Recipes', href: '/saved-recipes', icon: <BookOpen className="w-4 h-4" /> }
       ]
