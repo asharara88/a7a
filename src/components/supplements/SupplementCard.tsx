@@ -91,21 +91,6 @@ const SupplementCard: React.FC<SupplementCardProps> = ({
         return "";
     }
   };
-  
-  const getTierIcon = () => {
-    switch (tier) {
-      case 'green':
-        return <Check className="w-3.5 h-3.5 mr-1" />;
-      case 'yellow':
-        return <AlertCircle className="w-3.5 h-3.5 mr-1" />;
-      case 'orange':
-        return <Info className="w-3.5 h-3.5 mr-1" />;
-      case 'red':
-        return <X className="w-3.5 h-3.5 mr-1" />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
@@ -120,7 +105,6 @@ const SupplementCard: React.FC<SupplementCardProps> = ({
             className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getTierColor(tier)}`}
             title={getTierDescription(tier)}
           >
-            {getTierIcon()}
             {getTierIcon()}
             <span>{tier.charAt(0).toUpperCase() + tier.slice(1)}</span>
           </span>
