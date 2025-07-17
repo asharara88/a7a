@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
+import { createClient } from "npm:@supabase/supabase-js@2.38.4"
 import OpenAI from 'https://esm.sh/openai@4.20.1'
 
 const corsHeaders = {
