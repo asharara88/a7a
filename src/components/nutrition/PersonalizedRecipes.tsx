@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { Card } from '../ui/Card';
 
 const PersonalizedRecipes: React.FC = () => {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  git log --oneline -1  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [savedRecipes, setSavedRecipes] = useState<number[]>([]);
