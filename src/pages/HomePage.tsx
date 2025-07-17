@@ -64,7 +64,7 @@ const HomePage: React.FC = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/dashboard"
-                  className="bg-blue-700 dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg"
+                  className="bg-blue-700 dark:bg-blue-600 text-white px-8 sm:px-10 py-4 rounded-lg font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg min-w-[180px]"
                 >
                   Go to Dashboard
                   <ArrowRight className="ml-2 w-5 h-5" />
