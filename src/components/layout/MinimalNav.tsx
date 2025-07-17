@@ -104,18 +104,18 @@ const MinimalNav: React.FC = () => {
   // Generate breadcrumb data
   const generateBreadcrumbs = () => {
     const path = location.pathname;
-    const breadcrumbs = [{ name: 'My Wellness', path: '/dashboard' }];
+    const breadcrumbs = [{ name: 'My Wellness', path: '/dashboard', id: 'wellness-root' }];
     
     if (path.startsWith('/dashboard')) {
-      breadcrumbs.push({ name: 'Dashboard', path: '/dashboard' });
+      breadcrumbs.push({ name: 'Dashboard', path: '/dashboard', id: 'dashboard-page' });
     } else if (path.startsWith('/fitness')) {
-      breadcrumbs.push({ name: 'Fitness', path: '/fitness' });
+      breadcrumbs.push({ name: 'Fitness', path: '/fitness', id: 'fitness-page' });
     } else if (path.startsWith('/nutrition')) {
-      breadcrumbs.push({ name: 'Nutrition', path: '/nutrition' });
+      breadcrumbs.push({ name: 'Nutrition', path: '/nutrition', id: 'nutrition-page' });
     } else if (path.startsWith('/my-stacks')) {
-      breadcrumbs.push({ name: 'My Stacks', path: '/my-stacks' });
+      breadcrumbs.push({ name: 'My Stacks', path: '/my-stacks', id: 'my-stacks-page' });
     } else if (path.startsWith('/recommendations')) {
-      breadcrumbs.push({ name: 'Recommendations', path: '/recommendations' });
+      breadcrumbs.push({ name: 'Recommendations', path: '/recommendations', id: 'recommendations-page' });
     }
     
     return breadcrumbs;
@@ -478,7 +478,7 @@ const MinimalNav: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 h-full flex items-center">
             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             {breadcrumbs.map((crumb, index) => (
-              <React.Fragment key={crumb.path}>
+              <React.Fragment key={crumb.id}>
                 {index > 0 && (
                   <ChevronRight size={16} className="mx-2 text-gray-400" />
                 )}
