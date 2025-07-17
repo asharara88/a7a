@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ShoppingCart, User, Menu, X, MessageSquare, Moon, Sun, X as Close } from 'lucide-react'
+import { ShoppingCart, User, Menu, X, Bot, Moon, Sun, X as Close } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
 import MobileNav from '../ui/MobileNav'
@@ -85,7 +85,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 )}
                 aria-label="AI Coach"
               >
-                <MessageSquare className="w-6 h-6" />
+                <Bot className="w-6 h-6" />
               </Link>
               <Link
                 to="/login"

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Home,
+  Bot,
   Info,
   Utensils,
   BookOpen,
@@ -58,7 +59,7 @@ const Navigation: React.FC<NavigationProps> = ({
     { 
       name: 'MyCoach', 
       href: '/dashboard', 
-      icon: <MessageSquare className="w-5 h-5" /> 
+      icon: <Bot className="w-5 h-5" /> 
     },
     { 
       name: 'Personalized Supplements', 
