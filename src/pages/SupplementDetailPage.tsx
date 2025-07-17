@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Star, ShoppingCart, Heart, Shield, Award, ArrowLeft, Info } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Shield, Award, ArrowLeft, Info, Check } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -259,7 +259,7 @@ const SupplementDetailPage: React.FC = () => {
                   {supplement.subscription_discount_percent > 0 && (
                     <div className="text-right">
                       <p className="text-sm text-gray-600 dark:text-gray-400">Subscription Price</p>
-                  {addedToCart ? (
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
                         {calculateDiscountedPrice(
                           supplement.price_aed, 
                           supplement.subscription_discount_percent
