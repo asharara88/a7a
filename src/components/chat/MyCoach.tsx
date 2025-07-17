@@ -659,3 +659,11 @@ const MyCoach: React.FC = () => {
 };
 
 export default MyCoach;
+            }
+          ]
+        }
+      }
+      )
+    }
+  }
+}
