@@ -5,7 +5,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Link } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import { cn } from '../../utils/cn';
+import { cn } from '../../utils/cn'; 
 
 // Helper function to get tier badge component
 const getTierBadge = (tier: string) => {
@@ -217,7 +217,7 @@ const SupplementRecommendations: React.FC = () => {
       {/* Recommended Stacks */}
       {recommendations.stacks.length > 0 && (
         <div className="mt-8">
-          <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+          <h3 className="text-xl font-semibold mb-5 text-gray-900 dark:text-white">
             Recommended Supplement Stacks
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

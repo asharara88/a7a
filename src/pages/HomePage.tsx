@@ -75,15 +75,15 @@ const HomePage: React.FC = () => {
             <div className="flex flex-wrap gap-7 text-sm text-gray-600 dark:text-gray-400 tracking-wider">
               <div className="flex items-center">
                 <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                <span>Personalized recommendations</span>
+                <span>AI-powered health coach</span>
               </div>
               <div className="flex items-center">
                 <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                <span>Science-backed approach</span>
+                <span>Evidence-based supplements</span>
               </div>
               <div className="flex items-center">
                 <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                <span>AI-powered insights</span>
+                <span>Personalized health tracking</span>
               </div>
             </div>
           </motion.div>
@@ -100,7 +100,7 @@ const HomePage: React.FC = () => {
           <motion.div 
             className="mb-14 sm:mb-18 text-left"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
@@ -117,7 +117,7 @@ const HomePage: React.FC = () => {
           <motion.div 
             className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10"
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ staggerChildren: 0.1, delayChildren: 0.2 }}
           >
@@ -187,7 +187,7 @@ const HomePage: React.FC = () => {
           <motion.h2 
             className="text-3xl sm:text-4xl md:text-5xl font-bold mb-7 sm:mb-9 tracking-tight text-left leading-tight"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >

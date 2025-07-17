@@ -8,8 +8,8 @@ interface EvidenceBasedHealthOptimizationProps {
   expanded?: boolean;
 }
 
-const EvidenceBasedHealthOptimization: React.FC<EvidenceBasedHealthOptimizationProps> = ({ 
-  expanded = false 
+const EvidenceBasedHealthOptimization: React.FC<EvidenceBasedHealthOptimizationProps> = ({
+  expanded = false
 }) => {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(expanded);
@@ -27,8 +27,8 @@ const EvidenceBasedHealthOptimization: React.FC<EvidenceBasedHealthOptimizationP
       <div className="mobile-container">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <span className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-1 rounded-full text-sm font-medium mb-4">
-              Biowell Approach
+            <span className="inline-block bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-light px-4 py-1 rounded-full text-sm font-medium mb-4">
+              Our Scientific Approach
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
               Evidence-Based Health Optimization
