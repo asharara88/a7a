@@ -1,6 +1,6 @@
 import React from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { ShoppingCart, User, Menu, X, Sparkles } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Menu } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
 import MinimalNav from './MinimalNav'
@@ -83,6 +83,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className={`min-h-screen ${effectiveTheme === 'dark' ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header with consistent styling */}
+      <div className="fixed bottom-4 right-4 z-50 md:hidden">
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-3 bg-primary text-white rounded-full shadow-lg"
+          aria-label="Toggle mobile menu"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+      </div>
+      
       <MinimalNav />
       {/* Mobile Navigation */}
       <MobileNav 
@@ -93,7 +103,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       />
 
       {/* Main Content */}
-      <main className="flex-1 min-h-[calc(100vh-48px-88px)] pt-8">
+      <main className="flex-1 min-h-[calc(100vh-48px-88px)] pt-16">
         {children}
       </main>
 

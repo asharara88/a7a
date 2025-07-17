@@ -283,6 +283,13 @@
   }
 }
 
+/* Custom theme transition */
+html,
+body,
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -300,4 +307,17 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--color-text-light));
+}
+
+/* Improved mobile navigation */
+.mobile-nav-item {
+  @apply relative flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all duration-200;
+}
+
+.mobile-nav-item.active {
+  @apply bg-primary/10 text-primary font-medium;
+}
+
+.mobile-nav-icon {
+  @apply mr-3 text-gray-500 dark:text-gray-400;
 }

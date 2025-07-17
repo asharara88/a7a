@@ -51,24 +51,28 @@ export const useTheme = () => {
 
   // Listen for system preference changes if in auto mode
   useEffect(() => {
-    if (theme !== 'auto') return;
+    // Set up the theme based on either explicit preference or time
+    const updateEffectiveTheme = () => {
+      const newTheme = determineEffectiveTheme(theme);
+      setEffectiveTheme(newTheme);
     
-    // Set up a timer to check the time every hour for auto theme
-    const timer = setInterval(() => {
-      const newEffectiveTheme = determineEffectiveTheme('auto');
-      setEffectiveTheme(newEffectiveTheme);
-    
-      if (newEffectiveTheme === 'dark') {
+      if (newTheme === 'dark') {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
-    }, 60 * 60 * 1000); // Check every hour
+    };
+    
+    // Initial update
+    updateEffectiveTheme();
+    
+    // Set up a timer to check the time every hour for auto theme if in auto mode
+    const timer = theme === 'auto' ? setInterval(updateEffectiveTheme, 60 * 60 * 1000) : null;
     
     return () => {
-      clearInterval(timer);
+      if (timer) clearInterval(timer);
     };
-  }, [theme]);
+  }, [theme]); // Only re-run when theme preference changes
 
   // Function to set theme
   const setTheme = (newTheme: Theme) => {

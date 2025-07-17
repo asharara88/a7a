@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, ChevronDown, ChevronRight } from 'lucide-react';
+import { X, ChevronDown, ChevronRight, Sun, Moon } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import Navigation from './Navigation';
+import { useTheme } from '../../hooks/useTheme';
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
   onSignOut
 }) => {
   const location = useLocation();
+  const { theme, setTheme, effectiveTheme } = useTheme();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   // Close mobile nav when route changes
@@ -40,13 +42,13 @@ const MobileNav: React.FC<MobileNavProps> = ({
       onClick={onClose}
     >
       <div 
-        className={cn(
+        className={cn( 
           "fixed top-0 right-0 h-full w-4/5 max-w-sm bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 z-10">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Menu</h2>
           <button 
             onClick={onClose}
@@ -188,6 +190,57 @@ const MobileNav: React.FC<MobileNavProps> = ({
                 </>
               )}
             </div>
+          </div>
+        </div>
+        
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800 sticky bottom-0 bg-white dark:bg-gray-900 z-10">
+          <div className="flex flex-col space-y-4">
+            {/* Theme Toggle */}
+            <button
+              onClick={() => setTheme(effectiveTheme === 'dark' ? 'light' : 'dark')}
+              className="flex items-center justify-center w-full px-4 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg font-medium text-gray-900 dark:text-white"
+            >
+              {effectiveTheme === 'dark' ? (
+                <>
+                  <Sun className="w-5 h-5 mr-2" />
+                  Switch to Light Mode
+                </>
+              ) : (
+                <>
+                  <Moon className="w-5 h-5 mr-2" />
+                  Switch to Dark Mode
+                </>
+              )}
+            </button>
+            
+            {isLoggedIn ? (
+              <button 
+                onClick={() => {
+                  onSignOut?.();
+                  onClose();
+                }}
+                className="w-full px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <div className="flex space-x-3">
+                <Link 
+                  to="/login" 
+                  className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg font-medium text-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  onClick={onClose}
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  to="/signup" 
+                  className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-center transition-colors"
+                  onClick={onClose}
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
