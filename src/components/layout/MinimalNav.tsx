@@ -356,5 +356,3 @@ const MinimalNav: React.FC = () => {
 };
 
 export default MinimalNav;
-
-export default MinimalNav
