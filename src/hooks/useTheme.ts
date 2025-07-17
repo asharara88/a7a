@@ -11,7 +11,7 @@ export const useTheme = () => {
       return savedTheme;
     }
     
-    // Default to auto
+    // Default to auto theme
     return 'auto';
   };
   
@@ -19,19 +19,24 @@ export const useTheme = () => {
   const [effectiveTheme, setEffectiveTheme] = useState<'light' | 'dark'>('light');
 
   // Function to determine effective theme based on current settings
-  const determineEffectiveTheme = (): 'light' | 'dark' => {
-    if (theme === 'auto') {
-      // Use system preference
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const determineEffectiveTheme = (currentTheme = theme): 'light' | 'dark' => {
+    if (currentTheme === 'auto') {
+      // Check if it's daytime based on current hour
+      const currentHour = new Date().getHours();
+      const isDayTime = currentHour >= 6 && currentHour < 20; // 6 AM to 8 PM
+      
+      // During day, use light theme; at night, use dark theme
+      // This overrides system preference to focus on time of day
+      return isDayTime ? 'light' : 'dark';
     }
     
     // Otherwise use explicit user preference
-    return theme as 'light' | 'dark';
+    return currentTheme as 'light' | 'dark';
   };
 
   // Update effective theme and apply it to the document
   useEffect(() => {
-    const newEffectiveTheme = determineEffectiveTheme();
+    const newEffectiveTheme = determineEffectiveTheme(theme);
     setEffectiveTheme(newEffectiveTheme);
     
     if (newEffectiveTheme === 'dark') {
@@ -48,25 +53,20 @@ export const useTheme = () => {
   useEffect(() => {
     if (theme !== 'auto') return;
     
-    // Update theme when system preference changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleChange = () => {
-      const newEffectiveTheme = determineEffectiveTheme();
+    // Set up a timer to check the time every hour for auto theme
+    const timer = setInterval(() => {
+      const newEffectiveTheme = determineEffectiveTheme('auto');
       setEffectiveTheme(newEffectiveTheme);
-      
+    
       if (newEffectiveTheme === 'dark') {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
-    };
-    
-    // Modern browsers
-    mediaQuery.addEventListener('change', handleChange);
+    }, 60 * 60 * 1000); // Check every hour
     
     return () => {
-      mediaQuery.removeEventListener('change', handleChange);
+      clearInterval(timer);
     };
   }, [theme]);
 
