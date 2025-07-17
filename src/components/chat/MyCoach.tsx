@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Volume2, VolumeX, Loader2, Settings, Sparkles, X, HelpCircle, Check, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { format } from 'date-fns';
 import { Button } from '../ui/Button';
 import ChatMessage from './ChatMessage';
 import { createClient } from '@supabase/supabase-js';
@@ -48,6 +49,7 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  isNew?: boolean;
 }
 
 interface VoiceSettings {
@@ -70,6 +72,7 @@ const MyCoach: React.FC = () => {
     stability: 0.5,
     similarity_boost: 0.75
   });
+  const [isTyping, setIsTyping] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -129,13 +132,20 @@ const MyCoach: React.FC = () => {
       id: Date.now().toString(),
       role: 'user',
       content: messageText,
-      timestamp: new Date()
+      timestamp: new Date(),
+      isNew: true
     };
 
     setMessages(prev => [...prev, userMessage]);
     if (!questionText) setInput('');
     setIsLoading(true);
     setError(null);
+    setIsTyping(true);
+    
+    // Remove isNew flag from previous messages
+    setTimeout(() => {
+      setMessages(prev => prev.map(msg => ({ ...msg, isNew: false })));
+    }, 1000);
 
     try {
       // Call OpenAI proxy function
@@ -154,10 +164,12 @@ const MyCoach: React.FC = () => {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: data.result || "I'm sorry, I couldn't process that request.",
-        timestamp: new Date()
+        timestamp: new Date(),
+        isNew: true
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+      setIsTyping(false);
 
       // Save to chat history
       try {
@@ -278,11 +290,22 @@ const MyCoach: React.FC = () => {
 
   return (
     <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-200 dark:border-gray-700">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white p-5 flex items-center justify-between rounded-t-xl shadow-md">
+      {/* Animated Header */}
+      <motion.div 
+        className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white p-5 flex items-center justify-between rounded-t-xl shadow-md"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
         <div className="flex items-center">
-          <Sparkles className="w-6 h-6 mr-2" />
-          <h2 className="text-lg font-semibold">MyCoach™</h2>
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <Sparkles className="w-6 h-6 mr-2" />
+          </motion.div>
+          <h2 className="text-lg font-semibold">MyCoach<sup className="text-xs">™</sup></h2>
         </div>
         <div className="flex items-center">
           <button
@@ -305,7 +328,7 @@ const MyCoach: React.FC = () => {
             <Settings size={20} />
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Voice Settings Panel */}
       {showVoiceSettings && (
@@ -320,18 +343,56 @@ const MyCoach: React.FC = () => {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-gray-50 dark:bg-gray-700 transition-all duration-300">
-        {messages.map((message) => (
-          <ChatMessage
-            key={message.id}
-            message={message}
-            isLoading={false}
-          />
-        ))}
+        {messages.map((message, index) => {
+          const prevMessage = index > 0 ? messages[index - 1] : null;
+          const showTimestamp = !prevMessage || 
+                               (message.timestamp.getTime() - prevMessage.timestamp.getTime() > 5 * 60 * 1000) ||
+                               prevMessage.role !== message.role;
+          
+          return (
+            <motion.div
+              key={message.id}
+              initial={message.isNew ? { opacity: 0, y: 20 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              {showTimestamp && (
+                <div className="flex justify-center mb-2">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-black/30 px-2 py-0.5 rounded">
+                    {format(message.timestamp, 'h:mm a')}
+                  </span>
+                </div>
+              )}
+              <ChatMessage
+                message={message}
+                isLoading={false}
+              />
+            </motion.div>
+          );
+        })}
         {isLoading && (
-          <div className="flex items-center space-x-3 text-gray-700 dark:text-white p-4 bg-white dark:bg-gray-600 rounded-xl w-fit shadow-md">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="tracking-wide">Biowell AI is thinking...</span>
-          </div>
+          <motion.div 
+            className="flex items-center space-x-3 text-gray-700 dark:text-white p-4 bg-white dark:bg-gray-600 rounded-xl w-fit shadow-md"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {isTyping ? (
+              <>
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '600ms' }}></div>
+                </div>
+                <span className="tracking-wide">MyCoach<sup className="text-xs">™</sup> is typing...</span>
+              </>
+            ) : (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="tracking-wide">Biowell AI is thinking...</span>
+              </>
+            )}
+          </motion.div>
         )}
         {error && (
           <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-xl font-medium shadow-md">
@@ -349,27 +410,29 @@ const MyCoach: React.FC = () => {
                 Suggested questions:
               </span>
             </div>
-            {currentQuestions && currentQuestions.map((questionObj, index) => (
-              <motion.button
-                key={index}
-                onClick={handleQuestionClick(questionObj.text)}
-                className={cn(
-                  "px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg",
-                  "flex-grow md:flex-grow-0 relative overflow-hidden",
-                  recentlyClickedQuestion === questionObj.text 
-                    ? "bg-primary text-white" 
-                    : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200"
-                )}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.08 }}
-              >
-                <span className={`absolute left-0 top-0 h-full w-1.5 ${getCategoryColor(questionObj.category)}`}></span>
-                <span className="pl-5 tracking-wide">{questionObj.text}</span>
-              </motion.button>
-            ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {currentQuestions.map((questionObj, index) => (
+                <motion.button
+                  key={index}
+                  onClick={handleQuestionClick(questionObj.text)}
+                  className={cn(
+                    "px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg",
+                    "relative overflow-hidden",
+                    recentlyClickedQuestion === questionObj.text 
+                      ? "bg-primary text-white" 
+                      : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200"
+                  )}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.08 }}
+                >
+                  <span className={`absolute left-0 top-0 h-full w-1.5 ${getCategoryColor(questionObj.category)}`}></span>
+                  <span className="pl-5 tracking-wide">{questionObj.text}</span>
+                </motion.button>
+              ))}
+            </div>
           </div>
         )}
         
@@ -406,7 +469,7 @@ const MyCoach: React.FC = () => {
           <Button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="h-12 w-12 p-0 flex items-center justify-center rounded-full bg-gradient-to-r from-primary via-tertiary to-secondary shadow-lg"
+            className="h-12 w-12 p-0 flex items-center justify-center rounded-full bg-gradient-to-r from-primary via-tertiary to-secondary shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 active:scale-95"
           >
             {isLoading ? (
               <Loader2 className="w-6 h-6 animate-spin" />
@@ -415,9 +478,14 @@ const MyCoach: React.FC = () => {
             )}
           </Button>
         </div>
-        <div className="mt-3 text-xs text-gray-700 dark:text-gray-300 transition-all duration-300 font-medium tracking-wide">
-          <p className="leading-relaxed">Your MyCoach™ provides general wellness guidance based on your inputs. Not medical advice.</p>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="mt-3 text-xs text-gray-700 dark:text-gray-300 transition-all duration-300 font-medium tracking-wide"
+        >
+          <p className="leading-relaxed">Your MyCoach<sup className="text-xs">™</sup> provides general wellness guidance based on your inputs. Not medical advice.</p>
+        </motion.div>
       </form>
     </div>
   );
