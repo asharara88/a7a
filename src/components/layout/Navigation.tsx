@@ -47,8 +47,8 @@ const Navigation: React.FC<NavigationProps> = ({
   const mainNavigation: NavigationItem[] = [
     { 
       name: 'Home', 
-      href: '/', 
-      icon: <Home className="w-5 h-5" />,
+      href: '/',
+      icon: <Home className="w-4 h-4" />,
       children: [
         { name: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
         { name: 'Fitness', href: '/fitness', icon: <Activity className="w-4 h-4" /> },
@@ -63,13 +63,13 @@ const Navigation: React.FC<NavigationProps> = ({
     { 
       name: 'Personalized Supplements', 
       href: '/supplements', 
-      icon: <Package className="w-5 h-5" />,
+      icon: null,
       children: [
-        { name: 'My Stacks', href: '/my-stacks', icon: <Package className="w-4 h-4" /> },
-        { name: 'Recommendations', href: '/recommendations', icon: <Sparkles className="w-4 h-4" /> },
-        { name: 'Supplement Store', href: '/supplement-store', icon: <Pill className="w-4 h-4" /> },
-        { name: 'All Supplements', href: '/supplements', icon: <Pill className="w-4 h-4" /> },
-        { name: 'My Cart', href: '/cart', icon: <ShoppingCart className="w-4 h-4" /> }
+        { name: 'My Stacks', href: '/my-stacks', icon: null },
+        { name: 'Recommendations', href: '/recommendations', icon: null },
+        { name: 'Supplement Store', href: '/supplement-store', icon: null },
+        { name: 'All Supplements', href: '/supplements', icon: null },
+        { name: 'My Cart', href: '/cart', icon: null }
       ]
     }
   ];
@@ -118,7 +118,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <div className={cn(
             "flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors",
             isItemActive 
-              ? "text-primary bg-primary/10 dark:bg-primary/20 font-medium" 
+              ? "text-primary font-medium" 
               : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800",
             hasChildren && "cursor-pointer"
           )}
@@ -135,15 +135,15 @@ const Navigation: React.FC<NavigationProps> = ({
               className="flex items-center flex-1 tracking-wide"
               onClick={(e) => {
                 if (hasChildren) {
-                  e.preventDefault();
-                 e.stopPropagation();
-                 toggleSubmenu(item.name);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSubmenu(item.name);
                 } else if (onItemClick) {
                   onItemClick();
                 }
               }}
             >
-              <span className="mr-3">{item.icon}</span>
+              {item.icon && <span className="mr-3">{item.icon}</span>}
               <span>{item.name}</span>
             </Link>
             
