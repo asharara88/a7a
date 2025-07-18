@@ -207,7 +207,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                       {/* Nutrition Section */}
                       <div className="space-y-3">
                         <h4 className="font-semibold text-gray-800 dark:text-gray-200 px-4 text-base">Nutrition</h4>
-                        <Link to="/nutrition" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="nutrition-dashboard" to="/nutrition" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3">
                             <Utensils size={18} className="text-green-600 dark:text-green-400" />
                           </div>
@@ -217,7 +217,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
-                        <Link to="/recipes" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="recipes" to="/recipes" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
                             <Utensils size={18} className="text-green-600 dark:text-green-400" />
                           </div>
@@ -227,7 +227,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
-                        <Link to="/nutrition?tab=ai-analyzer" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="ai-food-analyzer" to="/nutrition?tab=ai-analyzer" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
                             <Sparkles size={18} className="text-green-600 dark:text-green-400" />
                           </div>
@@ -237,7 +237,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
-                        <Link to="/metabolism" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="metabolism" to="/metabolism" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
                             <Activity size={18} className="text-green-600 dark:text-green-400" />
                           </div>
@@ -251,7 +251,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                       {/* Fitness Section */}
                       <div className="space-y-3">
                         <h4 className="font-semibold text-gray-800 dark:text-gray-200 px-4 text-base">Fitness</h4>
-                        <Link to="/fitness" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="fitness-tracker" to="/fitness" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3">
                             <Activity size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
@@ -261,7 +261,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
-                        <Link to="/fitness?tab=history" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="workout-history" to="/fitness?tab=history" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
                             <Activity size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
@@ -271,7 +271,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
-                        <Link to="/fitness?tab=muscles" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="muscle-groups" to="/fitness?tab=muscles" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
                             <LayoutDashboard size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
@@ -281,7 +281,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
-                        <Link to="/fitness?tab=analytics" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="fitness-analytics" to="/fitness?tab=analytics" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
                             <BarChart2 size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
@@ -291,7 +291,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
-                        <Link to="/fitness?tab=ai-generator" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="ai-workout-generator" to="/fitness?tab=ai-generator" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
                             <Sparkles size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
@@ -305,7 +305,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                       {/* Sleep Section */}
                       <div className="space-y-3">
                         <h4 className="font-semibold text-gray-800 dark:text-gray-200 px-4 text-base">Sleep</h4>
-                        <Link to="/sleep" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="sleep-quality" to="/sleep" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3">
                             <Moon size={18} className="text-purple-600 dark:text-purple-400" />
                           </div>
@@ -315,7 +315,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
-                        <Link to="/sleep/bioclock" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
+                        <Link key="bioclock" to="/bioclock" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3 opacity-70">
                             <Moon size={18} className="text-purple-600 dark:text-purple-400" />
                           </div>
@@ -367,11 +367,11 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                     <Pill size={18} className="text-gray-700 dark:text-gray-300" />
                     <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Explore Supplements</span>
                   </Link>
-                  <Link to="/my-stacks" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link key="my-stacks" to="/my-stacks" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Package size={18} className="text-gray-700 dark:text-gray-300" />
                     <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">My Stacks</span>
                   </Link>
-                  <Link to="/recommendations" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link key="recommendations" to="/recommendations" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
                     <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Recommendations</span>
                   </Link>
@@ -429,7 +429,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Link to="/cart" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link key="cart" to="/cart" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <div className="relative">
                       <ShoppingCart size={16} className="text-gray-700 dark:text-gray-300" />
                       {cartCount > 0 && (
@@ -449,22 +449,22 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                     </div>
                     <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Cart</span>
                   </Link>
-                  <Link to="/mycoach" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link key="mycoach-util" to="/mycoach" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Sparkles size={16} className="text-gray-700 dark:text-gray-300" />
                     <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">MyCoach™</span>
                   </Link>
                   {user ? (
-                    <Link to="/profile" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Link key="profile" to="/profile" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <User size={18} className="text-gray-700 dark:text-gray-300" />
                       <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Profile</span>
                     </Link>
                   ) : (
                     <>
-                    <Link to="/signup" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Link key="signup" to="/signup" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <User size={18} className="text-gray-700 dark:text-gray-300" />
                       <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Sign Up</span>
                     </Link>
-                    <Link to="/login" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Link key="login" to="/login" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <User size={18} className="text-gray-700 dark:text-gray-300" />
                       <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Sign In</span>
                     </Link>
@@ -483,7 +483,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
           <div className="max-w-7xl mx-auto px-4 h-full flex items-center">
             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               {breadcrumbs.map((crumb, index) => (
-                <React.Fragment key={crumb.path}>
+                <React.Fragment key={`breadcrumb-${crumb.path}-${index}`}>
                   {index > 0 && (
                     <ChevronRight size={16} className="mx-2 text-gray-400" />
                   )}
