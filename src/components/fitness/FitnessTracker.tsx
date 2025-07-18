@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { format, parseISO } from 'date-fns';
-import { Activity, Calendar, Plus, Clock, Flame, BarChart2, TrendingUp, Target, Award, Zap, AlertCircle, RefreshCw } from 'lucide-react';
+import { Activity, Calendar, Plus, Clock, Flame, BarChart2, TrendingUp, Target, Award, Zap, AlertCircle, RefreshCw, Loader2 } from 'lucide-react';
 import { fitnessApi, WorkoutSession, FitnessSummary } from '../../api/fitnessApi';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';

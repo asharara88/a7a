@@ -98,7 +98,6 @@ const MinimalNav: React.FC = () => {
 
   useEffect(() => {
     const checkUser = async () => {
-    const checkUser = async () => {
       try {
         const { data } = await supabase.auth.getUser();
         setUser(data.user);

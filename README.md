@@ -78,17 +78,20 @@
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/asharara88/a7a.git
    cd a7a
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 3. **Environment Setup:**
+
    ```env
    VITE_SUPABASE_URL=your-supabase-url
    VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
@@ -98,24 +101,28 @@
    ```
 
 4. **Database Setup:**
+
    ```bash
    supabase link --project-ref your-project-ref
    supabase db push
    ```
 
 5. **Deploy Edge Functions:**
+
    ```bash
    supabase functions deploy openai-proxy
    supabase functions deploy elevenlabs-proxy
    ```
 
 6. **Set API Keys as Secrets:**
+
    ```bash
    supabase secrets set OPENAI_API_KEY=your-openai-api-key
    supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-api-key
    ```
 
 7. **Start Development Server:**
+
    ```bash
    npm run dev
    ```
@@ -158,16 +165,19 @@ supabase/
 1. **Get OpenAI API key** from [OpenAI Platform](https://platform.openai.com/api-keys)
 
 2. **Set as Supabase secret:**
+
    ```bash
    supabase secrets set OPENAI_API_KEY=sk-your-actual-key
    ```
 
 3. **Deploy the Edge Function:**
+
    ```bash
    supabase functions deploy openai-proxy
    ```
 
 4. **Verify setup:**
+
    ```bash
    supabase secrets list
    ```
@@ -177,11 +187,13 @@ supabase/
 1. **Get ElevenLabs API key** from [ElevenLabs](https://elevenlabs.io/)
 
 2. **Set as Supabase secret:**
+
    ```bash
    supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-key
    ```
 
 3. **Deploy the Edge Function:**
+
    ```bash
    supabase functions deploy elevenlabs-proxy
    ```
@@ -218,6 +230,7 @@ npm run deploy          # Deploy to Netlify
 ### Netlify Deployment
 
 1. **Build Configuration** (already configured in `netlify.toml`):
+
    ```toml
    [build]
    command = "npm run build"
@@ -233,6 +246,7 @@ npm run deploy          # Deploy to Netlify
    - `VITE_OPENAI_API_KEY` (optional for local dev)
 
 3. **Deploy:**
+
    ```bash
    npm run build:prod    # Production build
    npm run deploy        # Deploy to Netlify
@@ -245,15 +259,18 @@ npm run deploy          # Deploy to Netlify
 ### Common Issues
 
 **"Failed to fetch" Error:**
+
 - Check environment variables are set
 - Verify Edge Functions are deployed
 - Ensure OpenAI API key has sufficient credits
 
 **Import Resolution Errors:**
+
 - Clear Vite cache: `rm -rf node_modules/.vite`
 - Restart dev server: `npm run dev`
 
 **Build Failures:**
+
 - Check TypeScript errors: `npm run type-check`
 - Verify all dependencies: `npm install`
 
@@ -278,18 +295,21 @@ supabase functions logs openai-proxy
 ## 🎯 Roadmap
 
 ### Q1 2025
+
 - ✅ Core wellness dashboard
 - ✅ AI coach with voice integration
 - ✅ Supplement recommendations
 - ✅ Muscle recovery visualization
 
 ### Q2 2025
+
 - 🔄 CGM integration (FreeStyle Libre)
 - 🔄 Camera-based nutrition tracking
 - 🔄 Fertility mode enhancements
 - 🔄 Premium subscription tiers
 
 ### Q3 2025
+
 - 📋 Advanced wearable integrations
 - 📋 Personalized meal planning
 - 📋 Community features
