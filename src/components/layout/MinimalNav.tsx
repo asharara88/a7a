@@ -371,10 +371,6 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                     <Package size={18} className="text-gray-700 dark:text-gray-300" />
                     <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">My Stacks</span>
                   </Link>
-                  <Link to="/supplement-store" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Store size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Supplement Store</span>
-                  </Link>
                   <Link to="/recommendations" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
                     <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Recommendations</span>
