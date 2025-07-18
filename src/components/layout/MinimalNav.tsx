@@ -265,10 +265,15 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
               >
                 <Link
                   to="/cart"
-                  className="p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-300 backdrop-blur-sm border border-transparent hover:border-gray-200/50 dark:hover:border-gray-700/50 relative"
+                  className={cn(
+                    "p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-300 backdrop-blur-sm border border-transparent hover:border-gray-200/50 dark:hover:border-gray-700/50 relative",
+                    isActive('/cart')
+                      ? "bg-gradient-to-r from-primary/10 to-tertiary/10 dark:from-primary/20 dark:to-tertiary/20 text-primary border border-primary/20 shadow-sm backdrop-blur-sm"
+                      : ""
+                  )}
                   aria-label="Shopping cart"
                 >
-                      ? "bg-gradient-to-r from-primary/10 to-tertiary/10 dark:from-primary/20 dark:to-tertiary/20 text-primary border border-primary/20 shadow-sm backdrop-blur-sm"
+                  <ShoppingCart className="w-4 h-4" />
                 </Link>
               </motion.div>
 
@@ -302,12 +307,17 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                         >
                           <Link
                             to="/dashboard"
-                            className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-primary/5 hover:to-tertiary/5 hover:text-primary transition-all duration-200"
+                            className={cn(
+                              "flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-primary/5 hover:to-tertiary/5 hover:text-primary transition-all duration-200",
+                              isActive('/dashboard')
+                                ? "text-primary bg-gradient-to-r from-primary/10 to-tertiary/10 border-r-2 border-primary" 
+                                : ""
+                            )}
                             onClick={() => setShowUserMenu(false)}
                           >
                             <User className="w-4 h-4 mr-3" />
                             <span className="tracking-wide">Dashboard</span>
-                                  ? "text-primary bg-gradient-to-r from-primary/10 to-tertiary/10 border-r-2 border-primary" 
+                          </Link>
                           <button
                             onClick={handleSignOut}
                             className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-red-500 dark:text-red-400 hover:bg-gradient-to-r hover:from-red-50/80 hover:to-red-100/80 dark:hover:from-red-900/20 dark:hover:to-red-800/20 hover:text-red-600 dark:hover:text-red-300 transition-all duration-200"
@@ -338,7 +348,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Link
-                      to="/onboarding"
+                      to="/signup"
                       className="px-5 py-2.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-sm font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 shadow-md backdrop-blur-sm tracking-wide hover:from-primary-light hover:via-tertiary-light hover:to-secondary-light"
                     >
                       Get Started
@@ -392,7 +402,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                       <Link
                         to={item.href}
                         className={cn(
-                          "flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-all duration-300",
+                          "flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-all duration-300 relative",
                           isActive(item.href)
                             ? "bg-primary/10 text-primary border border-primary/20"
                             : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80"
@@ -401,6 +411,13 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                       >
                         <span className="mr-3">{item.icon}</span>
                         <span className="tracking-wide">{item.label}</span>
+                        {isActive(item.href) && (
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-primary/5 via-tertiary/5 to-secondary/5 rounded-lg border border-primary/10"
+                            layoutId="activeMobileTab"
+                            transition={{ type: "spring", duration: 0.5 }}
+                          />
+                        )}
                       </Link>
                     </motion.div>
                   ))}
@@ -420,10 +437,10 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                         Sign in
                       </Link>
                       <Link
-                        to="/onboarding"
+                        to="/signup"
                         className="block px-4 py-3.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-base font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 text-center tracking-wide hover:from-primary-light hover:via-tertiary-light hover:to-secondary-light"
                         onClick={() => setIsMobileMenuOpen(false)}
-                      className="absolute inset-0 bg-gradient-to-r from-primary/5 via-tertiary/5 to-secondary/5 rounded-lg border border-primary/10"
+                      >
                         Get Started
                       </Link>
                     </motion.div>
