@@ -208,21 +208,30 @@ const MinimalNav: React.FC = () => {
                         <button
                           onClick={() => {
                             if (item.label === 'Supplements') {
-                              setShowSupplementsMenu(!showSupplementsMenu);
+                              setShowSupplementsMenu(prev => !prev);
+                              setShowWellnessMenu(false); // Close other dropdowns
                             } else if (item.label === 'MyWellness') {
-                              setShowWellnessMenu(!showWellnessMenu);
+                              setShowWellnessMenu(prev => !prev);
+                              setShowSupplementsMenu(false); // Close other dropdowns
                             }
                           }}
                           className={cn(
                             "flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
-                            isActive(item.href)
-                              ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white shadow-lg scale-105"
-                              : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-gray-700/80 hover:scale-105"
+                            (isActive(item.href) || 
+                             (item.label === 'Supplements' && showSupplementsMenu) ||
+                             (item.label === 'MyWellness' && showWellnessMenu))
+                              ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white shadow-lg"
+                              : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-gray-700/80 hover:scale-105",
+                            "group"
                           )}
                         >
                           <span className="mr-2">{item.icon}</span>
                           <span className="tracking-wide">{item.label}</span>
-                          <ChevronDown className="w-3 h-3 ml-1" />
+                          <ChevronDown className={cn(
+                            "w-3 h-3 ml-1 transition-transform duration-200",
+                            ((item.label === 'Supplements' && showSupplementsMenu) ||
+                             (item.label === 'MyWellness' && showWellnessMenu)) && "rotate-180"
+                          )} />
                         </button>
                         
                         <AnimatePresence>
@@ -237,21 +246,26 @@ const MinimalNav: React.FC = () => {
                                 }}
                               />
                               <motion.div
-                                className="absolute top-full left-0 mt-2 w-56 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 py-2 z-50"
+                                className="absolute top-full left-0 mt-2 w-64 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 py-3 z-50"
                                 initial={{ opacity: 0, scale: 0.95, y: -10 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                                transition={{ duration: 0.15 }}
+                                transition={{ duration: 0.2, ease: "easeOut" }}
                               >
+                                <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 mb-2">
+                                  <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    {item.label === 'Supplements' ? 'Supplement Tools' : 'Wellness Tools'}
+                                  </h3>
+                                </div>
                                 {item.dropdownItems?.map((dropdownItem) => (
                                   <Link
                                     key={dropdownItem.href}
                                     to={dropdownItem.href}
                                     className={cn(
-                                      "flex items-center w-full px-4 py-3 text-sm transition-all duration-200",
+                                      "flex items-center w-full px-4 py-3 text-sm transition-all duration-200 group",
                                       isActive(dropdownItem.href)
-                                        ? "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20 font-medium"
-                                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary-light"
+                                        ? "text-green-400 bg-green-500/10 font-medium border-l-2 border-green-400"
+                                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-green-400 hover:translate-x-1"
                                     )}
                                     onClick={() => {
                                       setShowSupplementsMenu(false);
@@ -260,6 +274,7 @@ const MinimalNav: React.FC = () => {
                                   >
                                     <span className="mr-3">{dropdownItem.icon}</span>
                                     <span className="tracking-wide">{dropdownItem.label}</span>
+                                    <ChevronDown className="w-3 h-3 ml-auto rotate-[-90deg] opacity-0 group-hover:opacity-100 transition-opacity" />
                                   </Link>
                                 ))}
                               </motion.div>
@@ -489,35 +504,65 @@ const MinimalNav: React.FC = () => {
                     <div key={item.href}>
                       {item.hasDropdown ? (
                         <div className="space-y-1">
-                          <div
+                          <button
+                            onClick={() => {
+                              if (item.label === 'Supplements') {
+                                setShowSupplementsMenu(prev => !prev);
+                                setShowWellnessMenu(false);
+                              } else if (item.label === 'MyWellness') {
+                                setShowWellnessMenu(prev => !prev);
+                                setShowSupplementsMenu(false);
+                              }
+                            }}
                             className={cn(
-                              "flex items-center px-4 py-3 rounded-xl text-base font-medium transition-colors",
-                              isActive(item.href)
+                              "flex items-center justify-between w-full px-4 py-3 rounded-xl text-base font-medium transition-colors",
+                              (isActive(item.href) ||
+                               (item.label === 'Supplements' && showSupplementsMenu) ||
+                               (item.label === 'MyWellness' && showWellnessMenu))
                                ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white shadow-md"
                                 : "text-gray-700 dark:text-gray-300"
                             )}
                           >
-                            <span className="mr-3">{item.icon}</span>
-                            <span className="tracking-wide">{item.label}</span>
-                          </div>
-                          <div className="ml-6 space-y-1">
-                            {item.dropdownItems?.map((dropdownItem) => (
-                              <Link
-                                key={dropdownItem.href}
-                                to={dropdownItem.href}
-                                className={cn(
-                                  "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                                  isActive(dropdownItem.href)
-                                    ? "text-green-400 bg-green-500/10 border-l-2 border-green-400"
-                                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
-                                )}
-                                onClick={() => setIsMobileMenuOpen(false)}
+                            <div className="flex items-center">
+                              <span className="mr-3">{item.icon}</span>
+                              <span className="tracking-wide">{item.label}</span>
+                            </div>
+                            <ChevronDown className={cn(
+                              "w-4 h-4 transition-transform duration-200",
+                              ((item.label === 'Supplements' && showSupplementsMenu) ||
+                               (item.label === 'MyWellness' && showWellnessMenu)) && "rotate-180"
+                            )} />
+                          </button>
+                          
+                          <AnimatePresence>
+                            {((item.label === 'Supplements' && showSupplementsMenu) ||
+                              (item.label === 'MyWellness' && showWellnessMenu)) && (
+                              <motion.div 
+                                className="ml-6 space-y-1 overflow-hidden"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2, ease: "easeOut" }}
                               >
-                                <span className="mr-3">{dropdownItem.icon}</span>
-                                <span className="tracking-wide">{dropdownItem.label}</span>
-                              </Link>
-                            ))}
-                          </div>
+                                {item.dropdownItems?.map((dropdownItem) => (
+                                  <Link
+                                    key={dropdownItem.href}
+                                    to={dropdownItem.href}
+                                    className={cn(
+                                      "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                                      isActive(dropdownItem.href)
+                                        ? "text-green-400 bg-green-500/10 border-l-2 border-green-400"
+                                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                                    )}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                  >
+                                    <span className="mr-3">{dropdownItem.icon}</span>
+                                    <span className="tracking-wide">{dropdownItem.label}</span>
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
                       ) : (
                         <Link
