@@ -24,7 +24,6 @@ import NutritionDashboardPage from './pages/NutritionDashboardPage';
 import SupplementRecommendationsPage from './pages/SupplementRecommendationsPage';
 import MetabolismPage from './pages/MetabolismPage';
 import BioclockPage from './pages/BioclockPage';
-import MyPlatePage from './pages/MyPlatePage';
 function App() {
   return (
     <ErrorBoundary>

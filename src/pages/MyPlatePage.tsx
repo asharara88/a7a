@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Camera, Upload, Sparkles, Utensils, Clock, Zap, AlertCircle, CheckCircle } from 'lucide-react';
+import { Camera, Upload, Sparkles, Utensils, Zap, AlertCircle, CheckCircle } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { motion } from 'framer-motion';

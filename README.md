@@ -1,325 +1,312 @@
 # Biowell AI - Personal Digital Health Coach
 
+**Biowell** is a digital wellness platform that combines personalized coaching, smart data integration, and precision supplementation to help users optimize their health. It integrates wearable data, user input, and evidence-based recommendations to deliver real-time, goal-driven guidance.
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/5239b3f1-f78c-4857-ad9d-ad1bb351d322/deploy-status)](https://app.netlify.com/projects/biowellai/deploys)
 
-Biowell AI is a digital health platform that connects your wearable devices, delivers personalized insights, and offers evidence‑based supplement recommendations through an AI coach.
+---
 
-## Features
+## 📲 Core Features
 
-- **Personal Health Dashboard**: View your health score and metrics from connected wearable devices
-- **AI Health Coach**: Chat with an AI powered by OpenAI to get personalized health advice
-- **Supplement Recommendations**: Receive custom supplement suggestions based on your health data
-- **Onboarding Quiz**: Detailed health assessment to personalize your experience
-- **Wearable Integration**: Connect with Apple Health, Oura Ring, Garmin, and more
-- **Subscription Management**: Subscribe to recommended supplements for monthly delivery
-- **Shopping Cart**: Save supplements in your cart with quantity tracking
+- **Home Dashboard**  
+  Central hub displaying real-time wellness metrics from connected devices and user logs.
 
-> **Disclaimer**: Biowell AI does not provide medical diagnosis or treatment. The AI coach offers general wellness guidance based on the information you share. Always consult a qualified healthcare professional for medical concerns.
+- **MyCoach (AI Coach)**  
+  Personalized coaching via chat and voice (OpenAI + ElevenLabs), responding to user data, habits, and preferences.
 
-## Tech Stack
+- **Supplement Store**  
+  Curated stacks by use-case (muscle, sleep, gut, fertility, etc.), with dynamic pricing and subscription discounts.  
+  **Premium users** receive an automatic **15% discount** on all supplement purchases.
 
-- **Frontend**: React, TypeScript, TailwindCSS, Framer Motion
-- **Backend**: Supabase (Authentication, Database, Realtime)
-- **Serverless**: Supabase Edge Functions for OpenAI proxy
-- **Payments**: Stripe integration (currently unused placeholder)
+- **Fertility Mode** 🧬  
+  Couples-based module integrating with femtech platforms (Flo, Clue, Apple Cycle Tracking). Supports:
+  - Ovulation prediction & fertility window tracking  
+  - Female cycle data syncing  
+  - Couple-based supplement & lifestyle recommendations  
+  - Frontend UX for joint health goals and tracking
 
-## Getting Started
+- **Metabolic Mode (CGM Integration)** 🔬  
+  Continuous glucose monitoring (CGM) support for real-time metabolic health tracking. Includes:
+  - CGM integrations (FreeStyle Libre, Dexcom planned)  
+  - Blood sugar mapping, insulin sensitivity insights  
+  - AI-powered fasting & nutrition guidance  
+  - Metabolic scoring dashboard
+
+- **Premium Nutrition Module** 🍽️  
+  Exclusive to premium users:
+  - **Personalized meal plans and recipes** tailored from wearable data and quiz inputs  
+  - **Camera-based macronutrient tracker** (real-time food recognition and macro breakdown)  
+  - Full access to dietary pattern scoring and nutrition trends
+
+- **Data Integration**  
+  Seamless sync with Apple Watch, Oura, Garmin, smart scales, CGMs, and menstrual trackers via secure APIs.
+
+- **Recovery Mode**  
+  Supports dopamine balance, sleep repair, emotional regulation, and habit rewiring.
+
+- **Muscle Recovery Visualization** 💪  
+  Real-time muscle group recovery status with interactive 3D-style body diagrams.
+
+---
+
+## 🧠 Tech Stack
+
+- **Frontend:** React 18, TypeScript, Tailwind CSS, Framer Motion
+  - Premium UI modules for nutrition, food camera, and supplement discounts  
+- **Backend:** Supabase (PostgreSQL + Edge Functions)  
+  - User role logic (Premium vs Standard)  
+  - Nutrition scoring, CGM ingestion, camera uploads  
+- **AI:** OpenAI (prompt routing), ElevenLabs (voice), custom food classifier (planned)  
+- **Integrations:**  
+  - Wearables: Apple, Oura, Garmin  
+  - Femtech: Flo, Clue, Apple Cycle  
+  - CGM: FreeStyle Libre, Dexcom (planned)  
+  - Camera-based food logging: in development  
+- **Deployment:** Netlify (frontend), Supabase (backend)
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - Node.js 18+ and npm
-- Supabase account
-- OpenAI API key (for AI coach functionality)
-- Stripe account (optional - integration not currently used)
-- Supabase CLI installed globally (`npm install -g supabase`)
+- Supabase account and CLI (`npm install -g supabase`)
+- OpenAI API key (required for AI coach)
+- ElevenLabs API key (optional for voice features)
 
-### Local Development
+### Installation
 
-1. Clone the repository:
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/asharara88/a7a.git
+   cd a7a
+   ```
 
-```bash
-git clone https://github.com/yourusername/biowell-ai.git
-cd biowell-ai
-```
-
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Copy `.env.production.example` to `.env` and add your credentials:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-VITE_STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key # optional, not currently used
-VITE_OPENAI_API_KEY=your-openai-api-key # for local dev only; for production, set as a Supabase secret
-VITE_CAPTCHA_SECRET_KEY=your-captcha-secret-key # optional; only required if you enable CAPTCHA verification for forms (e.g., signup or contact forms)
-JWT_SECRET=your-jwt-secret
-```
-
-4. For production builds, copy `.env.production.example` to `.env.production` and supply your production values (this file is ignored by Git). Ensure `JWT_SECRET` is set in this file for token verification.
-
-5. Deploy Edge Functions
-
-Deploy the required Edge Functions to your Supabase project:
-
-```bash
-# Link your local project to Supabase
-supabase link --project-ref YOUR_PROJECT_REF
-
-# Deploy the OpenAI proxy function
-supabase functions deploy openai-proxy
-
-# Deploy other functions (optional)
-supabase functions deploy chat-assistant
-supabase functions deploy recommendations
-```
-
-**Verify deployment:**
-
-1. Go to your Supabase Dashboard
-2. Navigate to Edge Functions
-3. Confirm that `openai-proxy` is deployed and active
-
-6. Start the development server:
-
-```bash
-npm run dev
-```
-
-## Troubleshooting
-
-### "Failed to fetch" Error
-
-This error typically occurs when:
-
-1. **Environment not configured**: Check your `.env` file has real Supabase credentials
-2. **Edge Function not deployed**: Deploy the `openai-proxy` function to Supabase
-3. **OpenAI API key not set**: Configure the OpenAI API key as a Supabase secret
-
-**Quick fixes:**
-
-```bash
-# Check environment variables
-echo $VITE_SUPABASE_URL
-echo $VITE_SUPABASE_ANON_KEY
-
-# Deploy Edge Function
-supabase functions deploy openai-proxy
-
-# Set OpenAI secret
-supabase secrets set OPENAI_API_KEY=your-key-here
-```
-
-### Setup Guide
-
-The app includes a built-in setup guide that appears when configuration errors are detected. Click "Setup Guide" on any error message to get step-by-step instructions.
-
-### Running Tests and Lint
-
-1. **Install dependencies** (required before running `npm test`):
-
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
-2. **Run lint and tests**:
-
-   ```bash
-   npm run lint
-   npm test
+3. **Environment Setup:**
+   ```env
+   VITE_SUPABASE_URL=your-supabase-url
+   VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+   VITE_OPENAI_API_KEY=your-openai-api-key
+   VITE_ELEVENLABS_API_KEY=your-elevenlabs-api-key
+   VITE_STRIPE_PUBLISHABLE_KEY=your-stripe-key
    ```
 
-You can also use the convenience script `scripts/setup.sh` to install
-dependencies automatically before running tests locally.
-
-### Supabase Setup
-
-1. Create a new Supabase project
-2. Run the SQL migrations from the `supabase/migrations` folder
-3. Set up authentication with email/password
-
-#### Setting up OpenAI API Key (Required for AI Chat)
-
-**IMPORTANT**: The AI chat functionality requires an OpenAI API key to be configured as a Supabase secret. Follow these steps carefully:
-
-1. **Get your OpenAI API key** from [OpenAI's platform](https://platform.openai.com/api-keys)
-
-2. **Login to Supabase CLI**:
-
-```bash
-supabase login
-```
-
-3. **Link your project** (replace with your actual project reference):
-
-```bash
-supabase link --project-ref your-project-ref
-```
-
-4. **Set the OpenAI API key as a Supabase secret** (replace `your-actual-openai-api-key` with your real OpenAI API key):
-
-```bash
-supabase secrets set OPENAI_API_KEY=your-actual-openai-api-key
-```
-
-5. **Deploy the Edge Function** for OpenAI proxy:
-
-supabase functions deploy openai-proxy
-
-```
-
-6. **Verify the setup** by checking that the secret was set correctly:
-
-```bash
-supabase secrets list
-```
-
-You should see `OPENAI_API_KEY` in the list of secrets.
-
-#### Setting up ElevenLabs API Key (Optional for Text-to-Speech)
-
-**OPTIONAL**: The text-to-speech functionality requires an ElevenLabs API key to be configured as a Supabase secret. If not configured, the app will work normally but without voice responses.
-
-1. **Get your ElevenLabs API key** from [ElevenLabs](https://elevenlabs.io/app/speech-synthesis)
-
-2. **Set the ElevenLabs API key as a Supabase secret**:
-
-```bash
-supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-api-key
-```
-
-1. **Deploy the Edge Function** for ElevenLabs proxy:
-
-```bash
-supabase functions deploy elevenlabs-proxy
-```
-
-4. **Verify the setup** by checking that the secret was set correctly:
-
-```bash
-supabase secrets list
-```
-
-You should see `ELEVENLABS_API_KEY` in the list of secrets.
-
-**Note**: If you don't configure the ElevenLabs API key, the app will still work normally but text-to-speech features will be disabled.
-
-#### Troubleshooting OpenAI Integration
-
-If you encounter the error "Failed to fetch", "Network request failed", or "Incorrect API key provided":
-
-1. **Verify your OpenAI API key is valid**:
-   - Go to [OpenAI's API keys page](https://platform.openai.com/api-keys)
-   - Make sure your key is active and has sufficient credits
-   - Copy the exact key (it should start with `sk-`)
-
-2. **Check if the secret is properly set**:
-
+4. **Database Setup:**
    ```bash
-   supabase secrets list
+   supabase link --project-ref your-project-ref
+   supabase db push
    ```
 
-   You should see `OPENAI_API_KEY` listed.
-
-3. **If the secret is missing or incorrect, set it again**:
-
+5. **Deploy Edge Functions:**
    ```bash
-   supabase secrets set OPENAI_API_KEY=sk-your-actual-key-here
+   supabase functions deploy openai-proxy
+   supabase functions deploy elevenlabs-proxy
    ```
 
-4. **Redeploy the Edge Function** after setting/updating the secret:
+6. **Set API Keys as Secrets:**
+   ```bash
+   supabase secrets set OPENAI_API_KEY=your-openai-api-key
+   supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-api-key
+   ```
 
+7. **Start Development Server:**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 🧩 Project Structure
+
+```
+src/
+├── components/
+│   ├── auth/           # Authentication components
+│   ├── fitness/        # Fitness tracking & muscle visualization
+│   ├── layout/         # Navigation, headers, layout
+│   ├── nutrition/      # Meal planning & food tracking
+│   ├── supplements/    # Product cards, store, recommendations
+│   └── ui/            # Reusable UI components
+├── pages/
+│   ├── auth/          # Login, signup, onboarding
+│   ├── coach/         # AI coach interface
+│   ├── dashboard/     # Health dashboard
+│   └── store/         # Supplement marketplace
+├── utils/             # Helper functions
+├── hooks/             # Custom React hooks
+├── contexts/          # React context providers
+└── types/             # TypeScript definitions
+
+supabase/
+├── functions/         # Edge Functions (OpenAI, ElevenLabs)
+├── migrations/        # Database schema migrations
+└── config.toml        # Supabase configuration
+```
+
+---
+
+## 🔧 API Configuration
+
+### OpenAI Setup (Required)
+
+1. **Get OpenAI API key** from [OpenAI Platform](https://platform.openai.com/api-keys)
+
+2. **Set as Supabase secret:**
+   ```bash
+   supabase secrets set OPENAI_API_KEY=sk-your-actual-key
+   ```
+
+3. **Deploy the Edge Function:**
    ```bash
    supabase functions deploy openai-proxy
    ```
 
-5. **Check the Edge Function logs** for more details:
-
+4. **Verify setup:**
    ```bash
-   supabase functions logs openai-proxy
+   supabase secrets list
    ```
 
-6. **Verify your OpenAI account** has sufficient credits at [OpenAI's usage dashboard](https://platform.openai.com/usage)
+### ElevenLabs Setup (Optional)
 
-7. **Test the Edge Function directly** to isolate the issue:
+1. **Get ElevenLabs API key** from [ElevenLabs](https://elevenlabs.io/)
 
+2. **Set as Supabase secret:**
    ```bash
-   curl -X POST "https://your-project-ref.supabase.co/functions/v1/openai-proxy" \
-     -H "Authorization: Bearer your-supabase-anon-key" \
-     -H "Content-Type: application/json" \
-     -d '{"messages":[{"role":"user","content":"Hello"}]}'
+   supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-key
    ```
 
-8. **Common fixes for "Failed to fetch" errors**:
-   - Ensure your Supabase project is not paused
-   - Check that the Edge Function is deployed and running
-   - Verify network connectivity to Supabase
-   - Clear browser cache and try again
+3. **Deploy the Edge Function:**
+   ```bash
+   supabase functions deploy elevenlabs-proxy
+   ```
 
-#### Alternative Setup for Local Development
+---
 
-If you're developing locally and want to test the Edge Function locally, you can also:
-
-1. Create a `.env` file in the `supabase/functions/openai-proxy/` directory:
+## 🧪 Development Commands
 
 ```bash
-# supabase/functions/openai-proxy/.env
-OPENAI_API_KEY=your-openai-api-key
+# Development
+npm run dev              # Start dev server
+npm run build           # Build for production
+npm run preview         # Preview production build
+
+# Testing & Quality
+npm run test            # Run unit tests
+npm run test:coverage   # Test coverage report
+npm run lint            # Run ESLint
+npm run type-check      # TypeScript checking
+
+# Database
+supabase start          # Start local Supabase
+supabase db reset       # Reset local database
+supabase migration new  # Create new migration
+
+# Deployment
+npm run deploy          # Deploy to Netlify
 ```
 
-2. Start the local Supabase development environment:
+---
+
+## 🚀 Deployment
+
+### Netlify Deployment
+
+1. **Build Configuration** (already configured in `netlify.toml`):
+   ```toml
+   [build]
+   command = "npm run build"
+   publish = "dist"
+   
+   [build.environment]
+   NODE_VERSION = "18"
+   ```
+
+2. **Environment Variables** (set in Netlify dashboard):
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_OPENAI_API_KEY` (optional for local dev)
+
+3. **Deploy:**
+   ```bash
+   npm run build:prod    # Production build
+   npm run deploy        # Deploy to Netlify
+   ```
+
+---
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+**"Failed to fetch" Error:**
+- Check environment variables are set
+- Verify Edge Functions are deployed
+- Ensure OpenAI API key has sufficient credits
+
+**Import Resolution Errors:**
+- Clear Vite cache: `rm -rf node_modules/.vite`
+- Restart dev server: `npm run dev`
+
+**Build Failures:**
+- Check TypeScript errors: `npm run type-check`
+- Verify all dependencies: `npm install`
+
+### Debug Commands
 
 ```bash
-supabase start
-supabase functions serve
+# Check environment
+echo $VITE_SUPABASE_URL
+
+# Test Edge Function
+curl -X POST "https://your-project.supabase.co/functions/v1/openai-proxy" \
+  -H "Authorization: Bearer your-anon-key" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"role":"user","content":"Hello"}]}'
+
+# View logs
+supabase functions logs openai-proxy
 ```
 
-**Note**: The `.env` file approach only works for local development. For production, you must use Supabase secrets.
+---
 
-### Audio Cache Table
+## 🎯 Roadmap
 
-The migrations include an `audio_cache` table used to store generated audio for
-text-to-speech responses. It features indexes on `(user_id, cache_key)` and
-`expires_at` for quick lookups, row level security policies that restrict access
-to authenticated users, and a trigger that automatically removes expired
-entries.
+### Q1 2025
+- ✅ Core wellness dashboard
+- ✅ AI coach with voice integration
+- ✅ Supplement recommendations
+- ✅ Muscle recovery visualization
 
-### Shopping Cart
+### Q2 2025
+- 🔄 CGM integration (FreeStyle Libre)
+- 🔄 Camera-based nutrition tracking
+- 🔄 Fertility mode enhancements
+- 🔄 Premium subscription tiers
 
-The migration `20250628120000_shopping_cart.sql` introduces a `cart_items`
-table for storing supplements that users add to their cart. Add items via the
-"Add to Cart" button on a supplement, update quantities or remove items from the
-cart page, and proceed to checkout when ready. Row level security ensures each
-user can only manage their own cart items.
+### Q3 2025
+- 📋 Advanced wearable integrations
+- 📋 Personalized meal planning
+- 📋 Community features
+- 📋 Healthcare provider portal
 
-## Project Structure
+---
 
-```
-/components      - UI components 
-/contexts        - React context providers
-/hooks           - Custom React hooks
-/pages           - Application pages
-/supabase        - Supabase-related files
-  /functions     - Edge Functions 
-  /migrations    - SQL migration files
-/utils           - Utility functions
-```
+## 📄 License
 
-## Deployment
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-The `netlify.toml` file specifies a Node.js 18 environment for deployment.
-
-## Customizing Supabase Auth
-
-You can extend Supabase authentication using database triggers or Auth Webhooks. See [docs/customizing-supabase-auth.md](docs/customizing-supabase-auth.md) for examples of both approaches.
-
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
+---
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## ⚠️ Disclaimer
+
+Biowell AI does not provide medical diagnosis or treatment. The AI coach offers general wellness guidance based on the information you share. Always consult a qualified healthcare professional for medical concerns.
