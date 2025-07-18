@@ -79,7 +79,7 @@ const NutritionTracker: React.FC = () => {
   };
 
   // Prepare chart data
-  const macroChartData = {
+  const macroChartData = React.useMemo(() => ({
     labels: ['Protein', 'Carbs', 'Fat'],
     datasets: [
       {
@@ -101,9 +101,9 @@ const NutritionTracker: React.FC = () => {
         borderWidth: 1
       }
     ]
-  };
+  }), [nutritionSummary]);
 
-  const mealChartData = {
+  const mealChartData = React.useMemo(() => ({
     labels: ['Breakfast', 'Lunch', 'Dinner', 'Snacks'],
     datasets: [
       {
@@ -128,7 +128,17 @@ const NutritionTracker: React.FC = () => {
         borderWidth: 1
       }
     ]
-  };
+  }), [nutritionSummary]);
+
+  const chartOptions = React.useMemo(() => ({
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+      }
+    }
+  }), []);
 
   return (
     <div className="space-y-6">
@@ -188,14 +198,22 @@ const NutritionTracker: React.FC = () => {
                 </div>
               </div>
               <div className="h-48">
-                <Pie data={macroChartData} options={{ maintainAspectRatio: false }} />
+                <Pie 
+                  key={`macro-chart-${selectedDate}`}
+                  data={macroChartData} 
+                  options={chartOptions}
+                />
               </div>
             </Card>
 
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">Meal Breakdown</h3>
               <div className="h-48 mb-4">
-                <Pie data={mealChartData} options={{ maintainAspectRatio: false }} />
+                <Pie 
+                  key={`meal-chart-${selectedDate}`}
+                  data={mealChartData} 
+                  options={chartOptions}
+                />
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
