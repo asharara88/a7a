@@ -46,7 +46,7 @@ function App() {
         <Route path="sleep" element={<SleepPage />} />
         <Route path="supplements" element={<SupplementsPage />} />
         <Route path="supplements/store" element={<SupplementStorePage />} />
-        <Route path="supplements/stacks" element={<MyStacksPage />} />
+        <Route path="my-stacks" element={<MyStacksPage />} />
         <Route path="supplements/recommendations" element={<SupplementRecommendationsPage />} />
         <Route path="supplements/:id" element={<SupplementDetailPage />} />
         <Route path="recipes" element={<RecipesPage />} />
