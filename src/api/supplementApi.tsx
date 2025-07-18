@@ -55,34 +55,44 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface RecommendationResponse {
+  supplements: Supplement[];
+  stacks: SupplementStack[];
+  personalized_message: string;
+}
+
 export const supplementApi = {
   // Get personalized supplement recommendations
-  async getPersonalizedRecommendations(userId?: string): Promise<Supplement[]> {
+  async getPersonalizedRecommendations(userId?: string): Promise<RecommendationResponse> {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user && !userId) {
         // Return mock data for demo
-        return [
-          {
-            id: 'mock-1',
-            name: 'Vitamin D3',
-            brand: 'Biowell',
-            description: 'High-quality vitamin D3 for immune support',
-            price_aed: 40.00,
-            tier: 'green',
-            image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300'
-          },
-          {
-            id: 'mock-2',
-            name: 'Omega-3 Fish Oil',
-            brand: 'Biowell',
-            description: 'Premium omega-3 for heart and brain health',
-            price_aed: 65.00,
-            tier: 'green',
-            image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300'
-          }
-        ];
+        return {
+          supplements: [
+            {
+              id: 'mock-1',
+              name: 'Vitamin D3',
+              brand: 'Biowell',
+              description: 'High-quality vitamin D3 for immune support',
+              price_aed: 40.00,
+              tier: 'green',
+              image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300'
+            },
+            {
+              id: 'mock-2',
+              name: 'Omega-3 Fish Oil',
+              brand: 'Biowell',
+              description: 'Premium omega-3 for heart and brain health',
+              price_aed: 65.00,
+              tier: 'green',
+              image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300'
+            }
+          ],
+          stacks: [],
+          personalized_message: 'Based on your health goals, here are some recommended supplements to support your wellness journey.'
+        };
       }
 
       const { data, error } = await supabase
@@ -93,10 +103,18 @@ export const supplementApi = {
         .limit(10);
 
       if (error) throw error;
-      return data || [];
+      return {
+        supplements: data || [],
+        stacks: [],
+        personalized_message: 'Here are some high-quality supplements that may benefit your health goals.'
+      };
     } catch (error) {
       console.error('Error fetching recommendations:', error);
-      return [];
+      return {
+        supplements: [],
+        stacks: [],
+        personalized_message: 'We encountered an issue loading your recommendations. Please try again later.'
+      };
     }
   },
 
