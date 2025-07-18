@@ -14,44 +14,95 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-type ThemeMode = 'light' | 'dark' | 'auto';
+const Layout: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+  const [user, setUser] = React.useState<any>(null)
+  const navigate = useNavigate()
 
-// Get initial theme preference from localStorage or default to auto
-const getInitialTheme = (): ThemeMode => {
-  const savedTheme = localStorage.getItem('theme') as ThemeMode;
-  if (savedTheme && ['light', 'dark', 'auto'].includes(savedTheme)) {
-    return savedTheme;
-  }
-  return 'auto';
-};
+  // Check for user session on mount
+  React.useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const { data } = await supabase.auth.getUser();
+        setUser(data.user);
+      } catch (error) {
+        console.error('Error checking auth status:', error);
+      }
+    };
+    
+    checkUser();
+    
+    // Set up auth state listener
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
-// Check if it's currently PM (after 6 PM and before 6 AM)
-const isCurrentlyPM = () => {
-  const hour = new Date().getHours();
-  return hour >= 18 || hour < 6;
-};
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
-// Determine if dark mode should be active based on theme setting
-const shouldUseDarkMode = (theme: ThemeMode): boolean => {
-  switch (theme) {
-    case 'dark':
-      return true;
-    case 'light':
-      return false;
-    case 'auto':
-      return isCurrentlyPM();
-    default:
-      return false;
-  }
-};
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      {/* Header */}
+      <div className="relative">
+        <MinimalNav />
+      </div>
+      
+      {/* Mobile Navigation */}
+      <MobileNav 
+        isOpen={isMenuOpen} 
+        onClose={() => setIsMenuOpen(false)} 
+        isLoggedIn={!!user}
+        onSignOut={handleSignOut}
+      />
+
+      {/* Main Content */}
+      <main className="flex-1 min-h-[calc(100vh-64px)]">
+        <Outlet />
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-5 sm:px-7 lg:px-9 py-10">
+          <div className="flex flex-col md:flex-row justify-between items-start">
+            <div className="flex items-center mb-5 md:mb-0 text-left">
+              <img 
+                src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
+                alt="Biowell Logo" 
+                className="h-18 w-auto dark:hidden" 
+              />
+              <img 
+                src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
+                alt="Biowell Logo" 
+                className="h-18 w-auto hidden dark:block" 
+              />
+            </div>
+            <div className="text-left md:text-right">
+              <p className="font-medium tracking-wide">&copy; 2025 Biowell AI - Personal Digital Health Coach</p>
+              <p className="text-gray-500 dark:text-white/70 mt-2 tracking-wide">All rights reserved.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+export default Layout
 
 const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-  const [theme, setTheme] = React.useState<ThemeMode>(getInitialTheme)
-  const [showThemeMenu, setShowThemeMenu] = React.useState(false)
   const [user, setUser] = React.useState<any>(null)
-  const [isLoading, setIsLoading] = React.useState(true)
-  const location = useLocation()
   const navigate = useNavigate()
 
   // Calculate if dark mode should be active
