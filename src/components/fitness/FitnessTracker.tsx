@@ -59,6 +59,7 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
     if (currentUserId !== null) {
       loadFitnessData();
     }
+    }
   }, [timeRange, currentUserId]);
 
   const loadFitnessData = async () => {
@@ -85,50 +86,6 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
     try {
       await fitnessApi.logWorkout({
         userId: currentUserId,
-        workoutType: newWorkout.workoutType,
-        duration: newWorkout.duration,
-        caloriesBurned: newWorkout.caloriesBurned,
-        timestamp: new Date().toISOString(),
-        notes: newWorkout.notes
-      });
-      
-      // Refresh data
-      loadFitnessData();
-      setShowAddWorkout(false);
-      
-      // Reset form
-      setNewWorkout({
-        workoutType: 'Strength Training',
-        duration: 45,
-        caloriesBurned: 300,
-        notes: ''
-      });
-    } catch (error) {
-      console.error('Error adding workout:', error);
-    }
-  };
-    loadFitnessData();
-  }, [timeRange]);
-
-  const loadFitnessData = async () => {
-    setIsLoading(true);
-    try {
-      const history = await fitnessApi.getWorkoutHistory(userId, timeRange);
-      const summary = await fitnessApi.getFitnessSummary(userId, timeRange);
-      
-      setWorkoutHistory(history);
-      setFitnessSummary(summary);
-    } catch (error) {
-      console.error('Error loading fitness data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleAddWorkout = async () => {
-    try {
-      await fitnessApi.logWorkout({
-        userId,
         workoutType: newWorkout.workoutType,
         duration: newWorkout.duration,
         caloriesBurned: newWorkout.caloriesBurned,
