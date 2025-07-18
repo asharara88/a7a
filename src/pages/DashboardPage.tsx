@@ -11,8 +11,7 @@ import GoalsProgress from '../components/dashboard/GoalsProgress'
 import SupplementTracker from '../components/dashboard/SupplementTracker'
 import WearableDeviceCard from '../components/dashboard/WearableDeviceCard'
 import BWScoreCard, { MetricScore } from '../components/dashboard/BWScoreCard'
-import CGMChart from '../components/health/CGMChart'
-import BloodGlucoseTrendSheet from '../components/health/BloodGlucoseTrendSheet'
+import MetabolicSnapshot from '../components/dashboard/MetabolicSnapshot'
 
 const DashboardPage: React.FC = () => {
   // Mock data for metrics cards
@@ -355,14 +354,7 @@ const DashboardPage: React.FC = () => {
                 chartType="mixed"
                 height={280}
               />
-              
-              {/* CGM Chart */}
-              <CGMChart 
-                timeRange="day"
-                showTrends={true}
-                height={280}
-              />
-              
+
               {/* Statistics Grid */}
               <StatisticsGrid 
                 nutritionData={nutritionData}
@@ -392,6 +384,16 @@ const DashboardPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Metabolic Health Snapshot */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+          <MetabolicSnapshot 
+            averageGlucose={98}
+            timeInRange={78}
+            currentGlucose={95}
+            trend="stable"
+          />
+        </div>
+
         {/* Action Items and Management */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
           {/* Supplement Tracker */}
@@ -411,11 +413,6 @@ const DashboardPage: React.FC = () => {
           <div className="lg:col-span-2 xl:col-span-1">
             <ActivityTimeline events={timelineEvents} />
           </div>
-        </div>
-        
-        {/* Blood Glucose Trend Sheet */}
-        <div className="mb-6">
-          <BloodGlucoseTrendSheet />
         </div>
       </div>
     </div>
