@@ -1,29 +1,43 @@
+// This would be a proper main.tsx for Biowell AI
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { HelmetProvider } from 'react-helmet-async'
-import { MemoryMonitor, preloadCriticalResources, logBundleInfo } from './utils/performance'
 import { BrowserRouter } from 'react-router-dom'
-import './chartConfig'
+import { HelmetProvider } from 'react-helmet-async'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Toaster } from 'react-hot-toast'
 import App from './App'
-import './index.css'
+import { AuthProvider } from './contexts/AuthContext'
+import { ThemeProvider } from './contexts/ThemeContext'
+import { SupabaseProvider } from './contexts/SupabaseContext'
+import ErrorBoundary from './components/ui/ErrorBoundary'
+import './styles/globals.css'
 
-// Initialize performance monitoring
-if (import.meta.env.DEV) {
-  MemoryMonitor.start();
-}
-
-// Preload critical resources
-preloadCriticalResources();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <HelmetProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </HelmetProvider>
-  </React.StrictMode>
+    <ErrorBoundary>
+      <HelmetProvider>
+        <BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <SupabaseProvider>
+              <AuthProvider>
+                <ThemeProvider>
+                  <App />
+                  <Toaster position="top-right" />
+                </ThemeProvider>
+              </AuthProvider>
+            </SupabaseProvider>
+          </QueryClientProvider>
+        </BrowserRouter>
+      </HelmetProvider>
+    </ErrorBoundary>
+  </React.StrictMode>,
 )
-
-// Log bundle information
-logBundleInfo();
