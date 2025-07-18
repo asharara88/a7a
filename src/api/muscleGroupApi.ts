@@ -77,7 +77,12 @@ export const muscleGroupApi = {
       return result.imageUrl || null;
     } catch (error) {
       console.error(`Error getting colored muscle image for ${muscleGroup}:`, error);
-      return null;
+     // Return fallback SVG placeholder with the requested color
+     return `data:image/svg+xml;base64,${btoa(`<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="400" height="400" fill="transparent"/>
+<circle cx="200" cy="200" r="80" fill="${colorHex}" opacity="0.7"/>
+<text x="200" y="210" text-anchor="middle" fill="#374151" font-family="Arial" font-size="12">${muscleGroup}</text>
+</svg>`)}`;
     }
   },
 
