@@ -15,7 +15,8 @@ import {
   Package,
   Sparkles,
   Store,
-  Moon
+  Moon,
+  Gauge
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createClient } from '@supabase/supabase-js';
