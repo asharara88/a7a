@@ -17,6 +17,7 @@ import MetabolicSnapshot from '../components/dashboard/MetabolicSnapshot'
 const DashboardPage: React.FC = () => {
   // Mock data for metrics cards
   const [isSyncing, setIsSyncing] = React.useState(false);
+  const [expandedCards, setExpandedCards] = React.useState<Set<string>>(new Set());
   
   // Handle sync device
   const handleSyncDevice = (deviceId: string) => {
@@ -25,6 +26,19 @@ const DashboardPage: React.FC = () => {
     setTimeout(() => {
       setIsSyncing(false);
     }, 2000);
+  };
+  
+  // Handle card expansion toggle
+  const toggleCardExpansion = (cardId: string) => {
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(cardId)) {
+        newSet.delete(cardId);
+      } else {
+        newSet.add(cardId);
+      }
+      return newSet;
+    });
   };
   
   // Handle mark supplement as taken
@@ -319,6 +333,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 2, type: 'decrease' }}
               icon={<Heart className="w-6 h-6" />}
               color="primary"
+              isExpanded={expandedCards.has('resting-hr')}
+              onToggleExpand={() => toggleCardExpansion('resting-hr')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Resting Range:</span>
+                    <span className="font-medium">60-80 BPM</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">7-day Average:</span>
+                    <span className="font-medium">74 BPM</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Last Updated:</span>
+                    <span className="font-medium">2 hours ago</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p className="text-xs text-green-700 dark:text-green-300">
+                      Your resting heart rate is in the excellent range for your age group.
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="HRV"
@@ -326,6 +363,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 8, type: 'increase' }}
               icon={<Activity className="w-6 h-6" />}
               color="primary"
+              isExpanded={expandedCards.has('hrv')}
+              onToggleExpand={() => toggleCardExpansion('hrv')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Good Range:</span>
+                    <span className="font-medium">30-60 ms</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Recovery Status:</span>
+                    <span className="font-medium text-green-600">Good</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Trend:</span>
+                    <span className="font-medium text-green-600">Improving</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <p className="text-xs text-blue-700 dark:text-blue-300">
+                      Higher HRV indicates better autonomic nervous system function.
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="BP Systolic"
@@ -333,6 +393,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 3, type: 'decrease' }}
               icon={<Heart className="w-6 h-6" />}
               color="primary"
+              isExpanded={expandedCards.has('bp-systolic')}
+              onToggleExpand={() => toggleCardExpansion('bp-systolic')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Normal Range:</span>
+                    <span className="font-medium">90-120 mmHg</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Diastolic:</span>
+                    <span className="font-medium">78 mmHg</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Category:</span>
+                    <span className="font-medium text-green-600">Normal</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p className="text-xs text-green-700 dark:text-green-300">
+                      Your blood pressure is within the normal range. Keep up the good work!
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="Recovery"
@@ -340,6 +423,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 12, type: 'increase' }}
               icon={<Zap className="w-6 h-6" />}
               color="primary"
+              isExpanded={expandedCards.has('recovery')}
+              onToggleExpand={() => toggleCardExpansion('recovery')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Sleep Quality:</span>
+                    <span className="font-medium">Good (7.5h)</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Stress Level:</span>
+                    <span className="font-medium text-green-600">Low</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Readiness:</span>
+                    <span className="font-medium text-green-600">High</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p className="text-xs text-green-700 dark:text-green-300">
+                      Your body is well-recovered and ready for training.
+                    </p>
+                  </div>
+                </div>
+              }
             />
           </div>
         </div>
@@ -357,6 +463,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 15, type: 'increase' }}
               icon={<Activity className="w-6 h-6" />}
               color="secondary"
+              isExpanded={expandedCards.has('steps')}
+              onToggleExpand={() => toggleCardExpansion('steps')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Daily Goal:</span>
+                    <span className="font-medium">10,000 steps</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Progress:</span>
+                    <span className="font-medium text-blue-600">84%</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Weekly Average:</span>
+                    <span className="font-medium">8,742 steps</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <p className="text-xs text-blue-700 dark:text-blue-300">
+                      You're 1,568 steps away from your daily goal. Keep moving!
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="Walking"
@@ -364,6 +493,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 8, type: 'increase' }}
               icon={<Activity className="w-6 h-6" />}
               color="secondary"
+              isExpanded={expandedCards.has('walking')}
+              onToggleExpand={() => toggleCardExpansion('walking')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Avg Pace:</span>
+                    <span className="font-medium">5.2 km/h</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Time Walking:</span>
+                    <span className="font-medium">72 minutes</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Calories Burned:</span>
+                    <span className="font-medium">284 cal</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p className="text-xs text-green-700 dark:text-green-300">
+                      Great walking activity today! This contributes to your cardiovascular health.
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="NEAT"
@@ -371,6 +523,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 12, type: 'increase' }}
               icon={<Zap className="w-6 h-6" />}
               color="secondary"
+              isExpanded={expandedCards.has('neat')}
+              onToggleExpand={() => toggleCardExpansion('neat')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Daily Average:</span>
+                    <span className="font-medium">420 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Fidgeting:</span>
+                    <span className="font-medium">145 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Daily Activities:</span>
+                    <span className="font-medium">340 cal</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                    <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                      NEAT (Non-Exercise Activity Thermogenesis) is higher today than usual!
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="Active Time"
@@ -378,6 +553,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 5, type: 'increase' }}
               icon={<Target className="w-6 h-6" />}
               color="secondary"
+              isExpanded={expandedCards.has('active-time')}
+              onToggleExpand={() => toggleCardExpansion('active-time')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Goal:</span>
+                    <span className="font-medium">5 hours</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Workout Time:</span>
+                    <span className="font-medium">1.2 hrs</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Light Activity:</span>
+                    <span className="font-medium">3.0 hrs</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <p className="text-xs text-blue-700 dark:text-blue-300">
+                      You're 84% of the way to your daily active time goal.
+                    </p>
+                  </div>
+                </div>
+              }
             />
           </div>
         </div>
@@ -403,6 +601,34 @@ const DashboardPage: React.FC = () => {
               change={{ value: 5, type: 'increase' }}
               icon={<Utensils className="w-6 h-6" />}
               color="tertiary"
+              isExpanded={expandedCards.has('consumed')}
+              onToggleExpand={() => toggleCardExpansion('consumed')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Breakfast:</span>
+                    <span className="font-medium">420 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Lunch:</span>
+                    <span className="font-medium">650 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Dinner:</span>
+                    <span className="font-medium">580 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Snacks:</span>
+                    <span className="font-medium">200 cal</span>
+                  </div>
+                  <Link 
+                    to="/nutrition"
+                    className="mt-3 block w-full text-center py-2 bg-tertiary text-white rounded-lg text-sm font-medium hover:bg-tertiary-dark transition-colors"
+                  >
+                    Log Another Meal
+                  </Link>
+                </div>
+              }
             />
             <MetricsCard
               title="Burned"
@@ -410,6 +636,33 @@ const DashboardPage: React.FC = () => {
               change={{ value: 8, type: 'increase' }}
               icon={<Flame className="w-6 h-6" />}
               color="tertiary"
+              isExpanded={expandedCards.has('burned')}
+              onToggleExpand={() => toggleCardExpansion('burned')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">BMR:</span>
+                    <span className="font-medium">1,680 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Exercise:</span>
+                    <span className="font-medium">285 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">NEAT:</span>
+                    <span className="font-medium">185 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">TEF:</span>
+                    <span className="font-medium">90 cal</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                    <p className="text-xs text-orange-700 dark:text-orange-300">
+                      TEF: Thermic Effect of Food (calories burned digesting)
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="Balance"
@@ -417,6 +670,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 15, type: 'increase' }}
               icon={<Target className="w-6 h-6" />}
               color="tertiary"
+              isExpanded={expandedCards.has('balance')}
+              onToggleExpand={() => toggleCardExpansion('balance')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Target Deficit:</span>
+                    <span className="font-medium">-500 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Weekly Average:</span>
+                    <span className="font-medium">-420 cal</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Projected Loss:</span>
+                    <span className="font-medium text-green-600">0.5 lbs/week</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p className="text-xs text-green-700 dark:text-green-300">
+                      You're on track to meet your weight loss goals!
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="Goal Progress"
@@ -424,6 +700,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 12, type: 'increase' }}
               icon={<Gauge className="w-6 h-6" />}
               color="tertiary"
+              isExpanded={expandedCards.has('goal-progress')}
+              onToggleExpand={() => toggleCardExpansion('goal-progress')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">This Week:</span>
+                    <span className="font-medium">5/7 days on track</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">This Month:</span>
+                    <span className="font-medium">22/28 days</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Streak:</span>
+                    <span className="font-medium text-yellow-600">3 days</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                    <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                      Consistency is key! Keep up the momentum.
+                    </p>
+                  </div>
+                </div>
+              }
             />
           </div>
           <div className="mt-3 text-center">
@@ -447,6 +746,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 5, type: 'increase' }}
               icon={<Moon className="w-6 h-6" />}
               color="purple"
+              isExpanded={expandedCards.has('sleep')}
+              onToggleExpand={() => toggleCardExpansion('sleep')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Deep Sleep:</span>
+                    <span className="font-medium">1.8 hrs</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">REM Sleep:</span>
+                    <span className="font-medium">2.1 hrs</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Sleep Efficiency:</span>
+                    <span className="font-medium text-green-600">89%</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                    <p className="text-xs text-purple-700 dark:text-purple-300">
+                      Your sleep quality is excellent. Great recovery for tomorrow!
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="Water"
@@ -454,6 +776,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 10, type: 'decrease' }}
               icon={<Droplet className="w-6 h-6" />}
               color="yellow"
+              isExpanded={expandedCards.has('water')}
+              onToggleExpand={() => toggleCardExpansion('water')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Daily Goal:</span>
+                    <span className="font-medium">3.0L</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Progress:</span>
+                    <span className="font-medium text-yellow-600">70%</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Remaining:</span>
+                    <span className="font-medium">900ml</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                    <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                      Remember to drink more water throughout the day!
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="Stress Level"
@@ -461,6 +806,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 2, type: 'decrease' }}
               icon={<Brain className="w-6 h-6" />}
               color="purple"
+              isExpanded={expandedCards.has('stress')}
+              onToggleExpand={() => toggleCardExpansion('stress')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Morning:</span>
+                    <span className="font-medium text-green-600">2/10</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Afternoon:</span>
+                    <span className="font-medium text-yellow-600">4/10</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Weekly Average:</span>
+                    <span className="font-medium">3.5/10</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p className="text-xs text-green-700 dark:text-green-300">
+                      Your stress levels are well managed today. Keep up the good work!
+                    </p>
+                  </div>
+                </div>
+              }
             />
             <MetricsCard
               title="Energy"
@@ -468,6 +836,29 @@ const DashboardPage: React.FC = () => {
               change={{ value: 6, type: 'increase' }}
               icon={<Zap className="w-6 h-6" />}
               color="yellow"
+              isExpanded={expandedCards.has('energy')}
+              onToggleExpand={() => toggleCardExpansion('energy')}
+              expandedContent={
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Morning Energy:</span>
+                    <span className="font-medium text-green-600">9/10</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Afternoon Dip:</span>
+                    <span className="font-medium text-yellow-600">6/10</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Evening Energy:</span>
+                    <span className="font-medium">7.5/10</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                    <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                      High energy levels today! Your sleep and nutrition are paying off.
+                    </p>
+                  </div>
+                </div>
+              }
             />
           </div>
         </div>
