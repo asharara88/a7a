@@ -236,9 +236,10 @@ const MyCoach: React.FC = () => {
       // Stop typing animation
       if (typingTimeout) {
         clearTimeout(typingTimeout);
-        setTypingTimeout(null);
       }
+      setTypingTimeout(null);
       setTypingText('');
+      setIsFetching(false);
       
       // Update question set after each response
       setCurrentQuestionSetIndex((prevIndex) => 
@@ -251,8 +252,8 @@ const MyCoach: React.FC = () => {
       // Stop typing animation
       if (typingTimeout) {
         clearTimeout(typingTimeout);
-        setTypingTimeout(null);
       }
+      setTypingTimeout(null);
       setTypingText('');
       setIsFetching(false);
     } finally {
@@ -447,18 +448,12 @@ const MyCoach: React.FC = () => {
             isLoading={false}
           />
         ))}
-        {isLoading && (
-          <div className="flex items-center space-x-3 text-gray-700 dark:text-white p-4 bg-white dark:bg-gray-600 rounded-xl w-fit shadow-md animate-pulse">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="tracking-wide">Processing your question...</span>
-          </div>
-        )}
-        {!isLoading && isFetching && (
+        {isFetching && (
           <div className="flex flex-col space-y-2 text-gray-700 dark:text-white p-4 bg-white dark:bg-gray-600 rounded-xl w-fit shadow-md">
             <div className="flex items-center space-x-2">
               <Sparkles className="w-4 h-4" />
               <span className="tracking-wide">
-                MyCoach<sup className="text-xs">™</sup> {typingText ? typingText : 'is thinking...'}
+                MyCoach<sup className="text-xs">™</sup> {typingText || 'is thinking...'}
                 <span className="inline-block animate-pulse">...</span>
               </span>
             </div>
