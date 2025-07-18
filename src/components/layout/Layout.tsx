@@ -8,8 +8,13 @@ import MobileNav from '../ui/MobileNav'
 import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error("Supabase environment variables are missing. Check your .env file.");
+}
+
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 type ThemeMode = 'light' | 'dark' | 'auto';
