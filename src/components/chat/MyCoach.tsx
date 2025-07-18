@@ -75,6 +75,7 @@ const MyCoach: React.FC = () => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isFetching, setIsFetching] = useState(false); 
   const [typingText, setTypingText] = useState('');
+  const [typingTimeout, setTypingTimeout] = useState<number | null>(null);
   const typingTimeoutRef = useRef<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -576,8 +577,5 @@ const MyCoach: React.FC = () => {
     </div>
   );
 };
-
-// Helper function to get color based on category
-}
 
 export default MyCoach;
