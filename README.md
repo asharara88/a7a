@@ -191,7 +191,7 @@ You should see `OPENAI_API_KEY` in the list of secrets.
 supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-api-key
 ```
 
-3. **Deploy the Edge Function** for ElevenLabs proxy:
+1. **Deploy the Edge Function** for ElevenLabs proxy:
 
 ```bash
 supabase functions deploy elevenlabs-proxy
