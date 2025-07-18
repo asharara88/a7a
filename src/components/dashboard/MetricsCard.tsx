@@ -14,7 +14,6 @@ interface MetricsCardProps {
   color: 'primary' | 'secondary' | 'tertiary' | 'purple' | 'yellow';
   expandedContent?: React.ReactNode;
   isExpanded?: boolean;
-  onToggleExpand?: () => void;
 }
 
 const MetricsCard: React.FC<MetricsCardProps> = ({
@@ -25,7 +24,6 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
   color,
   expandedContent,
   isExpanded = false,
-  onToggleExpand
 }) => {
   const colorClasses = {
     primary: 'from-primary/20 to-primary/5 text-primary',
@@ -46,33 +44,14 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
       <div
         className={cn(
           "p-6 transition-all duration-300",
-          colorClasses[color],
-          expandedContent && "hover:bg-opacity-80"
+          colorClasses[color]
         )}
       >
         <div className="flex items-start justify-between">
           <div className="flex-1 text-left">
-            <button
-              onClick={expandedContent ? onToggleExpand : undefined}
-              className={cn(
-                "text-left w-full group",
-                expandedContent && "cursor-pointer hover:text-opacity-80"
-              )}
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2 group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors">
-                  {title}
-                </p>
-                {expandedContent && (
-                  <motion.div
-                    animate={{ rotate: isExpanded ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300" />
-                  </motion.div>
-                )}
-              </div>
-            </button>
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+              {title}
+            </p>
             <p className="text-2xl font-bold text-gray-800 dark:text-white tracking-tight">{value}</p>
             <div className={`flex items-center mt-1 ${changeColor}`}>
               {change.type === 'increase' ? (

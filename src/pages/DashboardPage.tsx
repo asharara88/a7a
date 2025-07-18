@@ -1,7 +1,8 @@
 import React from 'react'
-import { Activity, Heart, Moon, Zap, Droplet, Utensils, Pill, Target, Dumbbell, Brain, Gauge, Weight, Flame, ChevronRight } from 'lucide-react'
+import { Activity, Heart, Moon, Zap, Droplet, Utensils, Pill, Target, Dumbbell, Brain, Gauge, Weight, Flame, ChevronRight, ChevronDown } from 'lucide-react'
 import DashboardCards from '../components/dashboard/DashboardCards'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import MetricsCard from '../components/dashboard/MetricsCard'
 import TrendsChart from '../components/dashboard/TrendsChart'
 import StatisticsGrid from '../components/dashboard/StatisticsGrid'
@@ -17,7 +18,7 @@ import MetabolicSnapshot from '../components/dashboard/MetabolicSnapshot'
 const DashboardPage: React.FC = () => {
   // Mock data for metrics cards
   const [isSyncing, setIsSyncing] = React.useState(false);
-  const [expandedCards, setExpandedCards] = React.useState<Set<string>>(new Set());
+  const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set());
   
   // Handle sync device
   const handleSyncDevice = (deviceId: string) => {
@@ -28,14 +29,14 @@ const DashboardPage: React.FC = () => {
     }, 2000);
   };
   
-  // Handle card expansion toggle
-  const toggleCardExpansion = (cardId: string) => {
-    setExpandedCards(prev => {
+  // Handle section expansion toggle
+  const toggleSectionExpansion = (sectionId: string) => {
+    setExpandedSections(prev => {
       const newSet = new Set(prev);
-      if (newSet.has(cardId)) {
-        newSet.delete(cardId);
+      if (newSet.has(sectionId)) {
+        newSet.delete(sectionId);
       } else {
-        newSet.add(cardId);
+        newSet.add(sectionId);
       }
       return newSet;
     });
@@ -322,10 +323,20 @@ const DashboardPage: React.FC = () => {
 
         {/* Cardio Metrics Section */}
         <div className="mb-6">
-          <div className="flex items-center mb-4">
+          <button 
+            onClick={() => toggleSectionExpansion('cardiovascular')}
+            className="flex items-center mb-4 w-full text-left group hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
+          >
             <Heart className="w-5 h-5 text-red-500 mr-2" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Cardiovascular Health</h2>
-          </div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-red-500 transition-colors">Cardiovascular Health</h2>
+            <motion.div
+              animate={{ rotate: expandedSections.has('cardiovascular') ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="ml-auto"
+            >
+              <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-red-500" />
+            </motion.div>
+          </button>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <MetricsCard
               title="Resting HR"
@@ -333,8 +344,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 2, type: 'decrease' }}
               icon={<Heart className="w-6 h-6" />}
               color="primary"
-              isExpanded={expandedCards.has('resting-hr')}
-              onToggleExpand={() => toggleCardExpansion('resting-hr')}
+              isExpanded={expandedSections.has('cardiovascular')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -363,8 +373,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 8, type: 'increase' }}
               icon={<Activity className="w-6 h-6" />}
               color="primary"
-              isExpanded={expandedCards.has('hrv')}
-              onToggleExpand={() => toggleCardExpansion('hrv')}
+              isExpanded={expandedSections.has('cardiovascular')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -393,8 +402,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 3, type: 'decrease' }}
               icon={<Heart className="w-6 h-6" />}
               color="primary"
-              isExpanded={expandedCards.has('bp-systolic')}
-              onToggleExpand={() => toggleCardExpansion('bp-systolic')}
+              isExpanded={expandedSections.has('cardiovascular')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -423,8 +431,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 12, type: 'increase' }}
               icon={<Zap className="w-6 h-6" />}
               color="primary"
-              isExpanded={expandedCards.has('recovery')}
-              onToggleExpand={() => toggleCardExpansion('recovery')}
+              isExpanded={expandedSections.has('cardiovascular')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -452,10 +459,20 @@ const DashboardPage: React.FC = () => {
 
         {/* Activity & Movement Section */}
         <div className="mb-6">
-          <div className="flex items-center mb-4">
+          <button 
+            onClick={() => toggleSectionExpansion('activity')}
+            className="flex items-center mb-4 w-full text-left group hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
+          >
             <Activity className="w-5 h-5 text-blue-500 mr-2" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Activity & Movement</h2>
-          </div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-blue-500 transition-colors">Activity & Movement</h2>
+            <motion.div
+              animate={{ rotate: expandedSections.has('activity') ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="ml-auto"
+            >
+              <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-500" />
+            </motion.div>
+          </button>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <MetricsCard
               title="Steps"
@@ -463,8 +480,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 15, type: 'increase' }}
               icon={<Activity className="w-6 h-6" />}
               color="secondary"
-              isExpanded={expandedCards.has('steps')}
-              onToggleExpand={() => toggleCardExpansion('steps')}
+              isExpanded={expandedSections.has('activity')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -493,8 +509,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 8, type: 'increase' }}
               icon={<Activity className="w-6 h-6" />}
               color="secondary"
-              isExpanded={expandedCards.has('walking')}
-              onToggleExpand={() => toggleCardExpansion('walking')}
+              isExpanded={expandedSections.has('activity')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -523,8 +538,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 12, type: 'increase' }}
               icon={<Zap className="w-6 h-6" />}
               color="secondary"
-              isExpanded={expandedCards.has('neat')}
-              onToggleExpand={() => toggleCardExpansion('neat')}
+              isExpanded={expandedSections.has('activity')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -553,8 +567,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 5, type: 'increase' }}
               icon={<Target className="w-6 h-6" />}
               color="secondary"
-              isExpanded={expandedCards.has('active-time')}
-              onToggleExpand={() => toggleCardExpansion('active-time')}
+              isExpanded={expandedSections.has('activity')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -582,18 +595,30 @@ const DashboardPage: React.FC = () => {
 
         {/* Caloric Balance Section */}
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
+          <button 
+            onClick={() => toggleSectionExpansion('caloric')}
+            className="flex items-center justify-between mb-4 w-full text-left group hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
+          >
             <div className="flex items-center">
               <Utensils className="w-5 h-5 text-green-500 mr-2" />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Caloric Balance</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-green-500 transition-colors">Caloric Balance</h2>
             </div>
-            <Link 
-              to="/nutrition" 
-              className="text-primary hover:text-primary-dark text-sm font-medium flex items-center"
-            >
-              Log Meal <ChevronRight className="w-4 h-4 ml-1" />
-            </Link>
-          </div>
+            <div className="flex items-center">
+              <Link 
+                to="/nutrition" 
+                className="text-primary hover:text-primary-dark text-sm font-medium flex items-center mr-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Log Meal <ChevronRight className="w-4 h-4 ml-1" />
+              </Link>
+              <motion.div
+                animate={{ rotate: expandedSections.has('caloric') ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-green-500" />
+              </motion.div>
+            </div>
+          </button>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <MetricsCard
               title="Consumed"
@@ -601,8 +626,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 5, type: 'increase' }}
               icon={<Utensils className="w-6 h-6" />}
               color="tertiary"
-              isExpanded={expandedCards.has('consumed')}
-              onToggleExpand={() => toggleCardExpansion('consumed')}
+              isExpanded={expandedSections.has('caloric')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -636,8 +660,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 8, type: 'increase' }}
               icon={<Flame className="w-6 h-6" />}
               color="tertiary"
-              isExpanded={expandedCards.has('burned')}
-              onToggleExpand={() => toggleCardExpansion('burned')}
+              isExpanded={expandedSections.has('caloric')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -670,8 +693,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 15, type: 'increase' }}
               icon={<Target className="w-6 h-6" />}
               color="tertiary"
-              isExpanded={expandedCards.has('balance')}
-              onToggleExpand={() => toggleCardExpansion('balance')}
+              isExpanded={expandedSections.has('caloric')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -700,8 +722,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 12, type: 'increase' }}
               icon={<Gauge className="w-6 h-6" />}
               color="tertiary"
-              isExpanded={expandedCards.has('goal-progress')}
-              onToggleExpand={() => toggleCardExpansion('goal-progress')}
+              isExpanded={expandedSections.has('caloric')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -735,10 +756,20 @@ const DashboardPage: React.FC = () => {
 
         {/* Wellness Metrics */}
         <div className="mb-6">
-          <div className="flex items-center mb-4">
+          <button 
+            onClick={() => toggleSectionExpansion('wellness')}
+            className="flex items-center mb-4 w-full text-left group hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
+          >
             <Moon className="w-5 h-5 text-purple-500 mr-2" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Wellness Metrics</h2>
-          </div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-purple-500 transition-colors">Wellness Metrics</h2>
+            <motion.div
+              animate={{ rotate: expandedSections.has('wellness') ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="ml-auto"
+            >
+              <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-purple-500" />
+            </motion.div>
+          </button>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <MetricsCard
               title="Sleep"
@@ -746,8 +777,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 5, type: 'increase' }}
               icon={<Moon className="w-6 h-6" />}
               color="purple"
-              isExpanded={expandedCards.has('sleep')}
-              onToggleExpand={() => toggleCardExpansion('sleep')}
+              isExpanded={expandedSections.has('wellness')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -776,8 +806,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 10, type: 'decrease' }}
               icon={<Droplet className="w-6 h-6" />}
               color="yellow"
-              isExpanded={expandedCards.has('water')}
-              onToggleExpand={() => toggleCardExpansion('water')}
+              isExpanded={expandedSections.has('wellness')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -806,8 +835,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 2, type: 'decrease' }}
               icon={<Brain className="w-6 h-6" />}
               color="purple"
-              isExpanded={expandedCards.has('stress')}
-              onToggleExpand={() => toggleCardExpansion('stress')}
+              isExpanded={expandedSections.has('wellness')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -836,8 +864,7 @@ const DashboardPage: React.FC = () => {
               change={{ value: 6, type: 'increase' }}
               icon={<Zap className="w-6 h-6" />}
               color="yellow"
-              isExpanded={expandedCards.has('energy')}
-              onToggleExpand={() => toggleCardExpansion('energy')}
+              isExpanded={expandedSections.has('wellness')}
               expandedContent={
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
