@@ -57,11 +57,7 @@ const shouldUseDarkMode = (theme: ThemeMode): boolean => {
   }
 };
 
-interface MinimalNavProps {
-  // Component is self-contained and manages its own theme
-}
-
-const MinimalNav: React.FC<MinimalNavProps> = () => {
+const MinimalNav: React.FC = () => {
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -71,8 +67,16 @@ const MinimalNav: React.FC<MinimalNavProps> = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Calculate isDarkMode based on current theme
   const isDarkMode = shouldUseDarkMode(theme);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme, isDarkMode]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -111,14 +115,6 @@ const MinimalNav: React.FC<MinimalNavProps> = () => {
   const handleThemeChange = (newTheme: ThemeMode) => {
     setTheme(newTheme);
     setShowThemeMenu(false);
-    
-    const newIsDarkMode = shouldUseDarkMode(newTheme);
-    if (newIsDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('theme', newTheme);
   };
 
   const getThemeIcon = () => {
@@ -149,61 +145,38 @@ const MinimalNav: React.FC<MinimalNavProps> = () => {
 
   return (
     <>
-      <motion.nav 
-        className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/30 dark:border-gray-800/30 transition-all duration-300"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
+      <nav className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Link to="/" className="flex items-center">
-                <img 
-                  src={isDarkMode 
-                    ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
-                    : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
-                  }
-                  alt="Biowell" 
-                  className="h-8 w-auto object-contain transition-all duration-300" 
-                />
-              </Link>
-            </motion.div>
+            <Link to="/" className="flex items-center">
+              <img 
+                src={isDarkMode 
+                  ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
+                  : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
+                }
+                alt="Biowell" 
+                className="h-8 w-auto object-contain" 
+              />
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center">
-              <div className="flex items-center space-x-1 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-1 border border-gray-200/50 dark:border-gray-700/50">
-                {navItems.map((item, index) => (
-                  <motion.div
+              <div className="flex items-center space-x-1 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-1">
+                {navItems.map((item) => (
+                  <Link
                     key={item.href}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    to={item.href}
+                    className={cn(
+                      "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300",
+                      isActive(item.href)
+                        ? "bg-white dark:bg-gray-700 text-primary shadow-sm"
+                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-gray-700/50"
+                    )}
                   >
-                    <Link
-                      to={item.href}
-                      className={cn(
-                        "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 relative group",
-                        isActive(item.href)
-                          ? "bg-gradient-to-r from-primary/10 via-tertiary/10 to-secondary/10 text-primary border border-primary/30 shadow-lg shadow-primary/10"
-                          : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-gray-700/50"
-                      )}
-                    >
-                      <span className="mr-2.5">{item.icon}</span>
-                      <span className="tracking-wide">{item.label}</span>
-                      {isActive(item.href) && (
-                        <motion.div
-                          className="absolute inset-0 bg-primary/5 rounded-lg"
-                          layoutId="activeTab"
-                          transition={{ type: "spring", duration: 0.5 }}
-                        />
-                      )}
-                    </Link>
-                  </motion.div>
+                    <span className="mr-2">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -212,15 +185,12 @@ const MinimalNav: React.FC<MinimalNavProps> = () => {
             <div className="flex items-center space-x-2">
               {/* Theme Toggle */}
               <div className="relative">
-                <motion.button
+                <button
                   onClick={() => setShowThemeMenu(!showThemeMenu)}
-                  className="p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-300 backdrop-blur-sm border border-transparent hover:border-gray-200/50 dark:hover:border-gray-700/50"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label="Toggle theme"
+                  className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
                 >
                   {getThemeIcon()}
-                </motion.button>
+                </button>
                 
                 <AnimatePresence>
                   {showThemeMenu && (
@@ -230,11 +200,11 @@ const MinimalNav: React.FC<MinimalNavProps> = () => {
                         onClick={() => setShowThemeMenu(false)}
                       />
                       <motion.div
-                        className="absolute right-0 mt-2 w-40 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 py-2 z-50"
-                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.1 }}
                       >
                         {[
                           { mode: 'light' as ThemeMode, icon: Sun, label: 'Light' },
@@ -245,14 +215,14 @@ const MinimalNav: React.FC<MinimalNavProps> = () => {
                             key={mode}
                             onClick={() => handleThemeChange(mode)}
                             className={cn(
-                              "flex items-center w-full px-4 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-gray-100/80 dark:hover:bg-gray-700/80",
+                              "flex items-center w-full px-3 py-2 text-sm transition-colors",
                               theme === mode 
                                 ? "text-primary bg-primary/10" 
-                                : "text-gray-700 dark:text-gray-300"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                             )}
                           >
-                            <Icon className="w-4 h-4 mr-3" />
-                            <span className="tracking-wide">{label}</span>
+                            <Icon className="w-4 h-4 mr-2" />
+                            {label}
                           </button>
                         ))}
                       </motion.div>
@@ -262,37 +232,26 @@ const MinimalNav: React.FC<MinimalNavProps> = () => {
               </div>
 
               {/* Cart */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <Link
+                to="/cart"
+                className={cn(
+                  "p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200",
+                  isActive('/cart') && "text-primary bg-primary/10"
+                )}
               >
-                <Link
-                  to="/cart"
-                  className={cn(
-                    "p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-300 backdrop-blur-sm border border-transparent hover:border-gray-200/50 dark:hover:border-gray-700/50 relative",
-                    isActive('/cart')
-                      ? "bg-gradient-to-r from-primary/10 to-tertiary/10 dark:from-primary/20 dark:to-tertiary/20 text-primary border border-primary/20 shadow-sm backdrop-blur-sm"
-                      : ""
-                  )}
-                  aria-label="Shopping cart"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                </Link>
-              </motion.div>
+                <ShoppingCart className="w-4 h-4" />
+              </Link>
 
               {/* User Menu */}
               {user ? (
                 <div className="relative">
-                  <motion.button
+                  <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
-                    className="flex items-center p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-300 backdrop-blur-sm border border-transparent hover:border-gray-200/50 dark:hover:border-gray-700/50"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label="User menu"
+                    className="flex items-center p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
                   >
                     <User className="w-4 h-4 mr-1" />
                     <ChevronDown className="w-3 h-3" />
-                  </motion.button>
+                  </button>
                   
                   <AnimatePresence>
                     {showUserMenu && (
@@ -302,31 +261,26 @@ const MinimalNav: React.FC<MinimalNavProps> = () => {
                           onClick={() => setShowUserMenu(false)}
                         />
                         <motion.div
-                          className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 py-2 z-50"
-                          initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                          animate={{ opacity: 1, scale: 1, y: 0 }}
-                          exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                          transition={{ duration: 0.15 }}
+                          className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          transition={{ duration: 0.1 }}
                         >
                           <Link
                             to="/dashboard"
-                            className={cn(
-                              "flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-primary/5 hover:to-tertiary/5 hover:text-primary transition-all duration-200",
-                              isActive('/dashboard')
-                                ? "text-primary bg-gradient-to-r from-primary/10 to-tertiary/10 border-r-2 border-primary" 
-                                : ""
-                            )}
+                            className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                             onClick={() => setShowUserMenu(false)}
                           >
-                            <User className="w-4 h-4 mr-3" />
-                            <span className="tracking-wide">Dashboard</span>
+                            <User className="w-4 h-4 mr-2" />
+                            Dashboard
                           </Link>
                           <button
                             onClick={handleSignOut}
-                            className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-red-500 dark:text-red-400 hover:bg-gradient-to-r hover:from-red-50/80 hover:to-red-100/80 dark:hover:from-red-900/20 dark:hover:to-red-800/20 hover:text-red-600 dark:hover:text-red-300 transition-all duration-200"
+                            className="flex items-center w-full px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                           >
-                            <LogOut className="w-4 h-4 mr-3" />
-                            <span className="tracking-wide">Sign out</span>
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Sign out
                           </button>
                         </motion.div>
                       </>
@@ -335,118 +289,87 @@ const MinimalNav: React.FC<MinimalNavProps> = () => {
                 </div>
               ) : (
                 <div className="hidden lg:flex items-center space-x-3">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
-                    <Link
-                      to="/login"
-                      className="px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-300 tracking-wide"
-                    >
-                      Sign in
-                    </Link>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    Sign in
+                  </Link>
+                  <Link
+                    to="/onboarding"
+                    className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors shadow-sm"
                   >
-                    <Link
-                      to="/onboarding"
-                      className="px-5 py-2.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-sm font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 shadow-md backdrop-blur-sm tracking-wide hover:from-primary-light hover:via-tertiary-light hover:to-secondary-light"
-                    >
-                      Get Started
-                    </Link>
-                  </motion.div>
+                    Get Started
+                  </Link>
                 </div>
               )}
 
               {/* Mobile Menu Button */}
-              <motion.button
+              <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-300 backdrop-blur-sm border border-transparent hover:border-gray-200/50 dark:hover:border-gray-700/50"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Toggle mobile menu"
+                className="lg:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
               >
                 {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-              </motion.button>
+              </button>
             </div>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+              className="fixed inset-0 bg-black/20 z-40 lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div
-              className="fixed top-16 left-0 right-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200/30 dark:border-gray-800/30 z-50 lg:hidden"
+              className="fixed top-16 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-50 lg:hidden"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-                <div className="space-y-2">
-                  {navItems.map((item, index) => (
-                    <motion.div
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+                <div className="space-y-1">
+                  {navItems.map((item) => (
+                    <Link
                       key={item.href}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.2, delay: index * 0.05 }}
+                      to={item.href}
+                      className={cn(
+                        "flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors",
+                        isActive(item.href)
+                          ? "bg-primary/10 text-primary"
+                          : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <Link
-                        to={item.href}
-                        className={cn(
-                          "flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-all duration-300 relative",
-                          isActive(item.href)
-                            ? "bg-primary/10 text-primary border border-primary/20"
-                            : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80"
-                        )}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <span className="mr-3">{item.icon}</span>
-                        <span className="tracking-wide">{item.label}</span>
-                        {isActive(item.href) && (
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-primary/5 via-tertiary/5 to-secondary/5 rounded-lg border border-primary/10"
-                            layoutId="activeMobileTab"
-                            transition={{ type: "spring", duration: 0.5 }}
-                          />
-                        )}
-                      </Link>
-                    </motion.div>
+                      <span className="mr-3">{item.icon}</span>
+                      {item.label}
+                    </Link>
                   ))}
                   
                   {!user && (
-                    <motion.div
-                      className="pt-4 border-t border-gray-200/50 dark:border-gray-700/50 space-y-2"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3, delay: 0.2 }}
-                    >
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-1">
                       <Link
                         to="/login"
-                        className="block px-4 py-3.5 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-800/80 rounded-xl transition-all duration-300 tracking-wide"
+                        className="block px-3 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Sign in
                       </Link>
                       <Link
                         to="/onboarding"
-                        className="block px-4 py-3.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-base font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 text-center tracking-wide hover:from-primary-light hover:via-tertiary-light hover:to-secondary-light"
+                        className="block px-3 py-3 bg-primary text-white rounded-lg text-base font-medium text-center"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Get Started
                       </Link>
-                    </motion.div>
+                    </div>
                   )}
                 </div>
               </div>
