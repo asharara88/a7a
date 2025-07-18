@@ -289,15 +289,23 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 sm:py-8 transition-all duration-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4 sm:py-6 transition-all duration-200">
       <div className="mobile-container">
-        <div className="mb-6 sm:mb-8">
+        <div className="mb-4 sm:mb-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
           <p className="text-gray-600 dark:text-gray-400">Track your wellness journey</p>
         </div>
 
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Hero Section - BW Score (Most Important) */}
+        <div className="mb-6">
+          <BWScoreCard 
+            metrics={bwScoreMetrics}
+            onMetricClick={handleMetricClick}
+          />
+        </div>
+
+        {/* Key Health Metrics */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
           <MetricsCard
             title="Heart Rate"
             value="72 BPM"
@@ -328,40 +336,34 @@ const DashboardPage: React.FC = () => {
           />
         </div>
 
-        {/* New Dashboard Cards */}
-        <div className="mb-8">
+        {/* Enhanced Health Cards */}
+        <div className="mb-6">
           <DashboardCards />
         </div>
 
-        {/* BW Score */}
-        <div className="mb-8">
-          <BWScoreCard 
-            metrics={bwScoreMetrics}
-            onMetricClick={handleMetricClick}
-          />
-        </div>
-
-        {/* Main Dashboard Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          {/* Left Column */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Trends Chart */}
-            <TrendsChart 
-              title="Weekly Activity Trends" 
-              data={trendsData}
-              chartType="mixed"
-              height={250}
-            />
-            
-            {/* Statistics Grid */}
-            <StatisticsGrid 
-              nutritionData={nutritionData}
-              sleepData={sleepData}
-            />
+        {/* Analytics and Trends Section */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+          {/* Charts Section */}
+          <div className="xl:col-span-2">
+            <div className="grid grid-cols-1 gap-6">
+              {/* Trends Chart */}
+              <TrendsChart 
+                title="Weekly Activity Trends" 
+                data={trendsData}
+                chartType="mixed"
+                height={280}
+              />
+              
+              {/* Statistics Grid */}
+              <StatisticsGrid 
+                nutritionData={nutritionData}
+                sleepData={sleepData}
+              />
+            </div>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-6">
+          {/* Sidebar Information */}
+          <div className="xl:col-span-1 space-y-6">
             {/* Health Score */}
             <HealthScoreCard 
               score={82}
@@ -375,18 +377,16 @@ const DashboardPage: React.FC = () => {
               onSync={handleSyncDevice}
               isSyncing={isSyncing}
             />
+            
+            {/* Goals Progress */}
+            <GoalsProgress goals={goals} />
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Activity Timeline */}
-          <div>
-            <ActivityTimeline events={timelineEvents} />
-          </div>
-          
+        {/* Action Items and Management */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
           {/* Supplement Tracker */}
-          <div>
+          <div className="lg:col-span-1">
             <SupplementTracker 
               supplements={supplements}
               onMarkTaken={handleMarkSupplementTaken}
@@ -394,12 +394,15 @@ const DashboardPage: React.FC = () => {
           </div>
           
           {/* Recommendations */}
-          <div className="space-y-6">
+          <div className="lg:col-span-1">
             <RecommendationsCard recommendations={recommendations} />
-            <GoalsProgress goals={goals} />
+          </div>
+          
+          {/* Activity Timeline */}
+          <div className="lg:col-span-2 xl:col-span-1">
+            <ActivityTimeline events={timelineEvents} />
           </div>
         </div>
-        
       </div>
     </div>
   )
