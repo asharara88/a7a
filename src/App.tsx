@@ -26,6 +26,7 @@ import SupplementRecommendationsPage from './pages/SupplementRecommendationsPage
 import MetabolismPage from './pages/MetabolismPage';
 import BioclockPage from './pages/BioclockPage';
 import MyBioPage from './pages/MyBioPage';
+import SleepPage from './pages/SleepPage';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="nutrition/dashboard" element={<NutritionDashboardPage />} />
         <Route path="nutrition/myplate" element={<MyPlatePage />} />
         <Route path="fitness" element={<FitnessPage />} />
+        <Route path="sleep" element={<SleepPage />} />
         <Route path="supplements" element={<SupplementsPage />} />
         <Route path="supplements/store" element={<SupplementStorePage />} />
         <Route path="supplements/stacks" element={<MyStacksPage />} />

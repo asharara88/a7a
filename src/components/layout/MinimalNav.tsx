@@ -20,7 +20,9 @@ import {
   Heart,
   Camera,
   Shield,
-  BookOpen} from 'lucide-react';
+  BookOpen,
+  Moon,
+  Clock} from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -178,8 +180,9 @@ const MinimalNav: React.FC = () => {
         { href: '/nutrition', label: 'Nutrition', icon: <Utensils className="w-4 h-4" /> },
         { href: '/nutrition/myplate', label: 'MyPlate', icon: <Camera className="w-4 h-4" /> },
         { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> },
+        { href: '/sleep', label: 'Sleep', icon: <Moon className="w-4 h-4" /> },
         { href: '/recipes', label: 'Recipes', icon: <BookOpen className="w-4 h-4" /> },
-        { href: '/bioclock', label: 'BioClock', icon: <Moon className="w-4 h-4" /> }
+        { href: '/bioclock', label: 'BioClock', icon: <Clock className="w-4 h-4" /> }
       ]
     }
   ];

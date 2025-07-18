@@ -1,580 +1,371 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Send, Volume2, VolumeX, Loader2, Settings, Sparkles, X, HelpCircle, Check, AlertCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { Trash2, Plus, Minus, ShoppingCart, CreditCard, Package, ArrowLeft, CheckCircle, AlertTriangle } from 'lucide-react';
+import { supplementApi, CartItem } from '../api/supplementApi';
 import { Button } from '../components/ui/Button';
-import ChatMessage from '../components/chat/ChatMessage';
-import { createClient } from '@supabase/supabase-js';
-import { cn } from '../utils/cn'; 
-import { elevenlabsApi, Voice } from '../api/elevenlabsApi';
-import VoicePreferences from '../components/chat/VoicePreferences';
+import { Card } from '../components/ui/Card';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Sample question sets that will rotate after each response
-const QUESTION_SETS = [
-  [
-    { text: "How can I sleep better?", category: "sleep" },
-    { text: "What supplements should I take?", category: "supplements" },
-    { text: "How can I boost my metabolism?", category: "metabolism" },
-    { text: "What's a good fitness routine?", category: "fitness" }
-  ],
-  [
-    { text: "What foods are good for my brain?", category: "nutrition" },
-    { text: "How much protein do I need?", category: "nutrition" },
-    { text: "How can I track my health?", category: "tracking" },
-    { text: "How important is hydration?", category: "hydration" }
-  ],
-  [
-    { text: "How can I reduce stress?", category: "stress" },
-    { text: "How do I know if I have a deficiency?", category: "health" },
-    { text: "What's a balanced meal?", category: "nutrition" },
-    { text: "How can I get more energy?", category: "energy" }
-  ],
-  [
-    { text: "How does sleep affect hormones?", category: "sleep" },
-    { text: "How can I eat better for weight loss?", category: "nutrition" },
-    { text: "Why is strength training important?", category: "fitness" },
-    { text: "How can I recover faster from a workout?", category: "recovery" }
-  ],
-  [
-    { text: "What vitamins should I take?", category: "supplements" },
-    { text: "How can I stay healthy long-term?", category: "longevity" },
-    { text: "What's the best time to exercise?", category: "fitness" },
-    { text: "How can I improve my mental focus?", category: "cognitive" }
-  ]
-];
-
-// Define message type
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-}
-
-interface VoiceSettings {
-  enabled: boolean;
-  voiceId: string;
-  stability: number;
-  similarity_boost: number;
-}
-
-const MyCoach: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentQuestionSetIndex, setCurrentQuestionSetIndex] = useState(0);
+const CartPage: React.FC = () => {
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [recentlyClickedQuestion, setRecentlyClickedQuestion] = useState<string | null>(null);
-  const [voiceSettings, setVoiceSettings] = useState<VoiceSettings>({
-    enabled: false,
-    voiceId: 'EXAVITQu4vr4xnSDxMaL', // Default voice ID
-    stability: 0.5,
-    similarity_boost: 0.75
-  });
-  const [availableVoices, setAvailableVoices] = useState<Voice[]>([]);
-  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [isFetching, setIsFetching] = useState(false); 
-  const [typingText, setTypingText] = useState('');
-  const typingTimeoutRef = useRef<number | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [showCheckout, setShowCheckout] = useState(false);
 
-  // Health metrics for context (would come from user profile in a real app)
-  const healthContext = {
-    primaryGoal: "weight management",
-    sleepAverage: "7.2 hours",
-    stressLevel: "moderate"
-  };
-
-  // Initialize Supabase client
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Supabase environment variables are missing. Check your .env file.");
-  }
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-  // Scroll to bottom of messages
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  // Load available voices on mount
-  useEffect(() => {
-    const fetchVoices = async () => {
-      try {
-        const isConfigured = await elevenlabsApi.isConfigured();
-        
-        if (isConfigured) {
-          const voices = await elevenlabsApi.getVoices();
-          if (voices && voices.length > 0) {
-            setAvailableVoices(voices);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching voices:", error);
-      }
-    };
-    fetchVoices();
+    loadCartItems();
   }, []);
 
-  // Focus input on load
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  // Get current question set
-  const currentQuestions = QUESTION_SETS[currentQuestionSetIndex];
-
-  // Add initial greeting message
-  useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([
-        {
-          id: 'welcome',
-          role: 'assistant',
-          content: "Hi there! I'm your MyCoach™ health assistant. How can I help you optimize your wellness today?",
-          timestamp: new Date()
-        }
-      ]);
-    }
-  }, [messages.length]);
-
-  // Clean up audio on unmount
-  useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        URL.revokeObjectURL(audioRef.current.src);
-      }
-      
-      // Clear any active typing timeouts
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
-      }
-    };
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent, questionText?: string) => {
-    e.preventDefault();
-    
-    // Use either the provided question or the input field value
-    const messageText = questionText || input.trim();
-    if (!messageText || isLoading) return;
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      // Add health context for better personalized responses
-      content: `${messageText}${messageText.endsWith('?') ? '' : '?'}`,
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    if (!questionText) setInput('');
+  const loadCartItems = async () => {
     setIsLoading(true);
     setError(null);
-    setIsFetching(true);
-    
-    // Start typing animation
-    startTypingAnimation();
-
     try {
-      // Call OpenAI proxy function
-      const { data, error: apiError } = await supabase.functions.invoke('openai-proxy', {
-        body: {
-          // Include user context in the messages to OpenAI
-          messages: [ 
-            ...messages.map(m => ({ role: m.role, content: m.content })),
-            { role: 'user', content: messageText }
-          ]
-        }
-      });
-
-      if (apiError) throw new Error(apiError.message);
-
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.result || "I'm sorry, I couldn't process that request.",
-        // Include metadata about the response for rendering
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
-
-      // Save to chat history
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          await supabase.from('chat_history').insert([
-            {
-              user_id: user.id,
-              message: messageText,
-              response: data.result,
-              role: 'user',
-              timestamp: new Date().toISOString()
-            }
-          ]);
-        } else {
-          console.log('User not authenticated, skipping chat history save');
-        }
-      } catch (chatError) {
-        console.error('Error saving chat history:', chatError);
-        // Continue even if saving chat history fails
-      }
-
-      // If voice is enabled, convert response to speech
-      if (voiceSettings.enabled) {
-        playTextToSpeech(data.result);
-      }
-      
-      // Stop typing animation
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
-      }
-      setTypingTimeout(null);
-      setTypingText('');
-      setIsFetching(false);
-      
-      // Update question set after each response
-      setCurrentQuestionSetIndex((prevIndex) => 
-        (prevIndex + 1) % QUESTION_SETS.length
-      );
-      
-    } catch (err) {
-      console.error('Error sending message:', err);
-      setError('Failed to get a response. Please try again.');
-      // Stop typing animation
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
-      }
-      setTypingTimeout(null);
-      setTypingText('');
-      setIsFetching(false);
+      const items = await supplementApi.getCartItems();
+      setCartItems(items);
+    } catch (error) {
+      console.error('Error loading cart:', error);
+      setError('Failed to load cart items. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const startTypingAnimation = () => {
-    const texts = [
-      "Thinking",
-      "Analyzing your question",
-      "Checking health data",
-      "Researching evidence",
-      "Formulating response"
-    ];
-    
-    let index = 0;
-    
-    const updateTypingText = () => {
-      setTypingText(texts[index % texts.length]);
-      index++;
-      
-      const timeout = setTimeout(updateTypingText, 3000);
-      setTypingTimeout(timeout);
-    };
-    
-    updateTypingText();
-  };
-
-  const handleQuestionClick = (question: string) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    setRecentlyClickedQuestion(question);
-    handleSubmit(e, question);
-    
-    // Clear the recently clicked question after a delay
-    setTimeout(() => {
-      setRecentlyClickedQuestion(null);
-    }, 3000);
-  };
-
-  const playTextToSpeech = async (text: string) => {
+  const updateQuantity = async (itemId: string, newQuantity: number) => {
+    setIsUpdating(itemId);
     try {
-      // Stop any currently playing audio
-      if (audioRef.current) {
-        audioRef.current.pause();
-        URL.revokeObjectURL(audioRef.current.src);
-      }
-
-      setIsPlayingAudio(true);
-
-      // Call ElevenLabs API
-      const audioData = await elevenlabsApi.textToSpeech(
-        text,
-        voiceSettings.voiceId,
-        {
-          stability: voiceSettings.stability,
-          similarity_boost: voiceSettings.similarity_boost
+      const success = await supplementApi.updateCartItemQuantity(itemId, newQuantity);
+      if (success) {
+        if (newQuantity === 0) {
+          setCartItems(prev => prev.filter(item => item.id !== itemId));
+        } else {
+          setCartItems(prev => prev.map(item => 
+            item.id === itemId ? { ...item, quantity: newQuantity } : item
+          ));
         }
-      );
-
-      if (!audioData) {
-        throw new Error('Failed to generate speech');
       }
-
-      // Create audio element
-      const audio = new Audio();
-      audioRef.current = audio;
-
-      // Create blob and set as audio source
-      const blob = new Blob([audioData], { type: 'audio/mpeg' });
-      // Create object URL to play audio
-      const url = URL.createObjectURL(blob);
-      audio.src = url;
-
-      // Play audio
-      audio.onended = () => {
-        setIsPlayingAudio(false);
-        URL.revokeObjectURL(url);
-      };
-
-      audio.onerror = () => {
-        // Clean up on error
-        if (audioRef.current) {
-          audioRef.current = null;
-        }
-        setIsPlayingAudio(false);
-        console.error('Error playing audio');
-      };
-
-      await audio.play();
-    } catch (err) {
-      console.error('Error with text-to-speech:', err);
-      setIsPlayingAudio(false);
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      setError('Failed to update item quantity.');
+    } finally {
+      setIsUpdating(null);
     }
   };
 
-  const stopAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlayingAudio(false);
-    }
-  };
-  
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  };
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
-    
-    // Show typing indicator
-    if (typingTimeoutRef.current) {
-      window.clearTimeout(typingTimeoutRef.current);
-    }
-    
-    if (e.target.value.length > 0) {
-      // Set typing timeout - could be used for typing indicators
-      typingTimeoutRef.current = window.setTimeout(() => {
-        typingTimeoutRef.current = null;
-        // Additional typing indicator logic could go here
-      }, 1000);
-    }
-  };
-  
-  // Clean up any timeouts on unmount
-  useEffect(() => {
-    return () => {
-      if (typingTimeoutRef.current) {
-        window.clearTimeout(typingTimeoutRef.current);
+  const removeItem = async (itemId: string) => {
+    setIsUpdating(itemId);
+    try {
+      const success = await supplementApi.removeFromCart(itemId);
+      if (success) {
+        setCartItems(prev => prev.filter(item => item.id !== itemId));
       }
+    } catch (error) {
+      console.error('Error removing item:', error);
+      setError('Failed to remove item from cart.');
+    } finally {
+      setIsUpdating(null);
+    }
+  };
+
+  const clearCart = async () => {
+    try {
+      const success = await supplementApi.clearCart();
+      if (success) {
+        setCartItems([]);
+      }
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      setError('Failed to clear cart.');
+    }
+  };
+
+  const getTierBadge = (tier: string) => {
+    const colors = {
+      green: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+      yellow: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+      orange: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300'
     };
-  }, []);
+    
+    return (
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colors[tier] || colors.orange}`}>
+        {tier.charAt(0).toUpperCase() + tier.slice(1)} Tier
+      </span>
+    );
+  };
+
+  const calculateSubtotal = () => {
+    return cartItems.reduce((sum, item) => 
+      sum + (item.supplement.price_aed || 0) * item.quantity, 0
+    );
+  };
+
+  const calculateTax = (subtotal: number) => {
+    return subtotal * 0.05; // 5% VAT
+  };
+
+  const calculateTotal = () => {
+    const subtotal = calculateSubtotal();
+    const tax = calculateTax(subtotal);
+    return subtotal + tax;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-200 dark:border-gray-700">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-primary via-tertiary to-secondary text-white p-5 flex items-center justify-between rounded-t-xl shadow-md relative overflow-hidden">
-        {/* Background pattern for header */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
-        </div>
-        
-        <div className="flex items-center">
-          <Sparkles className="w-6 h-6 mr-2" />
-          <h2 className="text-lg font-semibold">MyCoach<sup className="text-xs tracking-tighter">™</sup></h2>
-          <span className="ml-2 text-xs bg-white/20 px-2 py-0.5 rounded-full">Wellness AI</span>
-        </div>
-        <div className="flex items-center">
-          <button
-            onClick={() => setVoiceSettings(prev => ({ ...prev, enabled: !prev.enabled }))}
-            className={cn(
-              "p-2 rounded-full transition-colors",
-              voiceSettings.enabled 
-                ? "bg-primary-light hover:bg-primary-dark" 
-                : "hover:bg-primary-dark"
-            )}
-            aria-label={voiceSettings.enabled ? "Disable voice responses" : "Enable voice responses"}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-6">
+          <Link
+            to="/supplements"
+            className="inline-flex items-center text-primary hover:text-primary-dark font-medium mb-4"
           >
-            {voiceSettings.enabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-          </button>
-          <button
-            onClick={() => setShowVoiceSettings(!showVoiceSettings)}
-            className="p-2 rounded-full hover:bg-primary-dark transition-colors"
-            aria-label="Voice settings"
-          >
-            <Settings size={20} />
-          </button>
-        </div>
-      </div>
-
-      {/* Voice Settings Panel */}
-      {showVoiceSettings && (
-        <VoicePreferences
-          settings={voiceSettings}
-          onSettingsChange={setVoiceSettings}
-          onClose={() => setShowVoiceSettings(false)}
-          isPlayingAudio={isPlayingAudio}
-          stopAudio={stopAudio}
-        />
-      )}
-
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-gray-50 dark:bg-gray-700 transition-all duration-300">
-        {messages.map((message) => (
-          <ChatMessage
-            key={message.id}
-            message={message}
-            isLoading={false}
-          />
-        ))}
-        {isFetching && (
-          <div className="flex flex-col space-y-2 text-gray-700 dark:text-white p-4 bg-white dark:bg-gray-600 rounded-xl w-fit shadow-md">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-4 h-4" />
-              <span className="tracking-wide">
-                MyCoach<sup className="text-xs">™</sup> {typingText || 'is thinking...'}
-                <span className="inline-block animate-pulse">...</span>
-              </span>
-            </div>
-            <div className="flex space-x-1 ml-6">
-              <div className="w-2 h-2 rounded-full bg-primary/70 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 rounded-full bg-primary/70 animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 rounded-full bg-primary/70 animate-bounce" style={{ animationDelay: '300ms' }}></div>
-            </div>
-          </div>
-        )}
-        {error && (
-          <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-xl font-medium shadow-md">
-            <AlertCircle className="w-4 h-4 inline-block mr-2" />
-            <span className="tracking-wide">{error}</span>
-          </div>
-        )}
-        
-        {/* Suggested Questions */}
-        {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
-          <div className="flex flex-wrap gap-3 mt-5 mb-3">
-            <div className="w-full flex items-center mb-4">
-              <HelpCircle className="w-4 h-4 text-primary mr-2" />
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-300 tracking-wide">
-                Suggested questions:
-              </span>
-            </div>
-            {currentQuestions && currentQuestions.map((questionObj, index) => (
-              <motion.button
-                key={index}
-                onClick={handleQuestionClick(questionObj.text)}
-                className={cn(
-                  "px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg",
-                  "flex-grow md:flex-grow-0 relative overflow-hidden",
-                  recentlyClickedQuestion === questionObj.text 
-                    ? "bg-primary text-white" 
-                    : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200"
-                )}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.08 }}
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Continue Shopping
+          </Link>
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Shopping Cart</h1>
+            {cartItems.length > 0 && (
+              <Button
+                variant="outline"
+                onClick={clearCart}
+                className="text-red-600 hover:text-red-700"
               >
-                <span className={`absolute left-0 top-0 h-full w-1.5 ${getCategoryColor(questionObj.category)}`}></span>
-                <span className="pl-5 tracking-wide">{questionObj.text}</span>
-              </motion.button>
-            ))}
+                Clear Cart
+              </Button>
+            )}
           </div>
-        )}
-        
-        {isPlayingAudio && (
-          <div className="fixed bottom-24 right-5 bg-primary text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center space-x-3">
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-            <span className="tracking-wide">Speaking...</span>
-            <button
-              onClick={stopAudio}
-              className="ml-2 p-1.5 hover:bg-primary-dark rounded-full"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input */}
-      <form onSubmit={handleSubmit} className="border-t border-gray-200 dark:border-gray-700 p-5 bg-white dark:bg-gray-800 transition-all duration-300">
-        <div className="flex items-end space-x-3">
-          <div className="flex-1 relative">
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask about your health, supplements, or wellness goals..."
-              className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-300 transition-all duration-300 shadow-inner tracking-wide"
-              rows={2}
-              disabled={isLoading}
-            />
-          </div>
-          <Button
-            type="submit"
-            disabled={isLoading || !input.trim()}
-            className="h-12 w-12 p-0 flex items-center justify-center rounded-full bg-gradient-to-r from-primary via-tertiary to-secondary shadow-lg"
-          >
-            <Send className="w-5 h-5" />
-          </Button>
         </div>
-      </form>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div className="flex items-center">
+              <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
+              <span className="text-red-700 dark:text-red-300">{error}</span>
+            </div>
+          </div>
+        )}
+
+        {cartItems.length === 0 ? (
+          <div className="text-center py-16">
+            <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              Your cart is empty
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Discover our science-backed supplements to optimize your health
+            </p>
+            <div className="space-x-4">
+              <Button as={Link} to="/supplements">
+                Browse Supplements
+              </Button>
+              <Button as={Link} to="/supplements/recommendations" variant="outline">
+                Get Recommendations
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Cart Items */}
+            <div className="lg:col-span-2">
+              <Card className="p-6">
+                <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
+                  Cart Items ({cartItems.length})
+                </h2>
+                
+                <AnimatePresence>
+                  <div className="space-y-6">
+                    {cartItems.map((item, index) => (
+                      <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                        className="flex items-center space-x-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+                      >
+                        <img
+                          src={item.supplement.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300'}
+                          alt={item.supplement.name}
+                          className="w-20 h-20 object-cover rounded-lg"
+                        />
+                        
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h3 className="font-semibold text-gray-900 dark:text-white">
+                                {item.supplement.name}
+                              </h3>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {item.supplement.brand}
+                              </p>
+                              <div className="mt-1">
+                                {item.supplement.tier && getTierBadge(item.supplement.tier)}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-lg text-gray-900 dark:text-white">
+                                {(item.supplement.price_aed || 0).toFixed(2)} AED
+                              </p>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
+                                per item
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center justify-between mt-4">
+                            <div className="flex items-center space-x-3">
+                              <button
+                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                disabled={isUpdating === item.id || item.quantity <= 1}
+                                className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50"
+                              >
+                                <Minus className="w-4 h-4" />
+                              </button>
+                              <span className="font-medium text-gray-900 dark:text-white w-8 text-center">
+                                {item.quantity}
+                              </span>
+                              <button
+                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                disabled={isUpdating === item.id}
+                                className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50"
+                              >
+                                <Plus className="w-4 h-4" />
+                              </button>
+                            </div>
+                            
+                            <div className="flex items-center space-x-4">
+                              <p className="font-bold text-primary">
+                                {((item.supplement.price_aed || 0) * item.quantity).toFixed(2)} AED
+                              </p>
+                              <button
+                                onClick={() => removeItem(item.id)}
+                                disabled={isUpdating === item.id}
+                                className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full disabled:opacity-50"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </AnimatePresence>
+              </Card>
+            </div>
+
+            {/* Order Summary */}
+            <div className="lg:col-span-1">
+              <Card className="p-6 sticky top-8">
+                <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
+                  Order Summary
+                </h2>
+                
+                <div className="space-y-4 mb-6">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      {calculateSubtotal().toFixed(2)} AED
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">VAT (5%)</span>
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      {calculateTax(calculateSubtotal()).toFixed(2)} AED
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Shipping</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">
+                      Free
+                    </span>
+                  </div>
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <div className="flex justify-between">
+                      <span className="text-lg font-semibold text-gray-900 dark:text-white">Total</span>
+                      <span className="text-lg font-bold text-primary">
+                        {calculateTotal().toFixed(2)} AED
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Button 
+                    className="w-full"
+                    onClick={() => setShowCheckout(true)}
+                  >
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Proceed to Checkout
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    as={Link}
+                    to="/supplements"
+                  >
+                    <Package className="w-4 h-4 mr-2" />
+                    Continue Shopping
+                  </Button>
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <div className="flex items-start">
+                    <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-blue-900 dark:text-blue-300 mb-1">
+                        Free Shipping
+                      </h4>
+                      <p className="text-sm text-blue-800 dark:text-blue-400">
+                        Free shipping on all orders within UAE
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {/* Checkout Modal */}
+        {showCheckout && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md p-6">
+              <div className="text-center">
+                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  Checkout Demo
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  This is a demonstration of the checkout process. In a real implementation, 
+                  this would integrate with Stripe or another payment processor.
+                </p>
+                <div className="space-y-3">
+                  <Button className="w-full" onClick={() => setShowCheckout(false)}>
+                    Continue Demo
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => setShowCheckout(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-// Helper function to get color based on category
-function getCategoryColor(category: string): string {
-  switch (category) {
-    case 'sleep':
-      return 'bg-purple-500';
-    case 'supplements':
-      return 'bg-green-500';
-    case 'nutrition':
-      return 'bg-blue-500';
-    case 'fitness':
-      return 'bg-orange-500';
-    case 'metabolism':
-      return 'bg-red-500';
-    case 'hydration':
-      return 'bg-cyan-500';
-    case 'stress':
-      return 'bg-pink-500';
-    case 'energy':
-      return 'bg-yellow-500';
-    case 'recovery':
-      return 'bg-indigo-500';
-    case 'cognitive':
-      return 'bg-emerald-500';
-    case 'longevity':
-      return 'bg-violet-500';
-    default:
-      return 'bg-gray-500';
-  }
-}
-
-export default MyCoach;
+export default CartPage;

@@ -55,7 +55,7 @@ const FitnessPage: React.FC = () => {
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
-                AI Generator
+                My Workouts
               </a>
               <a
                 href="/fitness?tab=analytics"
