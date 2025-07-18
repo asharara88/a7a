@@ -224,10 +224,10 @@ const DashboardPage: React.FC = () => {
   // Mock data for wearable device
   const wearableDevice = {
     id: 'device-1',
-    name: 'Oura Ring',
-    type: 'Oura',
+    name: 'Apple Watch Series 9',
+    type: 'Apple Health',
     lastSynced: '2 hours ago',
-    batteryLevel: 72,
+    batteryLevel: 84,
     connected: true
   };
 
