@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, Info } from 'lucide-react';
 import { cn } from '../../utils/cn';

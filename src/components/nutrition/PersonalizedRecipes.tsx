@@ -5,7 +5,7 @@ import RecipeCard from './RecipeCard';
 import { Button } from '../ui/Button';
 import RecipeFilters from './RecipeFilters';
 import { Link } from 'react-router-dom';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 
 const PersonalizedRecipes: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);

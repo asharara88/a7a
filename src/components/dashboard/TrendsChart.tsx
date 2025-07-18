@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line, Bar } from 'react-chartjs-2';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { motion } from 'framer-motion';
 
 interface TrendsChartProps {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sun, Moon, Monitor, Check } from 'lucide-react';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { useTheme } from '../../hooks/useTheme';
 import { cn } from '../../utils/cn';
 

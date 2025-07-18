@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { recipeApi, SavedRecipe } from '../../api/recipeApi';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Heart, Clock, Users, ExternalLink, Loader2, Search, Filter, SortDesc, SortAsc, ListFilter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';

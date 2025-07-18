@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Doughnut } from 'react-chartjs-2';
 import ProgressRing from './ProgressRing';
 

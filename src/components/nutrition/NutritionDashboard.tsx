@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Utensils, TrendingUp, Apple, Salad, Clock } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Doughnut } from 'react-chartjs-2';
 import { cn } from '../../utils/cn';
 import { Button } from '../ui/Button';

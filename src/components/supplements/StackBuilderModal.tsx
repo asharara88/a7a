@@ -3,7 +3,7 @@ import { X, Plus, Minus, Check, Info, AlertCircle } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import Select from 'react-select'; 
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Input } from '../ui/Input';
 
 // Initialize Supabase client

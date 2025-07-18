@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import { format, parseISO } from 'date-fns';
 import { LabResult } from '../../api/labResultsApi';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 
 interface LabResultsTrendsProps {
   labResults: LabResult[];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Lightbulb, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';

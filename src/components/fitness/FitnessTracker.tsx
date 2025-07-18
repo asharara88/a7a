@@ -3,7 +3,7 @@ import { format, parseISO, subDays } from 'date-fns';
 import { Activity, Calendar, Plus, Clock, Flame, BarChart2, Award, TrendingUp } from 'lucide-react';
 import { fitnessApi, WorkoutSession, FitnessSummary } from '../../api/fitnessApi';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Input } from '../ui/Input';
 import { Line, Bar } from 'react-chartjs-2';
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { fitnessApi } from '../../api/fitnessApi';
 import { nutritionApi } from '../../api/nutritionApi';
 import { Flame, Utensils, TrendingUp, TrendingDown, Activity } from 'lucide-react';

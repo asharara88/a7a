@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Star, ShoppingCart, Info, Filter, Check, AlertCircle, X, ShieldCheck, Plus, Package, Store, Sparkles, Edit, Trash2, ArrowRight } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs';
 import { supplementApi } from '../api/supplementApi';
 import StackBuilderModal from '../components/supplements/StackBuilderModal';

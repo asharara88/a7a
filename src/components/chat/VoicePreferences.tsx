@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Play, Loader2, Volume2, VolumeX, Info } from 'lucide-react';
 import { elevenlabsApi, Voice } from '../../api/elevenlabsApi';
 import { Button } from '../ui/Button'; 
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 
 interface VoiceSettings {
   enabled: boolean;

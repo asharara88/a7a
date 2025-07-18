@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShoppingCart, Heart, Info, Star, Check, AlertCircle, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Button } from '../ui/Button';
 import { cn } from '../../utils/cn';
 

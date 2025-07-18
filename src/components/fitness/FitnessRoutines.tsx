@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Dumbbell, Plus, ArrowRight, Calendar, Check, Edit, Trash } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { cn } from '../../utils/cn';

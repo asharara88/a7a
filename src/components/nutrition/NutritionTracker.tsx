@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { Search, Plus, Calendar, ArrowRight } from 'lucide-react';
 import { nutritionApi, FoodItem, MealLog, NutritionSummary } from '../../api/nutritionApi';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Input } from '../ui/Input';
 import { Pie } from 'react-chartjs-2';
 

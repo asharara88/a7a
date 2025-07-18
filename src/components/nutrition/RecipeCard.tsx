@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, Users, Heart, Award } from 'lucide-react';
 import { Recipe } from '../../api/recipeApi';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Link } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 

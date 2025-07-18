@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Clock, Users, Award, Heart, Share2, Printer, BookmarkPlus } from 'lucide-react';
 import { Recipe } from '../../api/recipeApi';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Link, useNavigate } from 'react-router-dom';
 
 interface RecipeDetailProps {

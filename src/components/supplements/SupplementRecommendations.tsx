@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, Info } from 'lucide-react';
 import { supplementApi, Supplement, SupplementStack } from '../../api/supplementApi';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Button } from '../ui/Button';
 import { Link } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';

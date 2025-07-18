@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Filter, X, Search, Check } from 'lucide-react';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Input } from '../ui/Input';
 import { RecipeSearchParams } from '../../api/recipeApi';
 import { cn } from '../../utils/cn';

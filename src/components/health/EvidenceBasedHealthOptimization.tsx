@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, CheckCircle, BookOpen, Brain, Heart, Activity, Moon, Utensils } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Card } from '../ui/Card';
+import { Card } from '../ui/card';
 import { Button } from '../ui/Button';
 
 interface EvidenceBasedHealthOptimizationProps {
