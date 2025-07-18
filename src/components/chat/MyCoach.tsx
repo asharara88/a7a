@@ -538,33 +538,43 @@ const MyCoach: React.FC = () => {
             type="submit"
             disabled={isLoading || !input.trim()}
             className="h-12 w-12 p-0 flex items-center justify-center rounded-full bg-gradient-to-r from-primary via-tertiary to-secondary shadow-lg"
-  // Helper function to get color based on category
-  function getCategoryColor(category: string): string {
-    switch (category) {
-      case 'sleep':
-        return 'bg-purple-500';
-      case 'supplements':
-        return 'bg-green-500';
-      case 'nutrition':
-        return 'bg-blue-500';
-      case 'fitness':
-        return 'bg-orange-500';
-      case 'metabolism':
-        return 'bg-red-500';
-      case 'hydration':
-        return 'bg-cyan-500';
-      case 'stress':
-        return 'bg-pink-500';
-      case 'energy':
-        return 'bg-yellow-500';
-      case 'recovery':
-        return 'bg-indigo-500';
-      case 'cognitive':
-        return 'bg-emerald-500';
-      case 'longevity':
-        return 'bg-violet-500';
-    }
-  }
+          >
+            <Send className="w-5 h-5" />
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 };
+
+// Helper function to get color based on category
+function getCategoryColor(category: string): string {
+  switch (category) {
+    case 'sleep':
+      return 'bg-purple-500';
+    case 'supplements':
+      return 'bg-green-500';
+    case 'nutrition':
+      return 'bg-blue-500';
+    case 'fitness':
+      return 'bg-orange-500';
+    case 'metabolism':
+      return 'bg-red-500';
+    case 'hydration':
+      return 'bg-cyan-500';
+    case 'stress':
+      return 'bg-pink-500';
+    case 'energy':
+      return 'bg-yellow-500';
+    case 'recovery':
+      return 'bg-indigo-500';
+    case 'cognitive':
+      return 'bg-emerald-500';
+    case 'longevity':
+      return 'bg-violet-500';
+    default:
+      return 'bg-gray-500';
+  }
+}
 
 export default MyCoach;
