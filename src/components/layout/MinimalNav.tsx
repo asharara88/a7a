@@ -338,7 +338,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Link
-                      to="/signup"
+                      to="/onboarding"
                       className="px-5 py-2.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-sm font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 shadow-md backdrop-blur-sm tracking-wide hover:from-primary-light hover:via-tertiary-light hover:to-secondary-light"
                     >
                       Get Started
@@ -420,7 +420,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                         Sign in
                       </Link>
                       <Link
-                        to="/signup"
+                        to="/onboarding"
                         className="block px-4 py-3.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-base font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 text-center tracking-wide hover:from-primary-light hover:via-tertiary-light hover:to-secondary-light"
                         onClick={() => setIsMobileMenuOpen(false)}
                       className="absolute inset-0 bg-gradient-to-r from-primary/5 via-tertiary/5 to-secondary/5 rounded-lg border border-primary/10"
