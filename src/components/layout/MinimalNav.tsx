@@ -14,7 +14,6 @@ import {
   LogOut,
   X,
   ChevronDown,
-  Settings,
   Utensils,
   BarChart3,
   Heart,
