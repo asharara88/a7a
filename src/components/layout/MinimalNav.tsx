@@ -17,7 +17,9 @@ import {
   Settings,
   Utensils,
   BarChart3,
-  Heart
+  Heart,
+  Camera,
+  Info
 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
@@ -34,6 +36,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 type ThemeMode = 'light' | 'dark' | 'auto';
+
+interface NavigationItem {
+  name: string;
+  href: string;
+  icon: React.ReactNode;
+  hasDropdown?: boolean;
+  dropdownItems?: NavigationItem[];
+}
 
 const getInitialTheme = (): ThemeMode => {
   const savedTheme = localStorage.getItem('theme') as ThemeMode;
@@ -65,7 +75,7 @@ const MinimalNav: React.FC = () => {
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [user, setUser] = useState<any>(null);
-  const [, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSupplementsMenu, setShowSupplementsMenu] = useState(false);
@@ -157,7 +167,6 @@ const MinimalNav: React.FC = () => {
   };
 
   const navItems = [
-    { href: '/dashboard', label: 'Home', icon: <Home className="w-4 h-4" /> },
     { href: '/mycoach', label: 'MyCoach', icon: <Sparkles className="w-4 h-4" /> },
     { 
       href: '/supplements', 
@@ -179,11 +188,25 @@ const MinimalNav: React.FC = () => {
       hasDropdown: true,
       dropdownItems: [
         { href: '/nutrition', label: 'Food Logging', icon: <Utensils className="w-4 h-4" /> },
-        { href: '/recipes', label: 'Personalized Recipes', icon: <Utensils className="w-4 h-4" /> },
-        { href: '/nutrition/myplate', label: 'MyPlate', icon: <Activity className="w-4 h-4" /> },
-        { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> }
+        { href: '/nutrition/myplate', label: 'MyPlate', icon: <Camera className="w-4 h-4" /> },
+        { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> },
+        { href: '/recipes', label: 'Recipes', icon: <Heart className="w-4 h-4" /> }
       ]
-    },
+    }
+  ];
+  
+  const accountNavigation: NavigationItem[] = [
+    { 
+      name: 'Account', 
+      href: '/login', 
+      icon: <User className="w-5 h-5" />,
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Profile', href: '/profile', icon: <User className="w-4 h-4" /> },
+        { name: 'Settings', href: '/settings', icon: <Settings className="w-4 h-4" /> },
+        { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> }
+      ]
+    }
   ];
 
   return (
@@ -411,9 +434,12 @@ const MinimalNav: React.FC = () => {
                 <div className="hidden lg:flex items-center space-x-3">
                   <Link
                     to="/login"
-                    className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md tracking-wide"
-                  >
+                    className={cn(
+                      "px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md tracking-wide",
                       isActive('/cart') && "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20"
+                    )}
+                  >
+                    Sign in
                   </Link>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
