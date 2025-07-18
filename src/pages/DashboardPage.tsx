@@ -20,6 +20,28 @@ const DashboardPage: React.FC = () => {
   const [isSyncing, setIsSyncing] = React.useState(false);
   const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set());
   
+  // Calculate section average scores
+  const sectionScores = {
+    cardiovascular: 87, // Based on HR, HRV, BP, Recovery
+    activity: 86,       // Based on Steps, Walking, NEAT, Active Time
+    caloric: 76,        // Based on deficit goal, consistency
+    wellness: 79        // Based on Sleep, Water, Stress, Energy
+  };
+  
+  // Helper function to get score color
+  const getScoreColor = (score: number) => {
+    if (score >= 85) return 'text-green-600 dark:text-green-400';
+    if (score >= 70) return 'text-yellow-600 dark:text-yellow-400';
+    return 'text-red-600 dark:text-red-400';
+  };
+  
+  // Helper function to get score label
+  const getScoreLabel = (score: number) => {
+    if (score >= 85) return 'Excellent';
+    if (score >= 70) return 'Good';
+    return 'Needs Attention';
+  };
+
   // Handle sync device
   const handleSyncDevice = (deviceId: string) => {
     setIsSyncing(true);
@@ -327,15 +349,33 @@ const DashboardPage: React.FC = () => {
             onClick={() => toggleSectionExpansion('cardiovascular')}
             className="flex items-center mb-4 w-full text-left group hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
           >
-            <Heart className="w-5 h-5 text-red-500 mr-2" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-red-500 transition-colors">Cardiovascular Health</h2>
-            <motion.div
-              animate={{ rotate: expandedSections.has('cardiovascular') ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-              className="ml-auto"
-            >
-              <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-red-500" />
-            </motion.div>
+            <div className="flex items-center flex-1">
+              <Heart className="w-5 h-5 text-red-500 mr-3" />
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-red-500 transition-colors">
+                  Cardiovascular Health
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Heart rate, blood pressure, and recovery metrics
+                </p>
+              </div>
+              <div className="flex items-center mr-4">
+                <div className="text-right mr-3">
+                  <div className={`text-2xl font-bold ${getScoreColor(sectionScores.cardiovascular)}`}>
+                    {sectionScores.cardiovascular}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {getScoreLabel(sectionScores.cardiovascular)}
+                  </div>
+                </div>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('cardiovascular') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-red-500" />
+                </motion.div>
+              </div>
+            </div>
           </button>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <MetricsCard
@@ -463,15 +503,33 @@ const DashboardPage: React.FC = () => {
             onClick={() => toggleSectionExpansion('activity')}
             className="flex items-center mb-4 w-full text-left group hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
           >
-            <Activity className="w-5 h-5 text-blue-500 mr-2" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-blue-500 transition-colors">Activity & Movement</h2>
-            <motion.div
-              animate={{ rotate: expandedSections.has('activity') ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-              className="ml-auto"
-            >
-              <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-500" />
-            </motion.div>
+            <div className="flex items-center flex-1">
+              <Activity className="w-5 h-5 text-blue-500 mr-3" />
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-blue-500 transition-colors">
+                  Activity & Movement
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Steps, walking, NEAT, and active time
+                </p>
+              </div>
+              <div className="flex items-center mr-4">
+                <div className="text-right mr-3">
+                  <div className={`text-2xl font-bold ${getScoreColor(sectionScores.activity)}`}>
+                    {sectionScores.activity}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {getScoreLabel(sectionScores.activity)}
+                  </div>
+                </div>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('activity') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-500" />
+                </motion.div>
+              </div>
+            </div>
           </button>
           <div className="flex items-center justify-between mb-4">
             <Link 
@@ -608,10 +666,25 @@ const DashboardPage: React.FC = () => {
             className="flex items-center justify-between mb-4 w-full text-left group hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
           >
             <div className="flex items-center">
-              <Utensils className="w-5 h-5 text-green-500 mr-2" />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-green-500 transition-colors">Caloric Balance</h2>
+              <Utensils className="w-5 h-5 text-green-500 mr-3" />
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-green-500 transition-colors">
+                  Caloric Balance
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Intake, expenditure, and deficit tracking
+                </p>
+              </div>
             </div>
             <div className="flex items-center">
+              <div className="text-right mr-3">
+                <div className={`text-2xl font-bold ${getScoreColor(sectionScores.caloric)}`}>
+                  {sectionScores.caloric}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {getScoreLabel(sectionScores.caloric)}
+                </div>
+              </div>
               <Link 
                 to="/nutrition" 
                 className="text-primary hover:text-primary-dark text-sm font-medium flex items-center mr-4"
@@ -768,15 +841,33 @@ const DashboardPage: React.FC = () => {
             onClick={() => toggleSectionExpansion('wellness')}
             className="flex items-center mb-4 w-full text-left group hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors"
           >
-            <Moon className="w-5 h-5 text-purple-500 mr-2" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-purple-500 transition-colors">Wellness Metrics</h2>
-            <motion.div
-              animate={{ rotate: expandedSections.has('wellness') ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-              className="ml-auto"
-            >
-              <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-purple-500" />
-            </motion.div>
+            <div className="flex items-center flex-1">
+              <Moon className="w-5 h-5 text-purple-500 mr-3" />
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-purple-500 transition-colors">
+                  Wellness Metrics
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Sleep, hydration, stress, and energy levels
+                </p>
+              </div>
+              <div className="flex items-center mr-4">
+                <div className="text-right mr-3">
+                  <div className={`text-2xl font-bold ${getScoreColor(sectionScores.wellness)}`}>
+                    {sectionScores.wellness}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {getScoreLabel(sectionScores.wellness)}
+                  </div>
+                </div>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('wellness') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-purple-500" />
+                </motion.div>
+              </div>
+            </div>
           </button>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <MetricsCard
