@@ -3,7 +3,6 @@ import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag, Check, Loader2, ShieldChec
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { createClient } from '@supabase/supabase-js'
-import { supplementApi } from '../api/supplementApi'
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
