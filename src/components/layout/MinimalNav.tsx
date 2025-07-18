@@ -58,10 +58,10 @@ const shouldUseDarkMode = (theme: ThemeMode): boolean => {
 };
 
 interface MinimalNavProps {
-  isDarkMode: boolean;
+  // Component is self-contained and manages its own theme
 }
 
-const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
+const MinimalNav: React.FC<MinimalNavProps> = () => {
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -70,6 +70,9 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Calculate isDarkMode based on current theme
+  const isDarkMode = shouldUseDarkMode(theme);
 
   useEffect(() => {
     const checkUser = async () => {

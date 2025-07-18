@@ -143,7 +143,7 @@ const Layout: React.FC = () => {
     <div className={`min-h-screen safe-area-top safe-area-bottom ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header with consistent styling */}
       <div className="relative">
-        <MinimalNav isDarkMode={isDarkMode} />
+        <MinimalNav />
       </div>
       
       {/* Mobile Navigation */}
