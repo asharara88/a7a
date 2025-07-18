@@ -18,9 +18,7 @@ import {
   Utensils,
   BarChart3,
   Heart,
-  Camera,
-  Info
-} from 'lucide-react';
+  Camera} from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -36,14 +34,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 type ThemeMode = 'light' | 'dark' | 'auto';
-
-interface NavigationItem {
-  name: string;
-  href: string;
-  icon: React.ReactNode;
-  hasDropdown?: boolean;
-  dropdownItems?: NavigationItem[];
-}
 
 const getInitialTheme = (): ThemeMode => {
   const savedTheme = localStorage.getItem('theme') as ThemeMode;
