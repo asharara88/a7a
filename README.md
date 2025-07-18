@@ -158,7 +158,7 @@ supabase link --project-ref your-project-ref
 supabase db push
 ```
 
-6. **Deploy Edge Functions:**
+2. **Deploy Edge Functions:**
 
 ```bash
 supabase functions deploy openai-proxy
@@ -356,7 +356,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-  <strong>Built with ❤️ by the Biowell team</strong>
+  
+  **Built with ❤️ by the Biowell team**
+  
 </div>
 supabase link --project-ref YOUR_PROJECT_REF
 
