@@ -507,15 +507,6 @@ const MinimalNav: React.FC = () => {
                                 setShowSupplementsMenu(false);
                               }
                             }}
-                            onClick={() => {
-                              if (item.label === 'Supplements') {
-                                setShowSupplementsMenu(prev => !prev);
-                                setShowWellnessMenu(false);
-                              } else if (item.label === 'MyWellness') {
-                                setShowWellnessMenu(prev => !prev);
-                                setShowSupplementsMenu(false);
-                              }
-                            }}
                             className={cn(
                               "flex items-center justify-between w-full px-4 py-3 rounded-xl text-base font-medium transition-colors",
                               (isActive(item.href) ||
@@ -525,7 +516,6 @@ const MinimalNav: React.FC = () => {
                                 : "text-gray-700 dark:text-gray-300"
                             )}
                           >
-                            <div className="flex items-center">
                             <div className="flex items-center">
                               <span className="mr-3">{item.icon}</span>
                               <span className="tracking-wide">{item.label}</span>
