@@ -1,349 +1,378 @@
-import { createClient } from '@supabase/supabase-js';
+import React, { useState, useEffect } from 'react';
+import { format } from 'date-fns';
+import { Search, Plus, Calendar, ArrowRight } from 'lucide-react';
+import { nutritionApi, FoodItem, MealLog, NutritionSummary } from '../../api/nutritionApi';
+import { Button } from '../ui/Button';
+import { Card } from '../ui/Card';
+import { Input } from '../ui/Input';
+import { Pie } from 'react-chartjs-2';
 
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const NutritionTracker: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<FoodItem[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [mealLogs, setMealLogs] = useState<MealLog[]>([]);
+  const [nutritionSummary, setNutritionSummary] = useState<NutritionSummary | null>(null);
+  const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [isLoading, setIsLoading] = useState(true);
+  const [showAddMeal, setShowAddMeal] = useState(false);
+  const [selectedMealType, setSelectedMealType] = useState<'breakfast' | 'lunch' | 'dinner' | 'snack'>('breakfast');
 
-// Types
-export interface Recipe {
-  id: number;
-  title: string;
-  image: string;
-  readyInMinutes: number;
-  servings: number;
-  sourceUrl: string;
-  summary: string;
-  healthScore: number;
-  diets: string[];
-  nutrition: {
-    calories: number;
-    protein: number;
-    fat: number;
-    carbs: number;
-  } | null;
-}
+  // Mock user ID for demo purposes
+  const userId = 'demo-user-id';
 
-export interface RecipeSearchParams {
-  diet?: string;
-  intolerances?: string;
-  excludeIngredients?: string;
-  includeIngredients?: string;
-  maxReadyTime?: number;
-  minProtein?: number;
-  maxCalories?: number;
-}
+  useEffect(() => {
+    loadNutritionData();
+  }, [selectedDate]);
 
-export interface RecipeSearchResponse {
-  recipes: Recipe[];
-  total: number;
-}
-
-export interface SavedRecipe {
-  id: string;
-  userId: string;
-  recipeId: number;
-  title: string;
-  image: string;
-  savedAt: string;
-  isFavorite: boolean;
-}
-
-// API functions
-export const recipeApi = {
-  // Search for recipes based on user preferences
-  searchRecipes: async (params: RecipeSearchParams): Promise<RecipeSearchResponse> => {
+  const loadNutritionData = async () => {
+    setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('get-personalized-recipes', {
-        body: params,
-        headers: {
-          'Content-Type': 'application/json'
-        }
+      const logs = await nutritionApi.getMealLogs(userId, 1);
+      const summary = await nutritionApi.getNutritionSummary(userId, 1);
+      
+      setMealLogs(logs);
+      setNutritionSummary(summary);
+    } catch (error) {
+      console.error('Error loading nutrition data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    setSearchError(null);
+    try {
+      const results = await nutritionApi.searchFoods(searchQuery);
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Error searching foods:', error);
+      setSearchError('Failed to search foods. Please try again.');
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleAddFood = async (food: FoodItem) => {
+    try {
+      await nutritionApi.logMeal({
+        userId,
+        foodName: food.name,
+        mealType: selectedMealType,
+        calories: food.calories,
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat,
+        servingSize: food.servingSize,
+        timestamp: new Date().toISOString()
       });
       
-      if (error) throw new Error(error.message);
-      return data;
+      // Refresh data
+      loadNutritionData();
+      setSearchResults([]);
+      setSearchQuery('');
+      setShowAddMeal(false);
     } catch (error) {
-      console.error('Error searching recipes:', error);
-      
-      // Fallback to mock data for demo purposes
-      return {
-        recipes: getMockRecipeData(),
-        total: getMockRecipeData().length
-      };
+      console.error('Error adding food:', error);
     }
-  },
-  
-  // Get recipe details by ID
-  getRecipeById: async (recipeId: number): Promise<Recipe | null> => {
-    try {
-      const { data, error } = await supabase.functions.invoke('get-personalized-recipes', {
-        body: { ids: [recipeId] }
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (error) throw new Error(error.message);
-      
-      // Check if recipe was found
-      if (!data.recipes || data.recipes.length === 0) {
-        console.warn('No recipe found with ID:', recipeId);
-        return null;
-      }
-      
-      return data.recipes[0] || null;
-    } catch (error) {
-      console.error('Error getting recipe details:', error);
-      
-      // Fallback to mock data
-      const mockRecipes = getMockRecipeData();
-      return mockRecipes.find(r => r.id === recipeId) || null;
-    }
-  },
-  
-  // Save a recipe to user's favorites
-  saveRecipe: async (userId: string, recipe: Recipe, isFavorite: boolean = false): Promise<SavedRecipe> => {
-    try {
-      // Check if recipe is already saved
-      const { data: existingRecipes, error: checkError } = await supabase
-        .from('saved_recipes')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('recipe_id', recipe.id)
-        .maybeSingle();
-      
-      if (checkError) throw checkError;
-      
-      // If recipe is already saved, just update the is_favorite status
-      if (existingRecipes) {
-        const { data, error } = await supabase
-          .from('saved_recipes')
-          .update({ is_favorite: isFavorite })
-          .eq('id', existingRecipes.id)
-          .select()
-          .single();
-        
-        if (error) throw error;
-        
-        return {
-          id: data.id,
-          userId: data.user_id,
-          recipeId: data.recipe_id,
-          title: data.title,
-          image: data.image,
-          savedAt: data.saved_at,
-          isFavorite: data.is_favorite
-        };
-      }
+  };
 
-      const { data, error } = await supabase
-        .from('saved_recipes')
-        .upsert({
-          user_id: userId,
-          recipe_id: recipe.id,
-          title: recipe.title,
-          image: recipe.image,
-          saved_at: new Date().toISOString(),
-          is_favorite: isFavorite
-        })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      
-      return {
-        id: data.id,
-        userId: data.user_id,
-        recipeId: data.recipe_id,
-        title: data.title,
-        image: data.image,
-        savedAt: data.saved_at,
-        isFavorite: data.is_favorite
-      };
-    } catch (error) {
-      console.error('Error saving recipe:', error);
-      throw error;
-    }
-  },
-  
-  // Unsave a recipe
-  unsaveRecipe: async (userId: string, recipeId: number): Promise<boolean> => {
-    try {
-      const { error } = await supabase
-        .from('saved_recipes')
-        .delete()
-        .eq('user_id', userId)
-        .eq('recipe_id', recipeId);
-      
-      if (error) throw error;
-      
-      return true;
-    } catch (error) {
-      console.error('Error unsaving recipe:', error);
-      throw error;
-    }
-  },
-  
-  // Get user's saved recipes
-  getSavedRecipes: async (userId: string): Promise<SavedRecipe[]> => {
-    try {
-      const { data, error } = await supabase
-        .from('saved_recipes')
-        .select('*')
-        .eq('user_id', userId)
-        .order('saved_at', { ascending: false });
-      
-      if (error) throw error;
-      
-      return data.map(item => ({
-        id: item.id,
-        userId: item.user_id,
-        recipeId: item.recipe_id,
-        title: item.title,
-        image: item.image,
-        savedAt: item.saved_at,
-        isFavorite: item.is_favorite
-      }));
-    } catch (error) {
-      console.error('Error getting saved recipes:', error);
-      return [];
-    }
-  },
-  
-  // Get personalized recipe recommendations based on user profile
-  getPersonalizedRecommendations: async (userId: string): Promise<Recipe[]> => {
-    try {
-      // First get user profile to determine preferences
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('diet_preference, dietary_restrictions, allergies, primary_health_goals')
-        .eq('id', userId)
-        .single();
-      
-      if (profileError) throw profileError;
-      
-      // Build search params based on user profile
-      const searchParams: RecipeSearchParams = {};
-      
-      if (profileData.diet_preference) {
-        // Map app diet preferences to Spoonacular diet params
-        const dietMap: Record<string, string> = {
-          'vegetarian': 'vegetarian',
-          'vegan': 'vegan',
-          'pescatarian': 'pescatarian',
-          'keto': 'ketogenic',
-          'paleo': 'paleo',
-          'mediterranean': 'mediterranean'
-        };
-        
-        searchParams.diet = dietMap[profileData.diet_preference] || '';
+  // Prepare chart data
+  const macroChartData = {
+    labels: ['Protein', 'Carbs', 'Fat'],
+    datasets: [
+      {
+        data: [
+          nutritionSummary?.totalProtein || 0,
+          nutritionSummary?.totalCarbs || 0,
+          nutritionSummary?.totalFat || 0
+        ],
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(255, 99, 132, 0.8)'
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 1
       }
-      
-      if (profileData.allergies && profileData.allergies.length > 0) {
-        searchParams.intolerances = profileData.allergies.join(',');
+    ]
+  };
+
+  const mealChartData = {
+    labels: ['Breakfast', 'Lunch', 'Dinner', 'Snacks'],
+    datasets: [
+      {
+        data: [
+          nutritionSummary?.mealBreakdown.breakfast || 0,
+          nutritionSummary?.mealBreakdown.lunch || 0,
+          nutritionSummary?.mealBreakdown.dinner || 0,
+          nutritionSummary?.mealBreakdown.snack || 0
+        ],
+        backgroundColor: [
+          'rgba(255, 159, 64, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(75, 192, 192, 0.8)'
+        ],
+        borderColor: [
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(75, 192, 192, 1)'
+        ],
+        borderWidth: 1
       }
-      
-      if (profileData.dietary_restrictions && profileData.dietary_restrictions.length > 0) {
-        searchParams.excludeIngredients = profileData.dietary_restrictions.join(',');
-      }
-      
-      // Adjust nutrition targets based on health goals
-      if (profileData.primary_health_goals && profileData.primary_health_goals.includes('Weight management')) {
-        searchParams.maxCalories = 500; // Lower calorie recipes
-      }
-      
-      if (profileData.primary_health_goals && profileData.primary_health_goals.includes('Muscle building')) {
-        searchParams.minProtein = 25; // Higher protein recipes
-      }
-      
-      // Get personalized recipes
-      const { recipes } = await recipeApi.searchRecipes(searchParams);
-      
-      // Sort recipes by relevance to user's goals
-      const sortedRecipes = [...recipes].sort((a, b) => {
-        // Prioritize recipes with high health scores for users with health goals
-        if (profileData.primary_health_goals?.includes('better health')) {
-          return (b.healthScore || 0) - (a.healthScore || 0);
-        }
-        
-        // Prioritize high protein recipes for muscle building goals
-        if (profileData.primary_health_goals?.includes('muscle building') && 
-            a.nutrition && b.nutrition) {
-          return (b.nutrition.protein || 0) - (a.nutrition.protein || 0);
-        }
-        
-        // Prioritize low calorie recipes for weight management
-        if (profileData.primary_health_goals?.includes('weight management') && 
-            a.nutrition && b.nutrition) {
-          return (a.nutrition.calories || 0) - (b.nutrition.calories || 0);
-        }
-        
-        // Default sorting by health score
-        return (b.healthScore || 0) - (a.healthScore || 0);
-      });
-      
-      return sortedRecipes;
-    } catch (error) {
-      console.error('Error getting personalized recommendations:', error);
-      return getMockRecipeData();
-    }
-  }
+    ]
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Nutrition Tracker</h2>
+        <div className="flex items-center space-x-2">
+          <Input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="w-auto"
+          />
+          <Button
+            onClick={() => setShowAddMeal(true)}
+            className="flex items-center"
+          >
+            <Plus className="w-4 h-4 mr-1" />
+            Log Meal
+          </Button>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : (
+        <>
+          {/* Nutrition Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Daily Summary</h3>
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Calories</p>
+                  <p className="text-2xl font-bold text-primary tracking-tight">
+                    {nutritionSummary?.totalCalories || 0}
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Protein</p>
+                  <p className="text-2xl font-bold text-blue-500 tracking-tight">
+                    {nutritionSummary?.totalProtein || 0}g
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Carbs</p>
+                  <p className="text-2xl font-bold text-teal-500 tracking-tight">
+                    {nutritionSummary?.totalCarbs || 0}g
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Fat</p>
+                  <p className="text-2xl font-bold text-red-500 tracking-tight">
+                    {nutritionSummary?.totalFat || 0}g
+                  </p>
+                </div>
+              </div>
+              <div className="h-48">
+                <Pie data={macroChartData} options={{ maintainAspectRatio: false }} />
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Meal Breakdown</h3>
+              <div className="h-48 mb-4">
+                <Pie data={mealChartData} options={{ maintainAspectRatio: false }} />
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Breakfast</span>
+                  <span className="font-medium">{nutritionSummary?.mealBreakdown.breakfast || 0} cal</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Lunch</span>
+                  <span className="font-medium">{nutritionSummary?.mealBreakdown.lunch || 0} cal</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Dinner</span>
+                  <span className="font-medium">{nutritionSummary?.mealBreakdown.dinner || 0} cal</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Snacks</span>
+                  <span className="font-medium">{nutritionSummary?.mealBreakdown.snack || 0} cal</span>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Meal Logs */}
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4">Today's Meals</h3>
+            {mealLogs.length === 0 ? (
+             <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
+                <p className="mb-4 text-lg">No meals logged for today</p>
+                <p className="mb-6 text-sm">Track your nutrition by logging your meals and snacks</p>
+                <Button 
+                  onClick={() => setShowAddMeal(true)}
+                  variant="outline"
+                  className="flex items-center shadow-sm hover:shadow-lg transition-all duration-300"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Your First Meal
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {mealLogs.map((log) => (
+                  <div 
+                    key={log.id} 
+                    className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg flex justify-between items-center"
+                  >
+                    <div>
+                      <div className="flex items-center">
+                        <span className="inline-block w-2 h-2 rounded-full mr-2"
+                          style={{
+                            backgroundColor: 
+                              log.mealType === 'breakfast' ? 'rgb(255, 159, 64)' :
+                              log.mealType === 'lunch' ? 'rgb(255, 99, 132)' :
+                              log.mealType === 'dinner' ? 'rgb(54, 162, 235)' :
+                              'rgb(75, 192, 192)'
+                          }}
+                        ></span>
+                        <span className="font-medium capitalize">{log.mealType}</span>
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">{log.foodName}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{log.servingSize}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">{log.calories} cal</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        P: {log.protein}g | C: {log.carbs}g | F: {log.fat}g
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+
+          {/* Add Meal Dialog */}
+          {showAddMeal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <Card className="w-full max-w-md p-6">
+                <h3 className="text-lg font-semibold mb-4">Log a Meal</h3>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">Meal Type</label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {(['breakfast', 'lunch', 'dinner', 'snack'] as const).map((type) => (
+                      <button
+                        key={type}
+                        className={`py-2 px-3 rounded-md text-sm font-medium capitalize ${
+                          selectedMealType === type
+                            ? 'bg-primary text-white'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                        }`}
+                        onClick={() => setSelectedMealType(type)}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">Search Food</label>
+                  <div className="flex space-x-2">
+                    <Input
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                      placeholder="Search for a food..."
+                      className="flex-1"
+                    />
+                    <Button onClick={handleSearch} disabled={isSearching}>
+                      {isSearching ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      ) : (
+                        <Search className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                  
+                  {searchError && (
+                    <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
+                      {searchError}
+                    </div>
+                  )}
+                </div>
+                
+                {searchResults.length > 0 && (
+                  <div className="mb-4 max-h-60 overflow-y-auto">
+                    <label className="block text-sm font-medium mb-2">Results</label>
+                    <div className="space-y-2">
+                      {searchResults.map((food) => (
+                        <div
+                          key={food.id}
+                          className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                          onClick={() => handleAddFood(food)}
+                        >
+                          <div className="flex items-center">
+                            {food.image && (
+                              <img src={food.image} alt={food.name} className="w-10 h-10 object-cover rounded-md mr-3" />
+                            )}
+                            <div>
+                              <p className="font-medium">{food.name}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{food.servingSize}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">{food.calories} cal</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              P: {food.protein}g | C: {food.carbs}g | F: {food.fat}g
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+             <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
+                )}
+                
+                <div className="flex justify-end space-x-2 mt-4">
+                  <Button variant="outline" onClick={() => setShowAddMeal(false)}>
+               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Daily Goal: 250g</p>
+                    Cancel
+             <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
+                  <Button onClick={handleSearch} disabled={!searchQuery.trim() || isSearching}>
+                    Search
+                  </Button>
+                </div>
+               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Daily Goal: 65g</p>
+              </Card>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };
 
-// Mock data function for development and fallback
-function getMockRecipeData(): Recipe[] {
-  return [
-    {
-      id: 716429,
-      title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
-      image: "https://spoonacular.com/recipeImages/716429-556x370.jpg",
-      readyInMinutes: 45,
-      servings: 2,
-      sourceUrl: "https://fullbellysisters.blogspot.com/2012/06/pasta-with-garlic-scallions-cauliflower.html",
-      summary: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs might be just the main course you are searching for. This recipe makes 2 servings with 636 calories, 21g of protein, and 20g of fat each.",
-      healthScore: 76,
-      diets: ["dairy free", "lacto ovo vegetarian", "vegan"],
-      nutrition: {
-        calories: 636,
-        protein: 21,
-        fat: 20,
-        carbs: 83
-      }
-    },
-    {
-      id: 715538,
-      title: "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-      image: "https://spoonacular.com/recipeImages/715538-556x370.jpg",
-      readyInMinutes: 35,
-      servings: 4,
-      sourceUrl: "https://www.pinkwhen.com/bruschetta-style-pork-pasta/",
-      summary: "What to make for dinner tonight?? Bruschetta Style Pork & Pasta might be a good recipe to expand your main course recipe box. This recipe makes 4 servings with 520 calories, 45g of protein, and 19g of fat each.",
-      healthScore: 81,
-      diets: ["dairy free"],
-      nutrition: {
-        calories: 520,
-        protein: 45,
-        fat: 19,
-        carbs: 45
-      }
-    },
-    {
-      id: 782601,
-      title: "Red Kidney Bean Jambalaya",
-      image: "https://spoonacular.com/recipeImages/782601-556x370.jpg",
-      readyInMinutes: 45,
-      servings: 6,
-      sourceUrl: "https://www.foodista.com/recipe/6BFKZR7Y/red-kidney-bean-jambalaya",
-      summary: "Red Kidney Bean Jambalayan is a main course that serves 6. One serving contains 538 calories, 21g of protein, and 8g of fat.",
-      healthScore: 96,
-      diets: ["gluten free", "dairy free", "lacto ovo vegetarian", "vegan"],
-      nutrition: {
-        calories: 538,
-        protein: 21,
-        fat: 8,
-        carbs: 92
-      }
-    }
-  ];
-}
+export default NutritionTracker;

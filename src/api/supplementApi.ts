@@ -1,474 +1,377 @@
-import { createClient } from '@supabase/supabase-js';
+import React, { useState, useEffect } from 'react';
+import { format } from 'date-fns';
+import { Search, Plus, Calendar, ArrowRight } from 'lucide-react';
+import { nutritionApi, FoodItem, MealLog, NutritionSummary } from '../../api/nutritionApi';
+import { Button } from '../ui/Button';
+import { Card } from '../ui/Card';
+import { Input } from '../ui/Input';
+import { Pie } from 'react-chartjs-2';
 
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const NutritionTracker: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<FoodItem[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [mealLogs, setMealLogs] = useState<MealLog[]>([]);
+  const [nutritionSummary, setNutritionSummary] = useState<NutritionSummary | null>(null);
+  const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [isLoading, setIsLoading] = useState(true);
+  const [showAddMeal, setShowAddMeal] = useState(false);
+  const [selectedMealType, setSelectedMealType] = useState<'breakfast' | 'lunch' | 'dinner' | 'snack'>('breakfast');
 
-// Types
-export interface Supplement {
-  id: string;
-  name: string;
-  brand: string;
-  description: string;
-  detailed_description?: string;
-  tier: 'green' | 'yellow' | 'orange' | 'red';
-  use_case: string;
-  price_aed: number;
-  subscription_discount_percent: number;
-  image_url: string;
-  is_available?: boolean;
-  is_featured?: boolean;
-  is_bestseller?: boolean;
-  form_type?: string;
-  form_image_url?: string;
-  benefits?: string[];
-  ingredients?: string;
-  dosage?: string;
-  certifications?: string[];
-  rating?: number;
-  reviews?: number;
-  is_available: boolean;
-  is_featured: boolean;
-  is_bestseller: boolean;
-}
+  // Mock user ID for demo purposes
+  const userId = 'demo-user-id';
 
-export interface SupplementStack {
-  id: string;
-  name: string;
-  category: string;
-  total_price: number;
-  components: any[];
-  description?: string;
-  is_active?: boolean;
-}
+  useEffect(() => {
+    loadNutritionData();
+  }, [selectedDate]);
 
-export interface SupplementRecommendation {
-  supplements: Supplement[];
-  stacks: SupplementStack[];
-  personalized_message: string;
-}
-
-export interface CartItem {
-  id: string;
-  supplement_id: string;
-  user_id: string;
-  quantity: number;
-  created_at: string;
-  updated_at?: string;
-}
-
-// API functions
-export const supplementApi = {
-  // Get all supplements
-  getSupplements: async (filters?: {
-    tier?: 'green' | 'yellow' | 'orange' | 'all';
-    category?: string;
-    featured?: boolean;
-    search?: string;
-  }): Promise<Supplement[]> => {
+  const loadNutritionData = async () => {
+    setIsLoading(true);
     try {
-      // First try to get supplements from supplements table
-      let query = supabase.from('supplements').select('*');
+      const logs = await nutritionApi.getMealLogs(userId, 1);
+      const summary = await nutritionApi.getNutritionSummary(userId, 1);
       
-      if (filters) {
-        if (filters.tier && filters.tier !== 'all') {
-          query = query.eq('tier', filters.tier);
-        }
-        
-        if (filters.category) {
-          query = query.eq('category', filters.category);
-        }
-        
-        if (filters.featured) {
-          query = query.eq('is_featured', true);
-        }
-        
-        if (filters.search) {
-          query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
-        }
-      }
-      
-      const { data: supplementsData, error: supplementsError } = await query.eq('is_available', true);
-      
-      if (supplementsData && supplementsData.length > 0) {
-        return supplementsData;
-      }
-      
-      // If no supplements found or error, try supplement table (older name)
-      query = supabase.from('supplement').select('*');
-      
-      // Apply filters
-      if (filters) {
-        if (filters.tier && filters.tier !== 'all') {
-          query = query.eq('tier', filters.tier);
-        }
-        
-        if (filters.category) {
-          query = query.eq('category', filters.category);
-        }
-        
-        if (filters.featured) {
-          query = query.eq('is_featured', true);
-        }
-        
-        if (filters.search) {
-          query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
-        }
-      }
-      
-      const { data, error } = await query.eq('is_available', true);
-      
-      if (error) {
-        console.warn("Error fetching supplements:", error);
-        return [];
-      }
-      
-      return data || [];
+      setMealLogs(logs);
+      setNutritionSummary(summary);
     } catch (error) {
-      console.error('Error getting supplements:', error);
-      return [];
+      console.error('Error loading nutrition data:', error);
+    } finally {
+      setIsLoading(false);
     }
-  },
-  
-  // Get supplements by tier
-  getSupplementsByTier: async (tier: 'green' | 'yellow' | 'orange' | 'all'): Promise<Supplement[]> => {
-    return supplementApi.getSupplements({ tier });
-  },
-  
-  // Get supplement by ID
-  getSupplementById: async (id: string): Promise<Supplement | null> => {
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    setSearchError(null);
     try {
-      const { data, error } = await supabase
-        .from('supplements')
-        .select('*')
-        .eq('id', id)
-        .single();
-      
-      if (error || !data) {
-        // If error or no data from main supplements table, try the supplement table as fallback
-        console.log('Trying alternate table for supplement id:', id);
-        const { data: altData, error: altError } = await supabase
-          .from('supplement')
-          .select('*')
-          .eq('id', id)
-          .single();
-          
-        if (altError) throw altError;
-        return altData;
-      }
-      
-      return data;
+      const results = await nutritionApi.searchFoods(searchQuery);
+      setSearchResults(results);
     } catch (error) {
-      console.error('Error getting supplement:', error);
-      return null;
+      console.error('Error searching foods:', error);
+      setSearchError('Failed to search foods. Please try again.');
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
     }
-  },
-  
-  // Get personalized supplement recommendations
-  getPersonalizedRecommendations: async (userId: string): Promise<SupplementRecommendation> => {
+  };
+
+  const handleAddFood = async (food: FoodItem) => {
     try {
-      const { data, error } = await supabase.functions.invoke('recommendations', {
-        body: { userId },
-        headers: {
-          'Content-Type': 'application/json'
-        }
+      await nutritionApi.logMeal({
+        userId,
+        foodName: food.name,
+        mealType: selectedMealType,
+        calories: food.calories,
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat,
+        servingSize: food.servingSize,
+        timestamp: new Date().toISOString()
       });
       
-      if (error) throw error;
-      
-      return data;
+      // Refresh data
+      loadNutritionData();
+      setSearchResults([]);
+      setSearchQuery('');
+      setShowAddMeal(false);
     } catch (error) {
-      console.error('Error getting personalized recommendations:', error);
-      
-      // Return mock data for development
-      return {
-        supplements: getMockRecommendedSupplements(),
-        stacks: getMockRecommendedStacks(),
-        personalized_message: "Based on your profile, we've selected supplements that may support your health goals. Remember that green tier supplements have the strongest scientific evidence, while yellow and orange tiers have moderate or preliminary evidence."
-      };
+      console.error('Error adding food:', error);
     }
-  },
-  
-  // Get supplement stacks
-  getSupplementStacks: async (): Promise<SupplementStack[]> => {
-    try {
-      const { data, error } = await supabase
-        .from('supplement_stacks')
-        .select('*');
-      
-      if (error) throw error;
-      
-      return data || [];
-    } catch (error) {
-      console.error('Error getting supplement stacks:', error);
-      return [];
-    }
-  },
-  
-  // Get user's supplement stacks
-  getUserSupplementStacks: async (userId: string): Promise<SupplementStack[]> => {
-    try {
-      const { data, error } = await supabase
-        .from('supplement_stacks')
-        .select('*')
-        .eq('user_id', userId);
-      
-      if (error) throw error;
-      
-      return data || [];
-    } catch (error) {
-      console.error('Error getting user supplement stacks:', error);
-      return [];
-    }
-  },
-  
-  // Create a supplement stack
-  createSupplementStack: async (stack: Omit<SupplementStack, 'id'>): Promise<SupplementStack | null> => {
-    try {
-      const { data, error } = await supabase
-        .from('supplement_stacks')
-        .insert([stack])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      
-      return data;
-    } catch (error) {
-      console.error('Error creating supplement stack:', error);
-      return null;
-    }
-  },
-  
-  // Update a supplement stack
-  updateSupplementStack: async (id: string, updates: Partial<SupplementStack>): Promise<SupplementStack | null> => {
-    try {
-      const { data, error } = await supabase
-        .from('supplement_stacks')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      
-      return data;
-    } catch (error) {
-      console.error('Error updating supplement stack:', error);
-      return null;
-    }
-  },
-  
-  // Delete a supplement stack
-  deleteSupplementStack: async (id: string): Promise<boolean> => {
-    try {
-      const { error } = await supabase
-        .from('supplement_stacks')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
-      
-      return true;
-    } catch (error) {
-      console.error('Error deleting supplement stack:', error);
-      return false;
-    }
-  },
-  
-  // Get cart items
-  getCartItems: async (userId: string): Promise<CartItem[]> => {
-    try {
-      const { data, error } = await supabase
-        .from('cart_items')
-        .select('*, supplements(*)')
-        .eq('user_id', userId);
-      
-      if (error) throw error;
-      
-      return data || [];
-    } catch (error) {
-      console.error('Error getting cart items:', error);
-      return [];
-    }
-  },
-  
-  // Add item to cart
-  addToCart: async (userId: string, supplementId: string, quantity: number = 1): Promise<CartItem | null> => {
-    try {
-      // Check if item already exists in cart
-      const { data: existingItems, error: checkError } = await supabase
-        .from('cart_items')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('supplement_id', supplementId)
-        .maybeSingle();
-      
-      if (checkError) throw checkError;
-      
-      if (existingItems) {
-        // Update quantity if item exists
-        const newQuantity = existingItems.quantity + quantity;
-        
-        const { data, error } = await supabase
-          .from('cart_items')
-          .update({ quantity: newQuantity, updated_at: new Date().toISOString() })
-          .eq('id', existingItems.id)
-          .select()
-          .single();
-        
-        if (error) throw error;
-        
-        return data;
-      } else {
-        // Insert new item if it doesn't exist
-        const { data, error } = await supabase
-          .from('cart_items')
-          .insert([{
-            user_id: userId,
-            supplement_id: supplementId,
-            quantity
-          }])
-          .select()
-          .single();
-        
-        if (error) throw error;
-        
-        return data;
+  };
+
+  // Prepare chart data
+  const macroChartData = {
+    labels: ['Protein', 'Carbs', 'Fat'],
+    datasets: [
+      {
+        data: [
+          nutritionSummary?.totalProtein || 0,
+          nutritionSummary?.totalCarbs || 0,
+          nutritionSummary?.totalFat || 0
+        ],
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(255, 99, 132, 0.8)'
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 1
       }
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      return null;
-    }
-  },
-  
-  // Update cart item quantity
-  updateCartItemQuantity: async (itemId: string, quantity: number): Promise<CartItem | null> => {
-    try {
-      const { data, error } = await supabase
-        .from('cart_items')
-        .update({ quantity, updated_at: new Date().toISOString() })
-        .eq('id', itemId)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      
-      return data;
-    } catch (error) {
-      console.error('Error updating cart item:', error);
-      return null;
-    }
-  },
-  
-  // Remove item from cart
-  removeFromCart: async (itemId: string): Promise<boolean> => {
-    try {
-      const { error } = await supabase
-        .from('cart_items')
-        .delete()
-        .eq('id', itemId);
-      
-      if (error) throw error;
-      
-      return true;
-    } catch (error) {
-      console.error('Error removing from cart:', error);
-      return false;
-    }
-  },
-  
-  // Clear cart
-  clearCart: async (userId: string): Promise<boolean> => {
-    try {
-      const { error } = await supabase
-        .from('cart_items')
-        .delete()
-        .eq('user_id', userId);
-      
-      if (error) throw error;
-      
-      return true;
-    } catch (error) {
-      console.error('Error clearing cart:', error);
-      return false;
-    }
-  }
+    ]
+  };
+
+  const mealChartData = {
+    labels: ['Breakfast', 'Lunch', 'Dinner', 'Snacks'],
+    datasets: [
+      {
+        data: [
+          nutritionSummary?.mealBreakdown.breakfast || 0,
+          nutritionSummary?.mealBreakdown.lunch || 0,
+          nutritionSummary?.mealBreakdown.dinner || 0,
+          nutritionSummary?.mealBreakdown.snack || 0
+        ],
+        backgroundColor: [
+          'rgba(255, 159, 64, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(75, 192, 192, 0.8)'
+        ],
+        borderColor: [
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(75, 192, 192, 1)'
+        ],
+        borderWidth: 1
+      }
+    ]
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Nutrition Tracker</h2>
+        <div className="flex items-center space-x-2">
+          <Input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="w-auto"
+          />
+          <Button
+            onClick={() => setShowAddMeal(true)}
+            className="flex items-center"
+          >
+            <Plus className="w-4 h-4 mr-1" />
+            Log Meal
+          </Button>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : (
+        <>
+          {/* Nutrition Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Daily Summary</h3>
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Calories</p>
+                  <p className="text-2xl font-bold text-primary tracking-tight">
+                    {nutritionSummary?.totalCalories || 0}
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Protein</p>
+                  <p className="text-2xl font-bold text-blue-500 tracking-tight">
+                    {nutritionSummary?.totalProtein || 0}g
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Carbs</p>
+                  <p className="text-2xl font-bold text-teal-500 tracking-tight">
+                    {nutritionSummary?.totalCarbs || 0}g
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Fat</p>
+                  <p className="text-2xl font-bold text-red-500 tracking-tight">
+                    {nutritionSummary?.totalFat || 0}g
+                  </p>
+                </div>
+              </div>
+              <div className="h-48">
+                <Pie data={macroChartData} options={{ maintainAspectRatio: false }} />
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Meal Breakdown</h3>
+              <div className="h-48 mb-4">
+                <Pie data={mealChartData} options={{ maintainAspectRatio: false }} />
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Breakfast</span>
+                  <span className="font-medium">{nutritionSummary?.mealBreakdown.breakfast || 0} cal</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Lunch</span>
+                  <span className="font-medium">{nutritionSummary?.mealBreakdown.lunch || 0} cal</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Dinner</span>
+                  <span className="font-medium">{nutritionSummary?.mealBreakdown.dinner || 0} cal</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Snacks</span>
+                  <span className="font-medium">{nutritionSummary?.mealBreakdown.snack || 0} cal</span>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Meal Logs */}
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4">Today's Meals</h3>
+            {mealLogs.length === 0 ? (
+             <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
+                <p className="mb-4 text-lg">No meals logged for today</p>
+                <p className="mb-6 text-sm">Track your nutrition by logging your meals and snacks</p>
+                <Button 
+                  onClick={() => setShowAddMeal(true)}
+                  variant="outline"
+                  className="flex items-center shadow-sm hover:shadow-lg transition-all duration-300"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Your First Meal
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {mealLogs.map((log) => (
+                  <div 
+                    key={log.id} 
+                    className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg flex justify-between items-center"
+                  >
+                    <div>
+                      <div className="flex items-center">
+                        <span className="inline-block w-2 h-2 rounded-full mr-2"
+                          style={{
+                            backgroundColor: 
+                              log.mealType === 'breakfast' ? 'rgb(255, 159, 64)' :
+                              log.mealType === 'lunch' ? 'rgb(255, 99, 132)' :
+                              log.mealType === 'dinner' ? 'rgb(54, 162, 235)' :
+                              'rgb(75, 192, 192)'
+                          }}
+                        ></span>
+                        <span className="font-medium capitalize">{log.mealType}</span>
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">{log.foodName}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{log.servingSize}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">{log.calories} cal</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        P: {log.protein}g | C: {log.carbs}g | F: {log.fat}g
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+
+          {/* Add Meal Dialog */}
+          {showAddMeal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <Card className="w-full max-w-md p-6">
+                <h3 className="text-lg font-semibold mb-4">Log a Meal</h3>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">Meal Type</label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {(['breakfast', 'lunch', 'dinner', 'snack'] as const).map((type) => (
+                      <button
+                        key={type}
+                        className={`py-2 px-3 rounded-md text-sm font-medium capitalize ${
+                          selectedMealType === type
+                            ? 'bg-primary text-white'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                        }`}
+                        onClick={() => setSelectedMealType(type)}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">Search Food</label>
+                  <div className="flex space-x-2">
+                    <Input
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                      placeholder="Search for a food..."
+                      className="flex-1"
+                    />
+                    <Button onClick={handleSearch} disabled={isSearching}>
+                      {isSearching ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      ) : (
+                        <Search className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                  
+                  {searchError && (
+                    <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
+                      {searchError}
+                    </div>
+                  )}
+                </div>
+                
+                {searchResults.length > 0 && (
+                  <div className="mb-4 max-h-60 overflow-y-auto">
+                    <label className="block text-sm font-medium mb-2">Results</label>
+                    <div className="space-y-2">
+                      {searchResults.map((food) => (
+                        <div
+                          key={food.id}
+                          className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                          onClick={() => handleAddFood(food)}
+                        >
+                          <div className="flex items-center">
+                            {food.image && (
+                              <img src={food.image} alt={food.name} className="w-10 h-10 object-cover rounded-md mr-3" />
+                            )}
+                            <div>
+                              <p className="font-medium">{food.name}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{food.servingSize}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">{food.calories} cal</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              P: {food.protein}g | C: {food.carbs}g | F: {food.fat}g
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                )}
+                
+                <div className="flex justify-end space-x-2 mt-4">
+                  <Button variant="outline" onClick={() => setShowAddMeal(false)}>
+               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Daily Goal: 250g</p>
+                    Cancel
+             <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
+                  <Button onClick={handleSearch} disabled={!searchQuery.trim() || isSearching}>
+                    Search
+                  </Button>
+                </div>
+               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Daily Goal: 65g</p>
+              </Card>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };
 
-// Mock data functions
-function getMockRecommendedSupplements(): Supplement[] {
-  return [
-    {
-      id: '1',
-      name: 'Creatine Monohydrate',
-      brand: 'Biowell',
-      description: 'Increases strength and power output during high-intensity exercise.',
-      tier: 'green',
-      use_case: 'Muscle strength & power',
-      price_aed: 85.00,
-      subscription_discount_percent: 15,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-      is_available: true,
-      is_featured: true,
-      is_bestseller: true
-    },
-    {
-      id: '2',
-      name: 'Vitamin D3',
-      brand: 'Biowell',
-      description: 'Essential fat-soluble vitamin that supports immune function, bone health, and mood regulation.',
-      tier: 'green',
-      use_case: 'Immune & bone health',
-      price_aed: 40.00,
-      subscription_discount_percent: 10,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-      is_available: true,
-      is_featured: false,
-      is_bestseller: false
-    },
-    {
-      id: '3',
-      name: 'Magnesium Glycinate',
-      brand: 'Biowell',
-      description: 'Highly bioavailable form of magnesium that supports sleep, muscle recovery, and nervous system function.',
-      tier: 'yellow',
-      use_case: 'Sleep & recovery',
-      price_aed: 75.00,
-      subscription_discount_percent: 12,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-      is_available: true,
-      is_featured: false,
-      is_bestseller: false
-    }
-  ];
-}
-
-function getMockRecommendedStacks(): SupplementStack[] {
-  return [
-    {
-      id: '1',
-      name: 'Sleep & Recovery Stack',
-      category: 'Sleep',
-      total_price: 215.00,
-      components: [
-        { name: 'Magnesium Glycinate', dosage: '400mg', price: 75.00 },
-        { name: 'L-Theanine', dosage: '200mg', price: 65.00 },
-        { name: 'Ashwagandha', dosage: '600mg', price: 75.00 }
-      ]
-    },
-    {
-      id: '2',
-      name: 'Cognitive Performance Stack',
-      category: 'Cognition',
-      total_price: 255.00,
-      components: [
-        { name: 'Bacopa Monnieri', dosage: '300mg', price: 85.00 },
-        { name: 'Lion\'s Mane', dosage: '500mg', price: 95.00 },
-        { name: 'Rhodiola Rosea', dosage: '300mg', price: 75.00 }
-      ]
-    }
-  ];
-}
-};
+export default NutritionTracker;
