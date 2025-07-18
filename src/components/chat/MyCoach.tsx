@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Volume2, VolumeX, Loader2, Settings, Sparkles, X, HelpCircle, Check, AlertCircle } from 'lucide-react';
+import { Send, Volume2, VolumeX, Loader2, Settings, Sparkles, X, HelpCircle, Check, AlertCircle, Bot } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '../ui/Button';
 import ChatMessage from './ChatMessage';
@@ -75,11 +75,11 @@ const MyCoach: React.FC = () => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isFetching, setIsFetching] = useState(false); 
   const [typingText, setTypingText] = useState('');
-  const [typingTimeout, setTypingTimeout] = useState<number | null>(null);
   const typingTimeoutRef = useRef<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'error'>('connected');
 
   // Health metrics for context (would come from user profile in a real app)
   const healthContext = {
@@ -117,6 +117,22 @@ const MyCoach: React.FC = () => {
     fetchVoices();
   }, []);
 
+  // Connection status monitoring
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setConnectionStatus(user ? 'connected' : 'connecting');
+      } catch (error) {
+        setConnectionStatus('error');
+      }
+    };
+    
+    checkConnection();
+    const interval = setInterval(checkConnection, 30000); // Check every 30 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
   // Focus input on load
   useEffect(() => {
     inputRef.current?.focus();
@@ -233,7 +249,6 @@ const MyCoach: React.FC = () => {
       if (typingTimeout) {
         clearTimeout(typingTimeout);
       }
-      setTypingTimeout(null);
       setTypingText('');
       setIsFetching(false);
       
@@ -249,7 +264,6 @@ const MyCoach: React.FC = () => {
       if (typingTimeout) {
         clearTimeout(typingTimeout);
       }
-      setTypingTimeout(null);
       setTypingText('');
       setIsFetching(false);
     } finally {
@@ -272,8 +286,7 @@ const MyCoach: React.FC = () => {
       setTypingText(texts[index % texts.length]);
       index++;
       
-      const timeout = setTimeout(updateTypingText, 3000);
-      setTypingTimeout(timeout);
+      typingTimeoutRef.current = window.setTimeout(updateTypingText, 3000);
     };
     
     updateTypingText();
@@ -429,7 +442,15 @@ const MyCoach: React.FC = () => {
         <div className="flex items-center">
           <Sparkles className="w-6 h-6 mr-2" />
           <h2 className="text-lg font-semibold">MyCoach<sup className="text-xs tracking-tighter">™</sup></h2>
-          <span className="ml-2 text-xs bg-white/20 px-2 py-0.5 rounded-full">Wellness AI</span>
+          <span className="ml-2 text-xs bg-white/20 px-2 py-0.5 rounded-full flex items-center">
+            <Bot className="w-3 h-3 mr-1" />
+            Wellness AI
+          </span>
+          {connectionStatus !== 'connected' && (
+            <span className={`ml-2 w-2 h-2 rounded-full ${
+              connectionStatus === 'connecting' ? 'bg-yellow-400 animate-pulse' : 'bg-red-400'
+            }`} title={connectionStatus === 'connecting' ? 'Connecting...' : 'Connection error'} />
+          )}
         </div>
         <div className="flex items-center">
           <button

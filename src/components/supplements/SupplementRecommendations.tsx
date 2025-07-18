@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Loader2, Info } from 'lucide-react';
+import { Loader2, Info, AlertTriangle, RefreshCw, Sparkles } from 'lucide-react';
 import { supplementApi, Supplement, SupplementStack } from '../../api/supplementApi';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -38,6 +38,9 @@ const SupplementRecommendations: React.FC = () => {
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
   const [selectedStackId, setSelectedStackId] = useState<string | null>(null);
 
+  const [retryCount, setRetryCount] = useState(0);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
   useEffect(() => {
     loadRecommendations();
   }, []);
@@ -59,9 +62,11 @@ const SupplementRecommendations: React.FC = () => {
       
       const data = await supplementApi.getPersonalizedRecommendations(userId);
       setRecommendations(data);
+      setLastUpdated(new Date());
+      setRetryCount(0);
     } catch (error) {
       console.error('Error loading recommendations:', error);
-      setError('Failed to load personalized recommendations. Please try again.');
+      setError('Failed to load recommendations. Check your connection and try again.');
       
       // Set mock data for development
       setRecommendations({
@@ -97,21 +102,37 @@ const SupplementRecommendations: React.FC = () => {
     }
   };
 
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    loadRecommendations();
+  };
+
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="flex flex-col justify-center items-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-primary mb-4" />
+        <p className="text-gray-600 dark:text-gray-400">Loading personalized recommendations...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg text-red-700 dark:text-red-300">
-        <p>{error}</p>
-        <Button onClick={loadRecommendations} className="mt-4">
-          Try Again
-        </Button>
+      <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
+        <div className="flex items-center mb-4">
+          <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400 mr-3" />
+          <h3 className="text-lg font-medium text-red-800 dark:text-red-300">Failed to Load Recommendations</h3>
+        </div>
+        <p className="text-red-700 dark:text-red-300 mb-4">{error}</p>
+        <div className="flex gap-3">
+          <Button onClick={handleRetry} className="flex items-center">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Try Again {retryCount > 0 && `(${retryCount})`}
+          </Button>
+          <Button variant="outline" as={Link} to="/supplements">
+            Browse All Supplements
+          </Button>
+        </div>
       </div>
     );
   }
@@ -131,6 +152,25 @@ const SupplementRecommendations: React.FC = () => {
 
   return (
     <div className="space-y-8">
+      {/* Header with last updated info */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <Sparkles className="w-6 h-6 text-primary mr-3" />
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Your Personalized Recommendations</h2>
+            {lastUpdated && (
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Last updated: {lastUpdated.toLocaleTimeString()}
+              </p>
+            )}
+          </div>
+        </div>
+        <Button variant="outline" onClick={loadRecommendations} size="sm">
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Refresh
+        </Button>
+      </div>
+
       {recommendations.personalized_message && (
         <div className="bg-blue-50 dark:bg-blue-900/20 p-5 rounded-xl border border-blue-100 dark:border-blue-800 text-blue-700 dark:text-blue-300 flex items-start shadow-sm">
           <Info className="w-5 h-5 mr-4 flex-shrink-0 mt-0.5" />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Loader2, ChevronRight } from 'lucide-react';
+import { Loader2, ChevronRight, Bookmark, AlertTriangle, RefreshCw } from 'lucide-react';
 import { recipeApi, Recipe, RecipeSearchParams } from '../../api/recipeApi';
 import RecipeCard from './RecipeCard';
 import { Button } from '../ui/Button';
@@ -11,6 +11,7 @@ const PersonalizedRecipes: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [savedRecipes, setSavedRecipes] = useState<number[]>([]);
+  const [retryCount, setRetryCount] = useState(0);
   
   // Filter states
   const [searchParams, setSearchParams] = useState<RecipeSearchParams>({
@@ -34,9 +35,10 @@ const PersonalizedRecipes: React.FC = () => {
     try {
       const { recipes } = await recipeApi.searchRecipes(searchParams);
       setRecipes(recipes);
+      setRetryCount(0);
     } catch (error) {
       console.error('Error loading recipes:', error);
-      setError('Failed to load recipes. Please try again.');
+      setError('Failed to load recipes. Check your connection and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -66,9 +68,15 @@ const PersonalizedRecipes: React.FC = () => {
       }
     } catch (error) {
       console.error('Error saving recipe:', error);
+      // Show user feedback for save errors
+      alert('Failed to save recipe. Please try again.');
     }
   };
 
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    loadRecipes();
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -98,8 +106,27 @@ const PersonalizedRecipes: React.FC = () => {
         </div>
       ) : error ? (
         <div className="text-center py-12">
-          <p className="text-red-500 mb-4">{error}</p>
-          <Button onClick={loadRecipes}>Try Again</Button>
+          <div className="flex flex-col items-center">
+            <AlertTriangle className="w-12 h-12 text-red-500 mb-4" />
+            <p className="text-red-500 mb-4">{error}</p>
+            <div className="flex gap-3">
+              <Button onClick={handleRetry} className="flex items-center">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Try Again {retryCount > 0 && `(${retryCount})`}
+              </Button>
+              <Button variant="outline" onClick={() => {
+                setSearchParams({
+                  diet: '',
+                  intolerances: '',
+                  maxReadyTime: 60,
+                  maxCalories: 800
+                });
+                loadRecipes();
+              }}>
+                Reset Filters
+              </Button>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -116,8 +143,22 @@ const PersonalizedRecipes: React.FC = () => {
           
           {recipes.length === 0 && (
             <div className="col-span-full text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400 mb-4">No recipes found matching your criteria.</p>
-              <Button onClick={() => {
+              <Bookmark className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No recipes found</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">Try adjusting your filters or search criteria.</p>
+              <div className="flex justify-center gap-3">
+                <Button onClick={() => {
+                  setSearchParams({
+                    diet: '',
+                    intolerances: '',
+                    maxReadyTime: 60,
+                    maxCalories: 800
+                  });
+                  loadRecipes();
+                }}>
+                  Reset Filters
+                </Button>
+                <Button variant="outline" onClick={() => {
                 setSearchParams({
                   diet: '',
                   intolerances: '',
@@ -125,7 +166,10 @@ const PersonalizedRecipes: React.FC = () => {
                   maxCalories: 800
                 });
                 loadRecipes();
-              }}>Reset Filters</Button>
+                }}>
+                  Browse All Recipes
+                </Button>
+              </div>
             </div>
           )}
         </div>

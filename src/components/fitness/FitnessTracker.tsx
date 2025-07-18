@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { format, parseISO } from 'date-fns';
-import { Activity, Calendar, Plus, Clock, Flame, BarChart2, TrendingUp, Target, Award, Zap } from 'lucide-react';
+import { Activity, Calendar, Plus, Clock, Flame, BarChart2, TrendingUp, Target, Award, Zap, AlertCircle, RefreshCw } from 'lucide-react';
 import { fitnessApi, WorkoutSession, FitnessSummary } from '../../api/fitnessApi';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
@@ -27,6 +27,8 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
   const [isLoading, setIsLoading] = useState(true);
   const [showAddWorkout, setShowAddWorkout] = useState(false);
   const [timeRange, setTimeRange] = useState(7); // days
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // New workout form state
   const [newWorkout, setNewWorkout] = useState({
@@ -62,6 +64,7 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
 
   const loadFitnessData = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const history = await fitnessApi.getWorkoutHistory(currentUserId, timeRange);
       const summary = await fitnessApi.getFitnessSummary(currentUserId, timeRange);
@@ -70,6 +73,7 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
       setFitnessSummary(summary);
     } catch (error) {
       console.error('Error loading fitness data:', error);
+      setError('Failed to load fitness data. Please check your connection.');
     } finally {
       setIsLoading(false);
     }
@@ -78,9 +82,12 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
   const handleAddWorkout = async () => {
     if (!currentUserId) {
       console.warn('No user ID available');
+      setError('Please sign in to log workouts.');
       return;
     }
     
+    setIsSubmitting(true);
+    setError(null);
     try {
       await fitnessApi.logWorkout({
         userId: currentUserId,
@@ -104,6 +111,9 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
       });
     } catch (error) {
       console.error('Error adding workout:', error);
+      setError('Failed to save workout. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -332,6 +342,26 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
 
   return (
     <div className="space-y-8">
+      {error && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center">
+          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-3 flex-shrink-0" />
+          <div className="flex-1">
+            <p className="text-red-800 dark:text-red-300">{error}</p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setError(null);
+              loadFitnessData();
+            }}
+            className="ml-3"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </Button>
+        </div>
+      )}
+
       {/* Tab Content Controls */}
       {(activeTab === 'dashboard' || !activeTab) && (
         <div className="flex items-center justify-between">
@@ -959,9 +989,16 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
                       </Button>
                       <Button 
                         onClick={handleAddWorkout}
-                        className="flex-1 shadow-lg hover:shadow-xl transition-all duration-300"
+                       disabled={isSubmitting}
                       >
-                        Save Workout
+                       {isSubmitting ? (
+                         <>
+                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                           Saving...
+                         </>
+                       ) : (
+                         'Save Workout'
+                       )}
                       </Button>
                     </div>
                   </Card>
