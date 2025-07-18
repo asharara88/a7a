@@ -395,6 +395,8 @@ export const supplementApi = {
       return false;
     }
   }
+};
+
 // Mock data functions
 function getMockRecommendedSupplements(): Supplement[] {
   return [
@@ -468,4 +470,4 @@ function getMockRecommendedStacks(): SupplementStack[] {
       ]
     }
   ];
-};
+}

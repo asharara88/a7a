@@ -1,92 +1,349 @@
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Types
 export interface Recipe {
-  id: string;
-  name: string;
-  description: string;
-  ingredients: string[];
-  instructions: string[];
-  nutritionInfo: {
+  id: number;
+  title: string;
+  image: string;
+  readyInMinutes: number;
+  servings: number;
+  sourceUrl: string;
+  summary: string;
+  healthScore: number;
+  diets: string[];
+  nutrition: {
     calories: number;
     protein: number;
-    carbs: number;
     fat: number;
-  };
-  prepTime: number;
-  cookTime: number;
-  servings: number;
-  image?: string;
-  tags: string[];
+    carbs: number;
+  } | null;
 }
 
-export interface RecipeFilters {
-  cuisine?: string;
-  dietaryRestrictions?: string[];
-  prepTime?: number;
-  difficulty?: string;
-  ingredients?: string[];
+export interface RecipeSearchParams {
+  diet?: string;
+  intolerances?: string;
+  excludeIngredients?: string;
+  includeIngredients?: string;
+  maxReadyTime?: number;
+  minProtein?: number;
+  maxCalories?: number;
 }
 
-class RecipeApi {
-  private readonly apiUrl = 'https://api.spoonacular.com/recipes';
-  private readonly apiKey = import.meta.env.VITE_SPOONACULAR_API_KEY;
+export interface RecipeSearchResponse {
+  recipes: Recipe[];
+  total: number;
+}
 
-  async searchRecipes(query: string, filters?: RecipeFilters): Promise<Recipe[]> {
+export interface SavedRecipe {
+  id: string;
+  userId: string;
+  recipeId: number;
+  title: string;
+  image: string;
+  savedAt: string;
+  isFavorite: boolean;
+}
+
+// API functions
+export const recipeApi = {
+  // Search for recipes based on user preferences
+  searchRecipes: async (params: RecipeSearchParams): Promise<RecipeSearchResponse> => {
     try {
-      const params = new URLSearchParams({
-        apiKey: this.apiKey,
-        query,
-        number: '12',
-        addRecipeInformation: 'true',
-        fillIngredients: 'true'
+      const { data, error } = await supabase.functions.invoke('get-personalized-recipes', {
+        body: params,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-
-      if (filters?.cuisine) params.append('cuisine', filters.cuisine);
-      if (filters?.dietaryRestrictions?.length) {
-        params.append('diet', filters.dietaryRestrictions.join(','));
-      }
-      if (filters?.prepTime) params.append('maxReadyTime', filters.prepTime.toString());
-
-      const response = await fetch(`${this.apiUrl}/complexSearch?${params}`);
-      const data = await response.json();
-
-      return data.results?.map(this.transformRecipe) || [];
+      
+      if (error) throw new Error(error.message);
+      return data;
     } catch (error) {
       console.error('Error searching recipes:', error);
+      
+      // Fallback to mock data for demo purposes
+      return {
+        recipes: getMockRecipeData(),
+        total: getMockRecipeData().length
+      };
+    }
+  },
+  
+  // Get recipe details by ID
+  getRecipeById: async (recipeId: number): Promise<Recipe | null> => {
+    try {
+      const { data, error } = await supabase.functions.invoke('get-personalized-recipes', {
+        body: { ids: [recipeId] },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (error) throw new Error(error.message);
+      
+      // Check if recipe was found
+      if (!data.recipes || data.recipes.length === 0) {
+        console.warn('No recipe found with ID:', recipeId);
+        return null;
+      }
+      
+      return data.recipes[0] || null;
+    } catch (error) {
+      console.error('Error getting recipe details:', error);
+      
+      // Fallback to mock data
+      const mockRecipes = getMockRecipeData();
+      return mockRecipes.find(r => r.id === recipeId) || null;
+    }
+  },
+  
+  // Save a recipe to user's favorites
+  saveRecipe: async (userId: string, recipe: Recipe, isFavorite: boolean = false): Promise<SavedRecipe> => {
+    try {
+      // Check if recipe is already saved
+      const { data: existingRecipes, error: checkError } = await supabase
+        .from('saved_recipes')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('recipe_id', recipe.id)
+        .maybeSingle();
+      
+      if (checkError) throw checkError;
+      
+      // If recipe is already saved, just update the is_favorite status
+      if (existingRecipes) {
+        const { data, error } = await supabase
+          .from('saved_recipes')
+          .update({ is_favorite: isFavorite })
+          .eq('id', existingRecipes.id)
+          .select()
+          .single();
+        
+        if (error) throw error;
+        
+        return {
+          id: data.id,
+          userId: data.user_id,
+          recipeId: data.recipe_id,
+          title: data.title,
+          image: data.image,
+          savedAt: data.saved_at,
+          isFavorite: data.is_favorite
+        };
+      }
+
+      const { data, error } = await supabase
+        .from('saved_recipes')
+        .upsert({
+          user_id: userId,
+          recipe_id: recipe.id,
+          title: recipe.title,
+          image: recipe.image,
+          saved_at: new Date().toISOString(),
+          is_favorite: isFavorite
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      return {
+        id: data.id,
+        userId: data.user_id,
+        recipeId: data.recipe_id,
+        title: data.title,
+        image: data.image,
+        savedAt: data.saved_at,
+        isFavorite: data.is_favorite
+      };
+    } catch (error) {
+      console.error('Error saving recipe:', error);
+      throw error;
+    }
+  },
+  
+  // Unsave a recipe
+  unsaveRecipe: async (userId: string, recipeId: number): Promise<boolean> => {
+    try {
+      const { error } = await supabase
+        .from('saved_recipes')
+        .delete()
+        .eq('user_id', userId)
+        .eq('recipe_id', recipeId);
+      
+      if (error) throw error;
+      
+      return true;
+    } catch (error) {
+      console.error('Error unsaving recipe:', error);
+      throw error;
+    }
+  },
+  
+  // Get user's saved recipes
+  getSavedRecipes: async (userId: string): Promise<SavedRecipe[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('saved_recipes')
+        .select('*')
+        .eq('user_id', userId)
+        .order('saved_at', { ascending: false });
+      
+      if (error) throw error;
+      
+      return data.map(item => ({
+        id: item.id,
+        userId: item.user_id,
+        recipeId: item.recipe_id,
+        title: item.title,
+        image: item.image,
+        savedAt: item.saved_at,
+        isFavorite: item.is_favorite
+      }));
+    } catch (error) {
+      console.error('Error getting saved recipes:', error);
       return [];
     }
-  }
-
-  async getRecipeById(id: string): Promise<Recipe | null> {
+  },
+  
+  // Get personalized recipe recommendations based on user profile
+  getPersonalizedRecommendations: async (userId: string): Promise<Recipe[]> => {
     try {
-      const response = await fetch(`${this.apiUrl}/${id}/information?apiKey=${this.apiKey}`);
-      const data = await response.json();
+      // First get user profile to determine preferences
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('diet_preference, dietary_restrictions, allergies, primary_health_goals')
+        .eq('id', userId)
+        .single();
       
-      return this.transformRecipe(data);
+      if (profileError) throw profileError;
+      
+      // Build search params based on user profile
+      const searchParams: RecipeSearchParams = {};
+      
+      if (profileData.diet_preference) {
+        // Map app diet preferences to Spoonacular diet params
+        const dietMap: Record<string, string> = {
+          'vegetarian': 'vegetarian',
+          'vegan': 'vegan',
+          'pescatarian': 'pescatarian',
+          'keto': 'ketogenic',
+          'paleo': 'paleo',
+          'mediterranean': 'mediterranean'
+        };
+        
+        searchParams.diet = dietMap[profileData.diet_preference] || '';
+      }
+      
+      if (profileData.allergies && profileData.allergies.length > 0) {
+        searchParams.intolerances = profileData.allergies.join(',');
+      }
+      
+      if (profileData.dietary_restrictions && profileData.dietary_restrictions.length > 0) {
+        searchParams.excludeIngredients = profileData.dietary_restrictions.join(',');
+      }
+      
+      // Adjust nutrition targets based on health goals
+      if (profileData.primary_health_goals && profileData.primary_health_goals.includes('Weight management')) {
+        searchParams.maxCalories = 500; // Lower calorie recipes
+      }
+      
+      if (profileData.primary_health_goals && profileData.primary_health_goals.includes('Muscle building')) {
+        searchParams.minProtein = 25; // Higher protein recipes
+      }
+      
+      // Get personalized recipes
+      const { recipes } = await recipeApi.searchRecipes(searchParams);
+      
+      // Sort recipes by relevance to user's goals
+      const sortedRecipes = [...recipes].sort((a, b) => {
+        // Prioritize recipes with high health scores for users with health goals
+        if (profileData.primary_health_goals?.includes('better health')) {
+          return (b.healthScore || 0) - (a.healthScore || 0);
+        }
+        
+        // Prioritize high protein recipes for muscle building goals
+        if (profileData.primary_health_goals?.includes('muscle building') && 
+            a.nutrition && b.nutrition) {
+          return (b.nutrition.protein || 0) - (a.nutrition.protein || 0);
+        }
+        
+        // Prioritize low calorie recipes for weight management
+        if (profileData.primary_health_goals?.includes('weight management') && 
+            a.nutrition && b.nutrition) {
+          return (a.nutrition.calories || 0) - (b.nutrition.calories || 0);
+        }
+        
+        // Default sorting by health score
+        return (b.healthScore || 0) - (a.healthScore || 0);
+      });
+      
+      return sortedRecipes;
     } catch (error) {
-      console.error('Error fetching recipe:', error);
-      return null;
+      console.error('Error getting personalized recommendations:', error);
+      return getMockRecipeData();
     }
   }
+};
 
-  private transformRecipe(apiRecipe: any): Recipe {
-    return {
-      id: apiRecipe.id.toString(),
-      name: apiRecipe.title,
-      description: apiRecipe.summary?.replace(/<[^>]*>/g, '') || '',
-      ingredients: apiRecipe.extendedIngredients?.map((ing: any) => ing.original) || [],
-      instructions: apiRecipe.analyzedInstructions?.[0]?.steps?.map((step: any) => step.step) || [],
-      nutritionInfo: {
-        calories: apiRecipe.nutrition?.nutrients?.find((n: any) => n.name === 'Calories')?.amount || 0,
-        protein: apiRecipe.nutrition?.nutrients?.find((n: any) => n.name === 'Protein')?.amount || 0,
-        carbs: apiRecipe.nutrition?.nutrients?.find((n: any) => n.name === 'Carbohydrates')?.amount || 0,
-        fat: apiRecipe.nutrition?.nutrients?.find((n: any) => n.name === 'Fat')?.amount || 0,
-      },
-      prepTime: apiRecipe.preparationMinutes || 0,
-      cookTime: apiRecipe.cookingMinutes || 0,
-      servings: apiRecipe.servings || 1,
-      image: apiRecipe.image,
-      tags: apiRecipe.dishTypes || []
-    };
-  }
+// Mock data function for development and fallback
+function getMockRecipeData(): Recipe[] {
+  return [
+    {
+      id: 716429,
+      title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
+      image: "https://spoonacular.com/recipeImages/716429-556x370.jpg",
+      readyInMinutes: 45,
+      servings: 2,
+      sourceUrl: "https://fullbellysisters.blogspot.com/2012/06/pasta-with-garlic-scallions-cauliflower.html",
+      summary: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs might be just the main course you are searching for. This recipe makes 2 servings with 636 calories, 21g of protein, and 20g of fat each.",
+      healthScore: 76,
+      diets: ["dairy free", "lacto ovo vegetarian", "vegan"],
+      nutrition: {
+        calories: 636,
+        protein: 21,
+        fat: 20,
+        carbs: 83
+      }
+    },
+    {
+      id: 715538,
+      title: "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
+      image: "https://spoonacular.com/recipeImages/715538-556x370.jpg",
+      readyInMinutes: 35,
+      servings: 4,
+      sourceUrl: "https://www.pinkwhen.com/bruschetta-style-pork-pasta/",
+      summary: "What to make for dinner tonight?? Bruschetta Style Pork & Pasta might be a good recipe to expand your main course recipe box. This recipe makes 4 servings with 520 calories, 45g of protein, and 19g of fat each.",
+      healthScore: 81,
+      diets: ["dairy free"],
+      nutrition: {
+        calories: 520,
+        protein: 45,
+        fat: 19,
+        carbs: 45
+      }
+    },
+    {
+      id: 782601,
+      title: "Red Kidney Bean Jambalaya",
+      image: "https://spoonacular.com/recipeImages/782601-556x370.jpg",
+      readyInMinutes: 45,
+      servings: 6,
+      sourceUrl: "https://www.foodista.com/recipe/6BFKZR7Y/red-kidney-bean-jambalaya",
+      summary: "Red Kidney Bean Jambalayan is a main course that serves 6. One serving contains 538 calories, 21g of protein, and 8g of fat.",
+      healthScore: 96,
+      diets: ["gluten free", "dairy free", "lacto ovo vegetarian", "vegan"],
+      nutrition: {
+        calories: 538,
+        protein: 21,
+        fat: 8,
+        carbs: 92
+      }
+    }
+  ];
 }
-
-export const recipeApi = new RecipeApi();

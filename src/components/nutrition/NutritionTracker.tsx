@@ -226,7 +226,7 @@ const NutritionTracker: React.FC = () => {
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Today's Meals</h3>
             {mealLogs.length === 0 ? (
-             <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
+              <div className="text-center p-4 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm transition-transform hover:transform hover:scale-105 duration-300">
                 <p className="mb-4 text-lg">No meals logged for today</p>
                 <p className="mb-6 text-sm">Track your nutrition by logging your meals and snacks</p>
                 <Button 
@@ -353,6 +353,7 @@ const NutritionTracker: React.FC = () => {
                         </div>
                       ))}
                     </div>
+                  </div>
                 )}
                 
                 <div className="flex justify-end space-x-2 mt-4">
