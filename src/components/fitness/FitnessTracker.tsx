@@ -270,6 +270,7 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
           {/* History Tab */}
           {activeTab === 'history' && (
             <Card className="p-6">
+             <>
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Workout History</h3>
                 <div className="flex items-center space-x-2">
@@ -333,7 +334,8 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
                   ))}
                 </div>
               )}
-            </div>
+             </>
+           </Card>
           )}
 
           {/* Muscle Groups Tab */}
