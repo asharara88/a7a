@@ -98,7 +98,6 @@ const MinimalNav: React.FC = () => {
   }, [theme, isDarkMode]);
 
   useEffect(() => {
-  useEffect(() => {
     const checkUser = async () => {
       try {
         const { data } = await supabase.auth.getUser();
@@ -110,7 +109,7 @@ const MinimalNav: React.FC = () => {
     
     checkUser();
     
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
     });
     
@@ -118,6 +117,7 @@ const MinimalNav: React.FC = () => {
       authListener.subscription.unsubscribe();
     };
   }, []);
+
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
