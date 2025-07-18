@@ -27,7 +27,6 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
   const [isLoading, setIsLoading] = useState(true);
   const [showAddWorkout, setShowAddWorkout] = useState(false);
   const [timeRange, setTimeRange] = useState(7); // days
-  const [showMuscleVisualization, setShowMuscleVisualization] = useState(false);
   
   // New workout form state
   const [newWorkout, setNewWorkout] = useState({
@@ -586,6 +585,55 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
                       <p className="font-medium text-gray-900 dark:text-white">Calories Goal</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">2000 cal per week</p>
                     </div>
+                  </div>
+                </Card>
+              </motion.div>
+
+              {/* Muscle Recovery Status - Show on Dashboard */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
+                <Card className="p-7 hover:shadow-xl transition-all duration-300">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center">
+                      <div className="p-2 rounded-xl bg-orange-100 dark:bg-orange-900/30 mr-3">
+                        <Target className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white tracking-tight">Muscle Recovery Status</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Monitor recovery across muscle groups</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
+                      <div className="flex items-center">
+                        <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+                        <span>Excellent</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
+                        <span>Good</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-3 h-3 bg-orange-500 rounded-full mr-1"></div>
+                        <span>Moderate</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-3 h-3 bg-red-500 rounded-full mr-1"></div>
+                        <span>Poor</span>
+                      </div>
+                    </div>
+                  </div>
+                  <MuscleGroupVisualization
+                    mode="recovery"
+                    recoveryStates={mockRecoveryStates}
+                    height={350}
+                  />
+                  <div className="mt-4 text-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Click on the "Muscles" tab for detailed muscle group analysis and recent workout targeting
+                    </p>
                   </div>
                 </Card>
               </motion.div>
