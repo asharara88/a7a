@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState, useMemo } from "react";
 import { CheckCircle, AlertCircle, Info, Loader2, Shield } from "lucide-react";
 import Breadcrumbs from '../components/ui/Breadcrumbs';
