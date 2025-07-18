@@ -1,8 +1,7 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import Layout from './components/layout/Layout';
-import HomePage from './pages/HomePage';
+import { default as HomePage } from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
 import MyCoachPage from './pages/MyCoachPage';
 import MyPlatePage from './pages/MyPlatePage';
