@@ -59,6 +59,7 @@ supabase functions deploy recommendations
 ```
 
 **Verify deployment:**
+
 1. Go to your Supabase Dashboard
 2. Navigate to Edge Functions
 3. Confirm that `openai-proxy` is deployed and active
