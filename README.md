@@ -187,6 +187,10 @@ supabase login
 supabase link --project-ref your-project-ref
 ```
 
+```bash
+supabase link --project-ref your-project-ref
+```
+
 4. **Set the OpenAI API key as a Supabase secret** (replace `your-actual-openai-api-key` with your real OpenAI API key):
 
 ```bash
