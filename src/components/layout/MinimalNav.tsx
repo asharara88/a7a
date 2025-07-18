@@ -30,7 +30,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface MinimalNavProps {
   isDarkMode?: boolean;
-}
+};
 
 const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
   const location = useLocation();
@@ -188,137 +188,140 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
               
               {/* Wellness Dropdown */}
               {wellnessDropdownOpen && (
+                <div className="fixed inset-0 z-40" onClick={() => setWellnessDropdownOpen(false)} />
+              )}
+              {wellnessDropdownOpen && (
                 <motion.div 
-                  className="absolute top-full left-0 right-0 w-screen bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-800 py-6 z-20"
+                  className="fixed top-12 left-0 right-0 w-full bg-white dark:bg-gray-900 shadow-xl border-b border-gray-200 dark:border-gray-800 py-8 z-50 max-h-[calc(100vh-48px)] overflow-y-auto"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="max-w-7xl mx-auto px-4">
+                  <div className="max-w-7xl mx-auto px-6">
                     <div className="mb-4">
-                      <h3 className="text-lg font-medium px-4 py-2 text-gray-900 dark:text-white">My Wellness</h3>
+                      <h3 className="text-xl font-semibold px-4 py-2 text-gray-900 dark:text-white">My Wellness</h3>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
                       {/* Nutrition Section */}
                       <div className="space-y-3">
-                        <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Nutrition</h4>
-                        <Link to="/nutrition" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <h4 className="font-semibold text-gray-800 dark:text-gray-200 px-4 text-base">Nutrition</h4>
+                        <Link to="/nutrition" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3">
                             <Utensils size={18} className="text-green-600 dark:text-green-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Nutrition Dashboard</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your meals and nutrition</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">Nutrition Dashboard</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Track your meals and nutrition</p>
                           </div>
                         </Link>
                         
-                        <Link to="/recipes" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Link to="/recipes" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
                             <Utensils size={18} className="text-green-600 dark:text-green-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Personalized Recipes</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">AI-tailored meal suggestions</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">Personalized Recipes</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">AI-tailored meal suggestions</p>
                           </div>
                         </Link>
                         
-                        <Link to="/nutrition?tab=ai-analyzer" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Link to="/nutrition?tab=ai-analyzer" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
                             <Sparkles size={18} className="text-green-600 dark:text-green-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">AI Food Analyzer</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Analyze meals with AI</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">AI Food Analyzer</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Analyze meals with AI</p>
                           </div>
                         </Link>
                         
-                        <Link to="/metabolism" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Link to="/metabolism" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
                             <Activity size={18} className="text-green-600 dark:text-green-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Metabolic Health</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Continuous glucose monitoring</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">Metabolic Health</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Continuous glucose monitoring</p>
                           </div>
                         </Link>
                       </div>
                       
                       {/* Fitness Section */}
                       <div className="space-y-3">
-                        <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Fitness</h4>
-                        <Link to="/fitness" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <h4 className="font-semibold text-gray-800 dark:text-gray-200 px-4 text-base">Fitness</h4>
+                        <Link to="/fitness" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3">
                             <Activity size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Fitness Tracker</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your workouts</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">Fitness Tracker</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Track your workouts</p>
                           </div>
                         </Link>
                         
-                        <Link to="/fitness?tab=history" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Link to="/fitness?tab=history" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
                             <Activity size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Workout History</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">View past workouts</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">Workout History</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">View past workouts</p>
                           </div>
                         </Link>
                         
-                        <Link to="/fitness?tab=muscles" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Link to="/fitness?tab=muscles" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
                             <LayoutDashboard size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Muscle Groups</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Visualize muscle targeting</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">Muscle Groups</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Visualize muscle targeting</p>
                           </div>
                         </Link>
                         
-                        <Link to="/fitness?tab=analytics" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Link to="/fitness?tab=analytics" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
                             <BarChart2 size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Fitness Analytics</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Progress charts & trends</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">Fitness Analytics</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Progress charts & trends</p>
                           </div>
                         </Link>
                         
-                        <Link to="/fitness?tab=ai-generator" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Link to="/fitness?tab=ai-generator" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
                             <Sparkles size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">AI Workout Generator</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Generate personalized workouts</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">AI Workout Generator</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Generate personalized workouts</p>
                           </div>
                         </Link>
                       </div>
                       
                       {/* Sleep Section */}
                       <div className="space-y-3">
-                        <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Sleep</h4>
-                        <Link to="/sleep" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <h4 className="font-semibold text-gray-800 dark:text-gray-200 px-4 text-base">Sleep</h4>
+                        <Link to="/sleep" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3">
                             <Moon size={18} className="text-purple-600 dark:text-purple-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Sleep Quality</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Monitor your sleep</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">Sleep Quality</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Monitor your sleep</p>
                           </div>
                         </Link>
                         
-                        <Link to="/sleep/bioclock" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Link to="/sleep/bioclock" className="flex items-center p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:shadow-sm">
                           <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3 opacity-70">
                             <Moon size={18} className="text-purple-600 dark:text-purple-400" />
                           </div>
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900 dark:text-white">Bioclock™</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Circadian health</p>
+                            <span className="font-semibold text-gray-900 dark:text-white text-sm">Bioclock™</span>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Circadian health</p>
                           </div>
                         </Link>
                       </div>
@@ -354,27 +357,27 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
               {/* Supplements Dropdown */}
               {openSubmenu === 'supplements' && (
                 <motion.div 
-                  className="absolute top-full right-0 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-20"
+                  className="absolute top-full right-0 w-72 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-3 z-50"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Link to="/supplements" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link to="/supplements" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Pill size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Explore Supplements</span>
+                    <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Explore Supplements</span>
                   </Link>
-                  <Link to="/my-stacks" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link to="/my-stacks" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Package size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">My Stacks</span>
+                    <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">My Stacks</span>
                   </Link>
-                  <Link to="/supplement-store" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link to="/supplement-store" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Store size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Supplement Store</span>
+                    <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Supplement Store</span>
                   </Link>
-                  <Link to="/recommendations" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link to="/recommendations" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Recommendations</span>
+                    <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Recommendations</span>
                   </Link>
                 </motion.div>
               )}
@@ -424,13 +427,13 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
               {/* Utilities Dropdown */}
               {utilitiesDropdownOpen && (
                 <motion.div 
-                  className="absolute top-full right-0 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-20"
+                  className="absolute top-full right-0 w-56 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-3 z-50"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Link to="/cart" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link to="/cart" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <div className="relative">
                       <ShoppingCart size={16} className="text-gray-700 dark:text-gray-300" />
                       {cartCount > 0 && (
@@ -448,26 +451,26 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                         </motion.span>
                       )}
                     </div>
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Cart</span>
+                    <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Cart</span>
                   </Link>
-                  <Link to="/mycoach" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Link to="/mycoach" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <Sparkles size={16} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">MyCoach™</span>
+                    <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">MyCoach™</span>
                   </Link>
                   {user ? (
-                    <Link to="/profile" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Link to="/profile" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <User size={18} className="text-gray-700 dark:text-gray-300" />
-                      <span className="ml-3 text-gray-700 dark:text-gray-300">Profile</span>
+                      <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Profile</span>
                     </Link>
                   ) : (
                     <>
-                    <Link to="/signup" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Link to="/signup" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <User size={18} className="text-gray-700 dark:text-gray-300" />
-                      <span className="ml-3 text-gray-700 dark:text-gray-300">Sign Up</span>
+                      <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Sign Up</span>
                     </Link>
-                    <Link to="/login" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <Link to="/login" className="flex items-center px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <User size={18} className="text-gray-700 dark:text-gray-300" />
-                      <span className="ml-3 text-gray-700 dark:text-gray-300">Sign In</span>
+                      <span className="ml-3 text-gray-700 dark:text-gray-300 font-medium">Sign In</span>
                     </Link>
                     </>
                   )}

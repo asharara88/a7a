@@ -88,8 +88,13 @@ const MyCoach: React.FC = () => {
   };
 
   // Initialize Supabase client
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("Supabase environment variables are missing. Check your .env file.");
+  }
+
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
   // Scroll to bottom of messages
