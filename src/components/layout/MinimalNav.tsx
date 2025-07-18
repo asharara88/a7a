@@ -149,7 +149,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
             <Link 
               to="/dashboard" 
               className={cn(
-                "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                "relative flex items-center justify-center h-12 w-12 min-w-[48px] min-h-[44px] text-gray-800 dark:text-gray-200 touch-target",
                 "hover:scale-105 transition-transform duration-150",
                 "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               )}
@@ -169,7 +169,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
               <button 
                 onClick={() => setWellnessDropdownOpen(!wellnessDropdownOpen)}
                 className={cn(
-                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] min-h-[44px] text-gray-800 dark:text-gray-200 touch-target",
                   "hover:scale-105 transition-transform duration-150",
                   "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 )}
@@ -337,7 +337,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
               <button 
                 onClick={() => toggleSubmenu('supplements')}
                 className={cn(
-                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] min-h-[44px] text-gray-800 dark:text-gray-200 touch-target",
                   "hover:scale-105 transition-transform duration-150",
                   "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 )}
@@ -387,7 +387,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
             <Link 
               to="/mycoach" 
               className={cn(
-                "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                "relative flex items-center justify-center h-12 w-12 min-w-[48px] min-h-[44px] text-gray-800 dark:text-gray-200 touch-target",
                 "hover:scale-105 transition-transform duration-150",
                 "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               )}
@@ -407,7 +407,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
               <button 
                 onClick={() => setUtilitiesDropdownOpen(!utilitiesDropdownOpen)}
                 className={cn(
-                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
+                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] min-h-[44px] text-gray-800 dark:text-gray-200 touch-target",
                   "hover:scale-105 transition-transform duration-150",
                   "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 )}

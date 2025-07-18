@@ -144,7 +144,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen safe-area-top safe-area-bottom ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header with consistent styling */}
       <div className="relative">
         <MinimalNav isDarkMode={isDarkMode} />
@@ -154,7 +154,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="relative">
             <button
               onClick={() => setShowThemeMenu(!showThemeMenu)}
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
+              className="p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors touch-target min-h-[44px] min-w-[44px]"
               aria-label="Change theme"
             >
               {getThemeIcon()}
@@ -166,7 +166,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <button
                   onClick={() => handleThemeChange('light')}
                   className={cn(
-                    "w-full px-3 py-2 text-left text-sm flex items-center hover:bg-gray-100 dark:hover:bg-gray-700",
+                    "w-full px-3 py-3 text-left text-sm flex items-center hover:bg-gray-100 dark:hover:bg-gray-700 min-h-[44px] touch-target",
                     theme === 'light' && "bg-primary/10 text-primary"
                   )}
                 >
@@ -176,7 +176,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <button
                   onClick={() => handleThemeChange('dark')}
                   className={cn(
-                    "w-full px-3 py-2 text-left text-sm flex items-center hover:bg-gray-100 dark:hover:bg-gray-700",
+                    "w-full px-3 py-3 text-left text-sm flex items-center hover:bg-gray-100 dark:hover:bg-gray-700 min-h-[44px] touch-target",
                     theme === 'dark' && "bg-primary/10 text-primary"
                   )}
                 >
@@ -186,7 +186,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <button
                   onClick={() => handleThemeChange('auto')}
                   className={cn(
-                    "w-full px-3 py-2 text-left text-sm flex items-center hover:bg-gray-100 dark:hover:bg-gray-700",
+                    "w-full px-3 py-3 text-left text-sm flex items-center hover:bg-gray-100 dark:hover:bg-gray-700 min-h-[44px] touch-target",
                     theme === 'auto' && "bg-primary/10 text-primary"
                   )}
                 >

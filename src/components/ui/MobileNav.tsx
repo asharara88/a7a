@@ -45,7 +45,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Menu</h2>
           <button 
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
+            className="p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 touch-target min-h-[44px] min-w-[44px]"
             aria-label="Close menu"
           >
             <X className="w-6 h-6" />
@@ -76,7 +76,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
                   onSignOut?.();
                   onClose();
                 }}
-                className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg font-medium text-gray-900 dark:text-white"
+                className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg font-medium text-gray-900 dark:text-white touch-target min-h-[44px]"
               >
                 Sign Out
               </button>
@@ -84,14 +84,14 @@ const MobileNav: React.FC<MobileNavProps> = ({
               <>
                 <Link 
                   to="/login" 
-                  className="flex items-center justify-center w-full px-4 py-2 bg-primary text-white rounded-lg font-medium"
+                  className="flex items-center justify-center w-full px-4 py-3 bg-primary text-white rounded-lg font-medium touch-target min-h-[44px]"
                   onClick={onClose}
                 >
                   Sign In
                 </Link>
                 <Link 
                   to="/signup" 
-                  className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg font-medium text-gray-900 dark:text-white"
+                  className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg font-medium text-gray-900 dark:text-white touch-target min-h-[44px]"
                   onClick={onClose}
                 >
                   Create Account
