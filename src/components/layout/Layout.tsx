@@ -144,55 +144,6 @@ const Layout: React.FC = () => {
       {/* Header with consistent styling */}
       <div className="relative">
         <MinimalNav isDarkMode={isDarkMode} />
-        
-        {/* Theme Switcher Button */}
-        <div className="absolute top-2 right-16">
-          <div className="relative">
-            <button
-              onClick={() => setShowThemeMenu(!showThemeMenu)}
-              className="p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors touch-target min-h-[44px] min-w-[44px]"
-              aria-label="Change theme"
-            >
-              {getThemeIcon()}
-            </button>
-            
-            {/* Theme Menu */}
-            {showThemeMenu && (
-              <div className="absolute top-full right-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
-                <button
-                  onClick={() => handleThemeChange('light')}
-                  className={cn(
-                    "w-full px-3 py-3 text-left text-sm flex items-center hover:bg-gray-100 dark:hover:bg-gray-700 min-h-[44px] touch-target",
-                    theme === 'light' && "bg-primary/10 text-primary"
-                  )}
-                >
-                  <Sun className="w-4 h-4 mr-2" />
-                  Light
-                </button>
-                <button
-                  onClick={() => handleThemeChange('dark')}
-                  className={cn(
-                    "w-full px-3 py-3 text-left text-sm flex items-center hover:bg-gray-100 dark:hover:bg-gray-700 min-h-[44px] touch-target",
-                    theme === 'dark' && "bg-primary/10 text-primary"
-                  )}
-                >
-                  <Moon className="w-4 h-4 mr-2" />
-                  Dark
-                </button>
-                <button
-                  onClick={() => handleThemeChange('auto')}
-                  className={cn(
-                    "w-full px-3 py-3 text-left text-sm flex items-center hover:bg-gray-100 dark:hover:bg-gray-700 min-h-[44px] touch-target",
-                    theme === 'auto' && "bg-primary/10 text-primary"
-                  )}
-                >
-                  <Monitor className="w-4 h-4 mr-2" />
-                  Auto
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
       </div>
       
       {/* Mobile Navigation */}
@@ -229,14 +180,6 @@ const Layout: React.FC = () => {
           </div>
         </div>
       </footer>
-      
-      {/* Click outside to close theme menu */}
-      {showThemeMenu && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setShowThemeMenu(false)}
-        />
-      )}
     </div>
   )
 }

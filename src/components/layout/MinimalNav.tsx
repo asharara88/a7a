@@ -23,6 +23,38 @@ import { Target, Plus } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
 
+// Theme types
+type ThemeMode = 'light' | 'dark' | 'auto';
+
+// Get initial theme preference from localStorage or default to auto
+const getInitialTheme = (): ThemeMode => {
+  const savedTheme = localStorage.getItem('theme') as ThemeMode;
+  if (savedTheme && ['light', 'dark', 'auto'].includes(savedTheme)) {
+    return savedTheme;
+  }
+  return 'auto';
+};
+
+// Check if it's currently PM (after 6 PM and before 6 AM)
+const isCurrentlyPM = () => {
+  const hour = new Date().getHours();
+  return hour >= 18 || hour < 6;
+};
+
+// Determine if dark mode should be active based on theme setting
+const shouldUseDarkMode = (theme: ThemeMode): boolean => {
+  switch (theme) {
+    case 'dark':
+      return true;
+    case 'light':
+      return false;
+    case 'auto':
+      return isCurrentlyPM();
+    default:
+      return false;
+  }
+};
+
 // Initialize Supabase client for auth
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
@@ -40,9 +72,40 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
   const [user, setUser] = useState<any>(null);
   const [cartCount, setCartCount] = useState(2); // Mock cart count
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
   
   const wellnessRef = useRef<HTMLDivElement>(null);
   const utilitiesRef = useRef<HTMLDivElement>(null);
+
+  // Handle theme change
+  const handleThemeChange = (newTheme: ThemeMode) => {
+    setTheme(newTheme);
+    setShowThemeMenu(false);
+    localStorage.setItem('theme', newTheme);
+    
+    // Apply theme immediately
+    const shouldBeDark = shouldUseDarkMode(newTheme);
+    if (shouldBeDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
+  // Get theme icon
+  const getThemeIcon = () => {
+    switch (theme) {
+      case 'light':
+        return <Sun className="w-5 h-5" />;
+      case 'dark':
+        return <Moon className="w-5 h-5" />;
+      case 'auto':
+        return <Monitor className="w-5 h-5" />;
+      default:
+        return <Monitor className="w-5 h-5" />;
+    }
+  };</parameter>
   
   // Check for user session on mount
   useEffect(() => {
