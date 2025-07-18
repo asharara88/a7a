@@ -344,7 +344,6 @@ const MinimalNav: React.FC = () => {
                   to="/cart"
                   className={cn(
                     "p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300",
-                    isActive('/cart') && "text-primary bg-primary/10"
                     isActive('/cart') && "text-green-400 bg-green-500/10"
                   )}
                 >
