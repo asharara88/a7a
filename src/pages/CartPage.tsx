@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import ChatMessage from '../components/chat/ChatMessage';
 import { createClient } from '@supabase/supabase-js';
-import { cn } from '../../utils/cn'; 
-import { elevenlabsApi, Voice } from '../../api/elevenlabsApi';
+import { cn } from '../utils/cn'; 
+import { elevenlabsApi, Voice } from '../api/elevenlabsApi';
 import VoicePreferences from './VoicePreferences';
 
 // Sample question sets that will rotate after each response
