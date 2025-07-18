@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingCart, Heart, Info, Star, Check, AlertCircle, X } from 'lucide-react';
+import { ShoppingCart, Info, Star, Check, AlertCircle, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -43,7 +43,6 @@ const SupplementCard: React.FC<SupplementCardProps> = ({
     subscription_discount_percent = 0,
     image_url,
     is_bestseller,
-    is_featured,
     rating = 4.5,
     reviews_count = 0,
   } = supplement;
@@ -60,7 +59,7 @@ const SupplementCard: React.FC<SupplementCardProps> = ({
       red: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
     };
     
-    return colors[tier] || colors.yellow;
+    return colors[tier as keyof typeof colors] || colors.yellow;
   };
 
   const getTierIcon = () => {
@@ -89,21 +88,6 @@ const SupplementCard: React.FC<SupplementCardProps> = ({
         return "Insufficient evidence – Not recommended";
       default:
         return "";
-    }
-  };
-  
-  const getTierIcon = () => {
-    switch (tier) {
-      case 'green':
-        return <Check className="w-3.5 h-3.5 mr-1" />;
-      case 'yellow':
-        return <AlertCircle className="w-3.5 h-3.5 mr-1" />;
-      case 'orange':
-        return <Info className="w-3.5 h-3.5 mr-1" />;
-      case 'red':
-        return <X className="w-3.5 h-3.5 mr-1" />;
-      default:
-        return null;
     }
   };
 
