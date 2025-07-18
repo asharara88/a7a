@@ -16,7 +16,9 @@ import {
   Sparkles,
   Store,
   Moon,
-  BarChart2
+  BarChart2,
+  Sun,
+  Monitor
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Target, Plus } from 'lucide-react';
@@ -78,6 +80,20 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
   const wellnessRef = useRef<HTMLDivElement>(null);
   const utilitiesRef = useRef<HTMLDivElement>(null);
 
+  // Get theme icon
+  const getThemeIcon = () => {
+    switch (theme) {
+      case 'light':
+        return <Sun className="w-5 h-5" />;
+      case 'dark':
+        return <Moon className="w-5 h-5" />;
+      case 'auto':
+        return <Monitor className="w-5 h-5" />;
+      default:
+        return <Monitor className="w-5 h-5" />;
+    }
+  };
+
   // Handle theme change
   const handleThemeChange = (newTheme: ThemeMode) => {
     setTheme(newTheme);
@@ -93,20 +109,6 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
     }
   };
 
-  // Get theme icon
-  const getThemeIcon = () => {
-    switch (theme) {
-      case 'light':
-        return <Sun className="w-5 h-5" />;
-      case 'dark':
-        return <Moon className="w-5 h-5" />;
-      case 'auto':
-        return <Monitor className="w-5 h-5" />;
-      default:
-        return <Monitor className="w-5 h-5" />;
-    }
-  };</parameter>
-  
   // Check for user session on mount
   useEffect(() => {
     const checkUser = async () => {
