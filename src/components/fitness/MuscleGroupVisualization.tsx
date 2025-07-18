@@ -21,7 +21,6 @@ const MuscleGroupVisualization: React.FC<MuscleGroupVisualizationProps> = ({
   mode,
   height = 400
 }) => {
-  const [visualization, setVisualization] = useState<MuscleGroupVisualization | null>(null);
   const [visualization, setVisualization] = useState<MuscleGroupVisualizationType | null>(null);
   const [recoveryImages, setRecoveryImages] = useState<any[]>([]);
   const [baseImage, setBaseImage] = useState<string | null>(null);
