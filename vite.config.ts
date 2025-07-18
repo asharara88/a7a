@@ -5,7 +5,9 @@ export default defineConfig({
   root: '.',
   plugins: [
     react({
-      fastRefresh: true,
+      babel: {
+        plugins: ['@babel/plugin-transform-react-jsx']
+      }
     }),
   ],
   server: {
