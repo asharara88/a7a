@@ -341,7 +341,8 @@ const SavedRecipesGrid: React.FC = () => {
                   </span>
                 </div>
               </div>
-        ))
+        ))}
+        </div>
       )}
     </div>
   );

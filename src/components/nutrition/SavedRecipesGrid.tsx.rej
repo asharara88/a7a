@@ -1,0 +1,14 @@
+--- SavedRecipesGrid.tsx
++++ SavedRecipesGrid.tsx
+@@ -341,9 +341,8 @@
+                 </div>
+               </CardContent>
+             </Card>
+-          ))}
+-        </div>
+-      )}
++          ))
++        )}
+       </div>
+     </div>
+   );
