@@ -8,20 +8,17 @@ import { getAllSupplements, getUniqueCategories, searchSupplements, ProcessedSup
 
 const TIER_COLORS = {
   green: "bg-green-100 text-green-700 border-green-500 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700",
-  yellow: "bg-yellow-100 text-yellow-700 border-yellow-500 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700",
-  orange: "bg-orange-100 text-orange-700 border-orange-500 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-700"
+  yellow: "bg-yellow-100 text-yellow-700 border-yellow-500 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700"
 };
 
 const TIER_LABELS = {
   green: "Strong evidence – Supported by multiple high-quality human clinical trials and major scientific consensus.",
-  yellow: "Moderate evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus.",
-  orange: "Preliminary evidence – Mostly early-stage or animal/lab-based research, few or low-quality human trials, or anecdotal support."
+  yellow: "Moderate/emerging evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus. Also includes preliminary evidence from early-stage research."
 };
 
 const TIER_ICONS = {
   green: <Shield className="w-4 h-4 text-green-600 dark:text-green-400" />,
-  yellow: <AlertCircle className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />,
-  orange: <Info className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+  yellow: <AlertCircle className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
 };
 
 function formatAED(price) {
@@ -135,11 +132,7 @@ export default function SupplementStorePage() {
                 </div>
                 <div className="flex items-start">
                   <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 mr-3 mt-0.5">Yellow</span>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">Moderate/emerging evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus (e.g., ashwagandha, beta-alanine).</p>
-                </div>
-                <div className="flex items-start">
-                  <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 mr-3 mt-0.5">Orange</span>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">Limited/preliminary evidence – Mostly early-stage or animal/lab-based research, few or low-quality human trials, or anecdotal support (e.g., tongkat ali, shilajit).</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">Moderate/emerging evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus (e.g., ashwagandha, beta-alanine). Also includes preliminary evidence from early-stage research (e.g., tongkat ali, shilajit).</p>
                 </div>
               </div>
             </div>
@@ -195,14 +188,6 @@ export default function SupplementStorePage() {
               >
                 {TIER_ICONS.yellow} Yellow Tier
               </Button>
-              
-              <Button
-                variant={tierFilter === "orange" ? "default" : "outline"}
-                onClick={() => setTierFilter("orange")}
-                className="px-4 py-2 flex items-center gap-1.5"
-              >
-                {TIER_ICONS.orange} Orange Tier
-              </Button>
             </div>
             
             {/* Category Filter */}
@@ -238,14 +223,8 @@ export default function SupplementStorePage() {
               
               <div className="flex items-center gap-1">
                 {TIER_ICONS.yellow}
-                <span className="font-medium text-gray-800 dark:text-gray-200">Moderate Evidence:</span>
-                <span className="text-gray-600 dark:text-gray-400">Some human studies</span>
-              </div>
-              
-              <div className="flex items-center gap-1">
-                {TIER_ICONS.orange}
-                <span className="font-medium text-gray-800 dark:text-gray-200">Preliminary Evidence:</span>
-                <span className="text-gray-600 dark:text-gray-400">Early research</span>
+                <span className="font-medium text-gray-800 dark:text-gray-200">Moderate/Emerging Evidence:</span>
+                <span className="text-gray-600 dark:text-gray-400">Some studies & early research</span>
               </div>
             </div>
           </div>

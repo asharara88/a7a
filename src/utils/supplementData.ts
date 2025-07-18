@@ -18,7 +18,7 @@ export interface ProcessedSupplement {
   brand: string;
   category: string;
   description: string;
-  tier: 'green' | 'yellow' | 'orange';
+  tier: 'green' | 'yellow';
   use_case: string;
   price_aed: number;
   subscription_discount_percent: number;
@@ -39,7 +39,7 @@ export const processSupplementData = (): ProcessedSupplement[] => {
     brand: 'Biowell',
     category: supplement.category,
     description: supplement.use_case || `${supplement.name} supplement for ${supplement.category.toLowerCase()}`,
-    tier: supplement.tier.toLowerCase() as 'green' | 'yellow' | 'orange',
+    tier: supplement.tier.toLowerCase() === 'green' ? 'green' : 'yellow',
     use_case: supplement.use_case,
     price_aed: supplement.price_aed,
     subscription_discount_percent: supplement.subscription_discount_percent,
@@ -59,7 +59,7 @@ export const getAllSupplements = (): ProcessedSupplement[] => {
 };
 
 // Filter supplements by tier
-export const getSupplementsByTier = (tier: 'green' | 'yellow' | 'orange'): ProcessedSupplement[] => {
+export const getSupplementsByTier = (tier: 'green' | 'yellow'): ProcessedSupplement[] => {
   return getAllSupplements().filter(supplement => supplement.tier === tier);
 };
 
