@@ -41,20 +41,6 @@ const HomePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Hero Logo */}
-            <motion.div 
-              className="flex justify-center mb-12"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <img 
-                src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/stack%20dash%20metalic%20favicon.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9zdGFjayBkYXNoIG1ldGFsaWMgZmF2aWNvbi5zdmciLCJpYXQiOjE3NTI4NDIyMTAsImV4cCI6MTc4NDM3ODIxMH0.J4JBhQ9A4sGJ_rZKF4frDrrTdN8SvQrxMnE6dYaB4VI"
-                alt="Biowell Hero Logo"
-                className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain drop-shadow-lg"
-              />
-            </motion.div>
-            
             <a 
               href="#evidence-based-health" 
               className="inline-block bg-gray-100 dark:bg-gray-800 rounded-xl px-5 py-1.5 mb-8 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer shadow-sm"
