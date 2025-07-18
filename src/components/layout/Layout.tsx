@@ -146,7 +146,7 @@ const Layout: React.FC = () => {
         <MinimalNav isDarkMode={isDarkMode} />
         
         {/* Theme Switcher Button */}
-        <div className="absolute top-2 right-4">
+        <div className="absolute top-2 right-16">
           <div className="relative">
             <button
               onClick={() => setShowThemeMenu(!showThemeMenu)}
