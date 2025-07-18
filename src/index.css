@@ -179,9 +179,9 @@
   }
 
   /* Brand color utilities for dynamic class generation */
-  .text-primary { @apply text-primary; }
-  .text-secondary { @apply text-secondary; }
-  .text-tertiary { @apply text-tertiary; }
+  .text-primary { color: hsl(var(--color-primary)); }
+  .text-secondary { color: hsl(var(--color-secondary)); }
+  .text-tertiary { color: hsl(var(--color-tertiary)); }
   .bg-primary\/5 { background-color: hsl(var(--color-primary) / 0.05); }
   .bg-primary\/10 { background-color: hsl(var(--color-primary) / 0.1); }
   .bg-secondary\/5 { background-color: hsl(var(--color-secondary) / 0.05); }
