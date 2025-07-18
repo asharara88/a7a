@@ -19,6 +19,7 @@ import {
   BarChart2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Target, Plus } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
 

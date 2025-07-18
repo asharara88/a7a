@@ -12,7 +12,9 @@ import RecommendationsCard from '../components/dashboard/RecommendationsCard'
 import GoalsProgress from '../components/dashboard/GoalsProgress'
 import SupplementTracker from '../components/dashboard/SupplementTracker'
 import WearableDeviceCard from '../components/dashboard/WearableDeviceCard'
-import MuscleGroupVisualization from '../components/fitness/MuscleGroupVisualization'
+import FitnessWidget from '../components/fitness/FitnessWidget'
+import FitnessQuickAccess from '../components/dashboard/FitnessQuickAccess'
+import QuickWorkoutLogger from '../components/fitness/QuickWorkoutLogger'
 import BWScoreCard, { MetricScore } from '../components/dashboard/BWScoreCard'
 import MetabolicSnapshot from '../components/dashboard/MetabolicSnapshot'
 
@@ -20,6 +22,7 @@ const DashboardPage: React.FC = () => {
   // Mock data for metrics cards
   const [isSyncing, setIsSyncing] = React.useState(false);
   const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set());
+  const [fitnessDataRefresh, setFitnessDataRefresh] = React.useState(0);
   
   // Calculate section average scores
   const sectionScores = {
@@ -70,6 +73,17 @@ const DashboardPage: React.FC = () => {
     // In a real app, this would update the state
     console.log('Marked supplement as taken:', id);
   };
+
+  const toggleWidget = (widgetName: string) => {
+    setExpandedWidgets(prev => ({
+      ...prev,
+      [widgetName]: !prev[widgetName]
+    }))
+  }
+
+  const handleWorkoutLogged = () => {
+    setFitnessDataRefresh(prev => prev + 1)
+  }
   
   // Mock data for trends chart
   const trendsData = {
@@ -1132,6 +1146,19 @@ const DashboardPage: React.FC = () => {
                 onMarkTaken={handleMarkSupplementTaken}
               />
             </motion.div>
+
+            {/* Fitness Widget */}
+            <FitnessWidget 
+              expanded={expandedWidgets.fitness}
+              onToggle={() => toggleWidget('fitness')}
+            />
+
+            {/* Fitness Quick Access - Only show if not expanded */}
+            {!expandedWidgets.fitness && (
+              <FitnessQuickAccess variant="compact" />
+            )}
+
+            {/* Health Recommendations */}
             <motion.div variants={itemVariants}>
               <RecommendationsCard recommendations={recommendations} />
             </motion.div>
@@ -1160,16 +1187,10 @@ const DashboardPage: React.FC = () => {
               currentGlucose={95}
               trend="stable"
             />
-            
-            {/* Recovery Visualization */}
-            <MuscleGroupVisualization
-              mode="recovery"
-              recoveryStates={recoveryStates}
-              height={300}
-            />
           </motion.div>
         </motion.div>
       </div>
+      <QuickWorkoutLogger onWorkoutLogged={handleWorkoutLogged} />
     </div>
   )
 }

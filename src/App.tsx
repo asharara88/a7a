@@ -2,6 +2,8 @@ import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import { createClient } from '@supabase/supabase-js'
+import { useLocation } from 'react-router-dom'
+import FitnessFloatingMenu from './components/ui/FitnessFloatingMenu'
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
@@ -57,6 +59,13 @@ const CartPage = React.lazy(() => import('./pages/CartPage'))
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'))
 
 const App: React.FC = () => {
+  const location = useLocation();
+  
+  // Show fitness floating menu on relevant pages
+  const showFitnessMenu = ['/dashboard', '/nutrition', '/mycoach'].some(path => 
+    location.pathname.startsWith(path)
+  );
+
   return (
     <Layout>
       <React.Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
@@ -83,6 +92,9 @@ const App: React.FC = () => {
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        
+        {/* Contextual Fitness Menu */}
+        {showFitnessMenu && <FitnessFloatingMenu />}
       </React.Suspense>
     </Layout>
   )
