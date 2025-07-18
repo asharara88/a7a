@@ -12,6 +12,7 @@ import RecommendationsCard from '../components/dashboard/RecommendationsCard'
 import GoalsProgress from '../components/dashboard/GoalsProgress'
 import SupplementTracker from '../components/dashboard/SupplementTracker'
 import WearableDeviceCard from '../components/dashboard/WearableDeviceCard'
+import MuscleGroupVisualization from '../components/fitness/MuscleGroupVisualization'
 import BWScoreCard, { MetricScore } from '../components/dashboard/BWScoreCard'
 import MetabolicSnapshot from '../components/dashboard/MetabolicSnapshot'
 
