@@ -164,8 +164,8 @@ const MyCoach: React.FC = () => {
       }
       
       // Clear any active typing timeouts
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
       }
     };
   }, []);
@@ -246,8 +246,8 @@ const MyCoach: React.FC = () => {
       }
       
       // Stop typing animation
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
       }
       setTypingText('');
       setIsFetching(false);
@@ -261,8 +261,8 @@ const MyCoach: React.FC = () => {
       console.error('Error sending message:', err);
       setError('Failed to get a response. Please try again.');
       // Stop typing animation
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
       }
       setTypingText('');
       setIsFetching(false);
