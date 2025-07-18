@@ -86,6 +86,8 @@ function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goa
           <Info className="w-5 h-5 text-primary cursor-pointer" title="Biowell Score: Composite of sleep, fitness, and consistency." />
 function SleepCard({ totalSleep = 7.5, deepSleep = 1.2, remSleep = 1.0, sleepGoal = 8 }) {
         <span className="text-4xl font-bold text-primary tracking-tight">{score}</span>
+    }
+  )
   return (
     <div className="rounded-2xl bg-white dark:bg-surface-1 shadow-lg border border-neutral-200/60 dark:border-neutral-700/60 p-8 w-full h-full hover:shadow-xl transition-all duration-300">
         <span className="text-sm text-neutral-500 dark:text-neutral-400">/100</span>
@@ -116,6 +118,7 @@ function SleepCard({ totalSleep = 7.5, deepSleep = 1.2, remSleep = 1.0, sleepGoa
         </div>
       </div>
     </div>
+  )
   );
 }
 
