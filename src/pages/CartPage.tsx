@@ -284,7 +284,7 @@ const CartPage: React.FC = () => {
                               removingItem === item.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                             onClick={() => handleRemoveItem(item.id)}
                             disabled={removingItem === item.id}
-                            }`}
+                          >
                             {removingItem === item.id ? (
                               <Loader2 className="w-4 h-4 animate-spin" />
                             ) : (
@@ -299,7 +299,7 @@ const CartPage: React.FC = () => {
                 </div>
               </div>
             </div>
-
+            
             {/* Order Summary */}
             <div>
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">

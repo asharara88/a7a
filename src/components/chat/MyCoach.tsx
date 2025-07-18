@@ -277,6 +277,36 @@ const MyCoach: React.FC = () => {
     updateTypingText();
   };
 
+  // Helper function to get color based on category
+  const getCategoryColor = (category: string): string => {
+    switch (category) {
+      case 'sleep':
+        return 'bg-purple-500';
+      case 'supplements':
+        return 'bg-green-500';
+      case 'nutrition':
+        return 'bg-blue-500';
+      case 'fitness':
+        return 'bg-orange-500';
+      case 'metabolism':
+        return 'bg-red-500';
+      case 'hydration':
+        return 'bg-cyan-500';
+      case 'stress':
+        return 'bg-pink-500';
+      case 'energy':
+        return 'bg-yellow-500';
+      case 'recovery':
+        return 'bg-indigo-500';
+      case 'cognitive':
+        return 'bg-emerald-500';
+      case 'longevity':
+        return 'bg-violet-500';
+      default:
+        return 'bg-gray-500';
+    }
+  };
+
   const handleQuestionClick = (question: string) => (e: React.MouseEvent) => {
     e.preventDefault();
     setRecentlyClickedQuestion(question);
@@ -548,33 +578,6 @@ const MyCoach: React.FC = () => {
 };
 
 // Helper function to get color based on category
-function getCategoryColor(category: string): string {
-  switch (category) {
-    case 'sleep':
-      return 'bg-purple-500';
-    case 'supplements':
-      return 'bg-green-500';
-    case 'nutrition':
-      return 'bg-blue-500';
-    case 'fitness':
-      return 'bg-orange-500';
-    case 'metabolism':
-      return 'bg-red-500';
-    case 'hydration':
-      return 'bg-cyan-500';
-    case 'stress':
-      return 'bg-pink-500';
-    case 'energy':
-      return 'bg-yellow-500';
-    case 'recovery':
-      return 'bg-indigo-500';
-    case 'cognitive':
-      return 'bg-emerald-500';
-    case 'longevity':
-      return 'bg-violet-500';
-    default:
-      return 'bg-gray-500';
-  }
 }
 
 export default MyCoach;
