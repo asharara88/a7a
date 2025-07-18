@@ -161,7 +161,7 @@ supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-api-key
 supabase functions deploy elevenlabs-proxy
 ```
 
-4. **Verify the setup** by checking that the secret was set correctly:
+1. **Verify the setup** by checking that the secret was set correctly:
 
 ```bash
 supabase secrets list
