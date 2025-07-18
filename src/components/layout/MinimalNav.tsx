@@ -166,7 +166,7 @@ const MinimalNav: React.FC = () => {
         { href: '/cart', label: 'Cart', icon: <ShoppingCart className="w-4 h-4" /> }
       ]
     },
-    { href: '/profile', label: 'MyBio', icon: <User className="w-4 h-4" /> },
+    { href: '/mybio', label: 'MyBio', icon: <User className="w-4 h-4" /> },
     { 
       href: '/nutrition', 
       label: 'MyWellness', 

@@ -25,6 +25,7 @@ import NutritionDashboardPage from './pages/NutritionDashboardPage';
 import SupplementRecommendationsPage from './pages/SupplementRecommendationsPage';
 import MetabolismPage from './pages/MetabolismPage';
 import BioclockPage from './pages/BioclockPage';
+import MyBioPage from './pages/MyBioPage';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
         <Route path="recipes/saved" element={<SavedRecipesPage />} />
         <Route path="recipes/:id" element={<RecipeDetailPage />} />
         <Route path="metabolism" element={<MetabolismPage />} />
+        <Route path="mybio" element={<MyBioPage />} />
         <Route path="bioclock" element={<BioclockPage />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="about" element={<AboutPage />} />
