@@ -6,6 +6,8 @@ import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { Input } from '../ui/Input';
 import { Line } from 'react-chartjs-2';
+import MuscleGroupVisualization from './MuscleGroupVisualization';
+import { muscleGroupApi } from '../../api/muscleGroupApi';
 
 const FitnessTracker: React.FC = () => {
   const [workoutHistory, setWorkoutHistory] = useState<WorkoutSession[]>([]);
@@ -13,6 +15,7 @@ const FitnessTracker: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showAddWorkout, setShowAddWorkout] = useState(false);
   const [timeRange, setTimeRange] = useState(7); // days
+  const [showMuscleVisualization, setShowMuscleVisualization] = useState(false);
   
   // New workout form state
   const [newWorkout, setNewWorkout] = useState({
@@ -140,6 +143,29 @@ const FitnessTracker: React.FC = () => {
     'CrossFit'
   ];
 
+  // Get muscle groups for workout type
+  const getMuscleGroupsForWorkout = (workoutType: string) => {
+    const muscleMap: Record<string, { primary: string[], secondary: string[] }> = {
+      'Strength Training': { primary: ['chest', 'back', 'shoulders'], secondary: ['biceps', 'triceps'] },
+      'HIIT': { primary: ['quads', 'glutes'], secondary: ['hamstrings', 'calves'] },
+      'Yoga': { primary: ['core'], secondary: ['back', 'shoulders'] },
+      'Pilates': { primary: ['core', 'glutes'], secondary: ['back'] },
+      'Swimming': { primary: ['shoulders', 'back'], secondary: ['chest', 'triceps'] },
+      'CrossFit': { primary: ['quads', 'shoulders', 'back'], secondary: ['hamstrings', 'triceps', 'biceps'] },
+    };
+    return muscleMap[workoutType] || { primary: [], secondary: [] };
+  };
+
+  // Mock recovery states for demonstration
+  const mockRecoveryStates = [
+    { muscleGroup: 'chest', readiness: 'excellent' as const, color: muscleGroupApi.getRecoveryColor('excellent') },
+    { muscleGroup: 'back', readiness: 'good' as const, color: muscleGroupApi.getRecoveryColor('good') },
+    { muscleGroup: 'shoulders', readiness: 'moderate' as const, color: muscleGroupApi.getRecoveryColor('moderate') },
+    { muscleGroup: 'biceps', readiness: 'poor' as const, color: muscleGroupApi.getRecoveryColor('poor') },
+    { muscleGroup: 'quads', readiness: 'excellent' as const, color: muscleGroupApi.getRecoveryColor('excellent') },
+    { muscleGroup: 'hamstrings', readiness: 'good' as const, color: muscleGroupApi.getRecoveryColor('good') },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -160,6 +186,14 @@ const FitnessTracker: React.FC = () => {
           >
             <Plus className="w-4 h-4 mr-1" />
             Log Workout
+          </Button>
+          <Button
+            onClick={() => setShowMuscleVisualization(!showMuscleVisualization)}
+            variant="outline"
+            className="flex items-center"
+          >
+            <Activity className="w-4 h-4 mr-1" />
+            {showMuscleVisualization ? 'Hide' : 'Show'} Muscle Groups
           </Button>
         </div>
       </div>
