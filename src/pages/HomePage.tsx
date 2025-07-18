@@ -44,7 +44,7 @@ const HomePage: React.FC = () => {
             <a 
               href="#evidence-based-health" 
               className="inline-block bg-gray-100 dark:bg-gray-800 rounded-xl px-5 py-1.5 mb-8 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer shadow-sm"
-            >
+              Log in
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300 tracking-wider">Evidence-based health optimization</span>
             </a>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight text-left leading-tight">
@@ -76,7 +76,7 @@ const HomePage: React.FC = () => {
                  to="/login"
                   className="bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 border border-gray-200 dark:border-gray-700 px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg min-w-[200px] tracking-wide"
                 >
-             Create Account
+             Log in
                 </Link>
               </motion.div>
             </motion.div>

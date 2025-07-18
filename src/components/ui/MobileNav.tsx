@@ -94,7 +94,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
                   className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg font-medium text-gray-900 dark:text-white touch-target min-h-[44px]"
                   onClick={onClose}
                 >
-                  Create Account
+                  Log in
                 </Link>
               </>
             )}

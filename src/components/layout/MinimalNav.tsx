@@ -424,7 +424,7 @@ const MinimalNav: React.FC = () => {
                       isActive('/cart') && "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20"
                     )}
                   >
-                    Sign in
+                    Log in
                   </Link>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
@@ -583,7 +583,7 @@ const MinimalNav: React.FC = () => {
                         className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors tracking-wide"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        Sign in
+                        Log in
                       </Link>
                       <Link
                         to="/onboarding"
