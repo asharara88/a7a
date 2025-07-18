@@ -2,8 +2,7 @@ import React from 'react';
 import { Info } from "lucide-react";
 
 // Placeholder donut chart using SVG
-function DonutChart({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goalCarbs = 250, goalFat = 70 }) {
-  // Simple static arc, replace with <PieChart/> from recharts for production
+function DonutChart({ protein = 95, carbs = 210, fat = 65 }) {
   return (
     <div className="flex flex-col items-center">
       <svg width="70" height="70">
@@ -22,36 +21,36 @@ function DonutChart({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, go
 
 function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
   return (
-    <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-7 w-full h-full">
+    <div className="rounded-2xl bg-white dark:bg-surface-1 shadow-lg border border-neutral-200/60 dark:border-neutral-700/60 p-8 w-full h-full hover:shadow-xl transition-all duration-300">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-2 text-left">
-          <span className="text-xl font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
+          <span className="text-2xl font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
             BW Score
           </span>
-          <Info className="w-5 h-5 text-blue-500 cursor-pointer" title="Biowell Score: Composite of sleep, fitness, and consistency." />
+          <Info className="w-5 h-5 text-primary cursor-pointer" title="Biowell Score: Composite of sleep, fitness, and consistency." />
         </div>
-        <span className="text-3xl font-bold text-yellow-500 tracking-tight">{score}</span>
+        <span className="text-4xl font-bold text-primary tracking-tight">{score}</span>
       </div>
       <div className="flex items-center gap-2 mb-6 text-left">
-        <span className="text-sm text-gray-500 dark:text-gray-400">/100</span>
-        <span className="px-3 py-1 rounded-full bg-yellow-50 text-yellow-700 text-xs font-medium ml-2 tracking-wide">
+        <span className="text-sm text-neutral-500 dark:text-neutral-400">/100</span>
+        <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium ml-2 tracking-wide">
           Good
         </span>
       </div>
-      <div className="border-t border-neutral-200 dark:border-neutral-800 pt-5 mt-3 space-y-4">
+      <div className="border-t border-neutral-200/60 dark:border-neutral-700/60 pt-6 mt-4 space-y-5">
         <div className="flex items-center justify-between text-left">
-          <span className="flex items-center gap-1.5 text-sm text-purple-600 dark:text-purple-400 font-medium tracking-wide">
+          <span className="flex items-center gap-2 text-sm text-secondary font-medium tracking-wide">
             Sleep
-            <Info className="w-3.5 h-3.5 text-purple-400" title="Based on sleep duration, quality, and consistency." />
+            <Info className="w-4 h-4 text-secondary/60" title="Based on sleep duration, quality, and consistency." />
           </span>
-          <span className="text-lg font-bold text-purple-500 tracking-tight">{sleep}</span>
+          <span className="text-lg font-bold text-secondary tracking-tight">{sleep}</span>
         </div>
         <div className="flex items-center justify-between text-left">
-          <span className="flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 font-medium tracking-wide">
+          <span className="flex items-center gap-2 text-sm text-tertiary font-medium tracking-wide">
             Fitness
-            <Info className="w-3.5 h-3.5 text-blue-400" title="Based on activity levels, workouts, and recovery." />
+            <Info className="w-4 h-4 text-tertiary/60" title="Based on activity levels, workouts, and recovery." />
           </span>
-          <span className="text-lg font-bold text-blue-500 tracking-tight">{fitness}</span>
+          <span className="text-lg font-bold text-tertiary tracking-tight">{fitness}</span>
         </div>
       </div>
     </div>
@@ -59,13 +58,14 @@ function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
 }
 
 function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goalCarbs = 250, goalFat = 70 }) {
+  const percent = Math.round((protein / goalProtein) * 100);
   return (
-    <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-7 w-full h-full">
+    <div className="rounded-2xl bg-white dark:bg-surface-1 shadow-lg border border-neutral-200/60 dark:border-neutral-700/60 p-8 w-full h-full hover:shadow-xl transition-all duration-300">
       <div className="flex items-center gap-2.5 mb-5 text-left">
-        <span className="text-xl font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
+        <span className="text-2xl font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
           Macros
         </span>
-        <Info className="w-5 h-5 text-green-500 cursor-pointer" title="Macronutrient breakdown based on daily intake and goals." />
+        <Info className="w-5 h-5 text-tertiary cursor-pointer" title="Macronutrient breakdown based on daily intake and goals." />
       </div>
       <DonutChart protein={protein} carbs={carbs} fat={fat} />
       <div className="flex flex-col gap-4 mt-5">

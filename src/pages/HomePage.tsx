@@ -1,142 +1,129 @@
 import React from 'react';
-import { Info } from "lucide-react";
+import { Link } from 'react-router-dom';
+import { 
+  ArrowRight, 
+  Brain, 
+  Activity, 
+  Utensils, 
+  Calendar,
+  BarChart,
+  Shield
+} from 'lucide-react';
+import { Button } from '../components/ui/Button';
+import DashboardCards from '../components/dashboard/DashboardCards';
 
-// Placeholder donut chart using SVG
-function DonutChart({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goalCarbs = 250, goalFat = 70 }) {
-  // Simple static arc, replace with <PieChart/> from recharts for production
+const HomePage: React.FC = () => {
   return (
-    <div className="flex flex-col items-center">
-      <svg width="70" height="70">
-        <circle cx="35" cy="35" r="30" fill="none" stroke="#6366f1" strokeWidth="8" strokeDasharray="180 110" />
-        <circle cx="35" cy="35" r="30" fill="none" stroke="#22d3ee" strokeWidth="8" strokeDasharray="100 190" strokeDashoffset="-100"/>
-        <circle cx="35" cy="35" r="30" fill="none" stroke="#f43f5e" strokeWidth="8" strokeDasharray="70 220" strokeDashoffset="-200"/>
-      </svg>
-      <div className="flex gap-2 text-xs mt-2">
-        <span className="text-indigo-500 font-bold">Protein</span>
-        <span className="text-cyan-500 font-bold">Carbs</span>
-        <span className="text-pink-500 font-bold">Fat</span>
-      </div>
-    </div>
-  );
-}
-
-function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
-  return (
-    <div className="rounded-2xl bg-white dark:bg-surface-1 shadow-lg border border-neutral-200/60 dark:border-neutral-700/60 p-8 w-full h-full hover:shadow-xl transition-all duration-300">
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-2 text-left">
-          <span className="text-2xl font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
-            BW Score
-          </span>
-          <Info className="w-5 h-5 text-primary cursor-pointer" title="Biowell Score: Composite of sleep, fitness, and consistency." />
-        </div>
-        <span className="text-4xl font-bold text-primary tracking-tight">{score}</span>
-      </div>
-      <div className="flex items-center gap-2 mb-6 text-left">
-        <span className="text-sm text-neutral-500 dark:text-neutral-400">/100</span>
-        <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium ml-2 tracking-wide">
-          Good
-        </span>
-      </div>
-      <div className="border-t border-neutral-200/60 dark:border-neutral-700/60 pt-6 mt-4 space-y-5">
-        <div className="flex items-center justify-between text-left">
-          <span className="flex items-center gap-2 text-sm text-secondary font-medium tracking-wide">
-            Sleep
-            <Info className="w-4 h-4 text-secondary/60" title="Based on sleep duration, quality, and consistency." />
-          </span>
-          <span className="text-lg font-bold text-secondary tracking-tight">{sleep}</span>
-        </div>
-        <div className="flex items-center justify-between text-left">
-          <span className="flex items-center gap-2 text-sm text-tertiary font-medium tracking-wide">
-            Fitness
-            <Info className="w-4 h-4 text-tertiary/60" title="Based on activity levels, workouts, and recovery." />
-          </span>
-          <span className="text-lg font-bold text-tertiary tracking-tight">{fitness}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goalCarbs = 250, goalFat = 70 }) {
-  return (
-    <div className="rounded-2xl bg-white dark:bg-surface-1 shadow-lg border border-neutral-200/60 dark:border-neutral-700/60 p-8 w-full h-full hover:shadow-xl transition-all duration-300">
-      <div className="flex items-center gap-2.5 mb-5 text-left">
-        <span className="text-2xl font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
-          Macros
-        </span>
-        <Info className="w-5 h-5 text-tertiary cursor-pointer" title="Macronutrient breakdown based on daily intake and goals." />
-      </div>
-      <DonutChart protein={protein} carbs={carbs} fat={fat} />
-      <div className="flex flex-col gap-4 mt-5">
-        <div className="flex items-center justify-between text-sm text-left">
-        </div>
-        <div className="flex items-center justify-between text-sm text-left">
-          <span className="text-cyan-600 dark:text-cyan-400 tracking-wide">Carbs</span>
-          <span className="font-bold tracking-tight">{carbs}g <span className="text-gray-400">/ {goalCarbs}g</span></span>
-        </div>
-        <div className="flex items-center justify-between text-sm text-left">
-          <span className="text-pink-600 dark:text-pink-400 tracking-wide">Fat</span>
-          <span className="font-bold tracking-tight">{fat}g <span className="text-gray-400">/ {goalFat}g</span></span>
-        </div>
-      </div>
-          <span className="text-2xl font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
-  );
-}
-          <Info className="w-5 h-5 text-primary cursor-pointer" title="Biowell Score: Composite of sleep, fitness, and consistency." />
-function SleepCard({ totalSleep = 7.5, deepSleep = 1.2, remSleep = 1.0, sleepGoal = 8 }) {
-        <span className="text-4xl font-bold text-primary tracking-tight">{score}</span>
-    }
-  )
-  return (
-    <div className="rounded-2xl bg-white dark:bg-surface-1 shadow-lg border border-neutral-200/60 dark:border-neutral-700/60 p-8 w-full h-full hover:shadow-xl transition-all duration-300">
-        <span className="text-sm text-neutral-500 dark:text-neutral-400">/100</span>
-        <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium ml-2 tracking-wide">
-          Sleep Analysis
-        </span>
-        <Info className="w-5 h-5 text-purple-500 cursor-pointer" title="Total, Deep, and REM sleep compared to optimal targets." />
-      </div>
-      <div className="flex items-start gap-5 text-left">
-        <div className="text-left">
-          <span className="text-3xl font-bold text-purple-500 tracking-tight">{totalSleep}h</span>
-          <div className="text-xs text-gray-500 dark:text-gray-400 tracking-wide mt-1">Total Sleep</div>
-        </div>
-      <div className="border-t border-neutral-200/60 dark:border-neutral-700/60 pt-6 mt-4 space-y-5">
-          <div className="flex items-center gap-3 text-left">
-          <span className="flex items-center gap-2 text-sm text-secondary font-medium tracking-wide">
-            <span className="font-bold tracking-tight">{deepSleep}h</span>
-            <Info className="w-4 h-4 text-secondary/60" title="Based on sleep duration, quality, and consistency." />
-            <span className="font-bold tracking-tight">{remSleep}h</span>
-          <span className="text-lg font-bold text-secondary tracking-tight">{sleep}</span>
-          <div className="w-full bg-neutral-200 dark:bg-neutral-700 h-2.5 rounded-full mt-3">
-            <div
-          <span className="flex items-center gap-2 text-sm text-tertiary font-medium tracking-wide">
-              style={{ width: `${percent}%` }}
-            <Info className="w-4 h-4 text-tertiary/60" title="Based on activity levels, workouts, and recovery." />
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+      {/* Hero Section */}
+      <section className="pt-20 pb-12 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-6">
+            Your Personal Health Revolution
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+            Unlock evidence-based insights for optimal health. Track, analyze, and improve your wellness journey with AI-powered guidance.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link to="/signup">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+                Start Free Trial
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link to="/about">
+              <Button size="lg" variant="outline">
+                Learn More
+              </Button>
+            </Link>
           </div>
-          <span className="text-lg font-bold text-tertiary tracking-tight">{fitness}</span>
         </div>
-      </div>
-    </div>
-  )
-  );
-}
+      </section>
 
-// Main Dashboard Cards component
-const DashboardCards: React.FC = () => {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="md:col-span-1">
-        <BWScoreCard />
-      </div>
-      <div className="md:col-span-1">
-        <MacroCard />
-      </div>
-      <div className="md:col-span-1">
-        <SleepCard />
-      </div>
+      {/* Dashboard Preview */}
+      <section className="py-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
+            Real-Time Health Insights
+          </h2>
+          <DashboardCards />
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="py-16 px-4 bg-white dark:bg-gray-900">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
+            Everything You Need for Optimal Health
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div key={index} className="p-6 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
+                <feature.icon className="h-12 w-12 text-blue-600 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 px-4 bg-blue-600">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-white mb-6">
+            Ready to Transform Your Health?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8">
+            Join thousands who are already optimizing their health with evidence-based insights.
+          </p>
+          <Link to="/signup">
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+              Get Started Now
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+        </div>
+      </section>
     </div>
   );
 };
 
-export default DashboardCards;
+const features = [
+  {
+    icon: Brain,
+    title: "AI Health Coach",
+    description: "Get personalized recommendations based on your health data and goals."
+  },
+  {
+    icon: Activity,
+    title: "Fitness Tracking",
+    description: "Monitor workouts, steps, and activity levels with smart device integration."
+  },
+  {
+    icon: Utensils,
+    title: "Nutrition Insights",
+    description: "Track macros, discover healthy recipes, and optimize your diet."
+  },
+  {
+    icon: Calendar,
+    title: "BioClock Analysis",
+    description: "Understand your circadian rhythm and optimize sleep patterns."
+  },
+  {
+    icon: BarChart,
+    title: "Lab Results Tracking",
+    description: "Monitor biomarkers and track health improvements over time."
+  },
+  {
+    icon: Shield,
+    title: "Evidence-Based",
+    description: "All recommendations backed by peer-reviewed scientific research."
+  }
+];
+
+export default HomePage;
