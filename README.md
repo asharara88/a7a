@@ -119,22 +119,26 @@ biowell-ai/
 ### Local Development
 
 1. **Clone the repository:**
+
 ```bash
 git clone https://github.com/asharara88/biowell-ai.git
 cd biowell-ai
 ```
 
 2. **Install dependencies:**
+
 ```bash
 npm install
 ```
 
 3. **Set up environment variables:**
+
 ```bash
 cp .env.example .env
 ```
 
 Fill in your environment variables:
+
 ```env
 VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
@@ -143,28 +147,33 @@ VITE_ELEVENLABS_API_KEY=your-elevenlabs-api-key
 ```
 
 4. **Link to your Supabase project:**
+
 ```bash
 supabase link --project-ref your-project-ref
 ```
 
 5. **Run database migrations:**
+
 ```bash
 supabase db push
 ```
 
 6. **Deploy Edge Functions:**
+
 ```bash
 supabase functions deploy openai-proxy
 supabase functions deploy elevenlabs-proxy
 ```
 
 7. **Set API keys as Supabase secrets:**
+
 ```bash
 supabase secrets set OPENAI_API_KEY=your-openai-api-key
 supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-api-key
 ```
 
 8. **Start the development server:**
+
 ```bash
 npm run dev
 ```
@@ -265,6 +274,7 @@ npm run deploy          # Deploy to Netlify
 ## 🔗 Integrations
 
 ### Wearables
+
 - **Apple Health** (HealthKit)
 - **Oura Ring** (API v2)
 - **Garmin Connect** (Connect IQ)
@@ -272,6 +282,7 @@ npm run deploy          # Deploy to Netlify
 - **Withings** (Health Mate)
 
 ### Health Platforms
+
 - **Flo** (Fertility tracking)
 - **Clue** (Menstrual cycle)
 - **Apple Cycle Tracking**
@@ -279,6 +290,7 @@ npm run deploy          # Deploy to Netlify
 - **Dexcom** (CGM - planned)
 
 ### AI Services
+
 - **OpenAI GPT-4** (Conversational AI)
 - **ElevenLabs** (Voice synthesis)
 - **Custom food classifier** (Computer vision - planned)
@@ -288,18 +300,21 @@ npm run deploy          # Deploy to Netlify
 ## 📈 Roadmap
 
 ### Q3 2025
+
 - [ ] Fertility Mode launch
 - [ ] Camera-based food tracking
 - [ ] Premium nutrition module
 - [ ] Apple Watch app
 
 ### Q4 2025
+
 - [ ] CGM integration (FreeStyle Libre)
 - [ ] Advanced metabolic scoring
 - [ ] Couples dashboard
 - [ ] Mobile app launch
 
 ### Q1 2026
+
 - [ ] Dexcom integration
 - [ ] Garmin Connect IQ app
 - [ ] Advanced AI coaching
@@ -312,6 +327,7 @@ npm run deploy          # Deploy to Netlify
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ### Development Setup
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -330,7 +346,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Documentation:** [docs.biowell.ai](https://docs.biowell.ai)
 - **Discord Community:** [discord.gg/biowell](https://discord.gg/biowell)
-- **Email Support:** support@biowell.ai
+- **Email Support:** <support@biowell.ai>
 - **Bug Reports:** [GitHub Issues](https://github.com/asharara88/biowell-ai/issues)
 
 ---
@@ -345,11 +361,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 supabase link --project-ref YOUR_PROJECT_REF
 
 # Deploy the OpenAI proxy function
+
 supabase functions deploy openai-proxy
 
 # Deploy other functions (optional)
+
 supabase functions deploy chat-assistant
 supabase functions deploy recommendations
+
 ```
 
 **Verify deployment:**
@@ -387,11 +406,13 @@ npm run dev
 ### "Failed to fetch" Error
 
 This error typically occurs when:
+
 1. **Environment not configured**: Check your `.env` file has real Supabase credentials
 2. **Edge Function not deployed**: Deploy the `openai-proxy` function to Supabase
 3. **OpenAI API key not set**: Configure the OpenAI API key as a Supabase secret
 
 **Quick fixes:**
+
 ```bash
 # Check environment variables
 echo $VITE_SUPABASE_URL
@@ -411,10 +432,13 @@ The app includes a built-in setup guide that appears when configuration errors a
 ### Running Tests and Lint
 
 1. **Install dependencies** (required before running `npm test`):
+
    ```bash
    npm install
    ```
+
 2. **Run lint and tests**:
+
    ```bash
    npm run lint
    npm test
@@ -438,16 +462,19 @@ dependencies automatically before running tests locally.
 1. **Get your ElevenLabs API key** from [ElevenLabs](https://elevenlabs.io/app/speech-synthesis)
 
 2. **Set the ElevenLabs API key as a Supabase secret**:
+
 ```bash
 supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-api-key
 ```
 
 3. **Deploy the Edge Function** for ElevenLabs proxy:
+
 ```bash
 supabase functions deploy elevenlabs-proxy
 ```
 
 4. **Verify the setup** by checking that the secret was set correctly:
+
 ```bash
 supabase secrets list
 ```
@@ -461,26 +488,31 @@ You should see `ELEVENLABS_API_KEY` in the list of secrets.
 1. **Get your OpenAI API key** from [OpenAI's platform](https://platform.openai.com/api-keys)
 
 2. **Login to Supabase CLI**:
+
 ```bash
 supabase login
 ```
 
 3. **Link your project** (replace with your actual project reference):
+
 ```bash
 supabase link --project-ref your-project-ref
 ```
 
 4. **Set the OpenAI API key as a Supabase secret** (replace `your-actual-openai-api-key` with your real OpenAI API key):
+
 ```bash
 supabase secrets set OPENAI_API_KEY=your-actual-openai-api-key
 ```
 
 5. **Deploy the Edge Function** for OpenAI proxy:
+
 ```bash
 supabase functions deploy openai-proxy
 ```
 
 6. **Verify the setup** by checking that the secret was set correctly:
+
 ```bash
 supabase secrets list
 ```
@@ -497,22 +529,27 @@ If you encounter the error "Failed to fetch", "Network request failed", or "Inco
    - Copy the exact key (it should start with `sk-`)
 
 2. **Check if the secret is properly set**:
+
    ```bash
    supabase secrets list
    ```
+
    You should see `OPENAI_API_KEY` listed.
 
 3. **If the secret is missing or incorrect, set it again**:
+
    ```bash
    supabase secrets set OPENAI_API_KEY=sk-your-actual-key-here
    ```
 
 4. **Redeploy the Edge Function** after setting/updating the secret:
+
    ```bash
    supabase functions deploy openai-proxy
    ```
 
 5. **Check the Edge Function logs** for more details:
+
    ```bash
    supabase functions logs openai-proxy
    ```
@@ -520,6 +557,7 @@ If you encounter the error "Failed to fetch", "Network request failed", or "Inco
 6. **Verify your OpenAI account** has sufficient credits at [OpenAI's usage dashboard](https://platform.openai.com/usage)
 
 7. **Test the Edge Function directly** to isolate the issue:
+
    ```bash
    curl -X POST "https://your-project-ref.supabase.co/functions/v1/openai-proxy" \
      -H "Authorization: Bearer your-supabase-anon-key" \
@@ -585,7 +623,7 @@ user can only manage their own cart items.
 ## Deployment
 
 The `netlify.toml` file specifies a Node.js 18 environment and uses the
-`netlify-plugin-fetch-feeds` plugin to download the latest Hacker News front page 
+`netlify-plugin-fetch-feeds` plugin to download the latest Hacker News front page
 into `public/feeds/hn.xml` during each build.
 
 ## Customizing Supabase Auth
