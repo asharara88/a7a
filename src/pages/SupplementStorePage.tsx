@@ -20,7 +20,7 @@ import {
   Heart
 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
-import { cn } from '../../utils/cn';
+import { cn } from '../utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Initialize Supabase client
