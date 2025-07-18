@@ -98,7 +98,7 @@ const WearableDeviceCard: React.FC<WearableDeviceCardProps> = ({ device, onSync,
         </Button>
         <Button
           as="a"
-          href={`https://${device.type.toLowerCase()}.com/settings`}
+          href={device.type === 'Apple Health' ? 'https://support.apple.com/en-us/HT204665' : `https://${device.type.toLowerCase()}.com/settings`}
           target="_blank"
           rel="noopener noreferrer"
           variant="outline"
