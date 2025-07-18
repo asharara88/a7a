@@ -303,6 +303,17 @@ const FitnessTracker: React.FC = () => {
                       <p className="text-sm text-gray-500 dark:text-gray-400">{workout.caloriesBurned} cal</p>
                     </div>
                   </div>
+                  
+                  {/* Muscle Group Visualization for Individual Workout */}
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <MuscleGroupVisualization
+                      mode="exercise"
+                      exerciseName={workout.workoutType}
+                      primaryMuscles={getMuscleGroupsForWorkout(workout.workoutType).primary}
+                      secondaryMuscles={getMuscleGroupsForWorkout(workout.workoutType).secondary}
+                      height={200}
+                    />
+                  </div>
                 ))}
               </div>
             )}
