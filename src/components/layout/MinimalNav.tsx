@@ -178,6 +178,10 @@ const MinimalNav: React.FC = () => {
               alt="Biowell Logo"
               className="h-8 w-auto object-contain hidden dark:block" 
             />
+          </Link>
+          
+          {/* Navigation Icons */}
+          <div className="flex items-center space-x-2">
         {user && (
               <>
                 {/* Dashboard/Home */}
