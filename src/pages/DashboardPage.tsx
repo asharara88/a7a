@@ -1,6 +1,7 @@
 import React from 'react'
-import { Activity, Heart, Moon, Zap, Droplet, Utensils, Pill, Target, Dumbbell, Brain, Gauge, Weight } from 'lucide-react'
+import { Activity, Heart, Moon, Zap, Droplet, Utensils, Pill, Target, Dumbbell, Brain, Gauge, Weight, Flame, ChevronRight } from 'lucide-react'
 import DashboardCards from '../components/dashboard/DashboardCards'
+import { Link } from 'react-router-dom'
 import MetricsCard from '../components/dashboard/MetricsCard'
 import TrendsChart from '../components/dashboard/TrendsChart'
 import StatisticsGrid from '../components/dashboard/StatisticsGrid'
@@ -305,36 +306,170 @@ const DashboardPage: React.FC = () => {
           />
         </div>
 
-        {/* Key Health Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-          <MetricsCard
-            title="Heart Rate"
-            value="72 BPM"
-            change={{ value: 2, type: 'increase' }}
-            icon={<Heart className="w-6 h-6" />}
-            color="primary"
-          />
-          <MetricsCard
-            title="Steps"
-            value="8,432"
-            change={{ value: 15, type: 'increase' }}
-            icon={<Activity className="w-6 h-6" />}
-            color="secondary"
-          />
-          <MetricsCard
-            title="Sleep"
-            value="7.5 hrs"
-            change={{ value: 5, type: 'increase' }}
-            icon={<Moon className="w-6 h-6" />}
-            color="purple"
-          />
-          <MetricsCard
-            title="Water"
-            value="2.1L"
-            change={{ value: 10, type: 'decrease' }}
-            icon={<Droplet className="w-6 h-6" />}
-            color="tertiary"
-          />
+        {/* Cardio Metrics Section */}
+        <div className="mb-6">
+          <div className="flex items-center mb-4">
+            <Heart className="w-5 h-5 text-red-500 mr-2" />
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Cardiovascular Health</h2>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <MetricsCard
+              title="Resting HR"
+              value="72 BPM"
+              change={{ value: 2, type: 'decrease' }}
+              icon={<Heart className="w-6 h-6" />}
+              color="primary"
+            />
+            <MetricsCard
+              title="HRV"
+              value="45 ms"
+              change={{ value: 8, type: 'increase' }}
+              icon={<Activity className="w-6 h-6" />}
+              color="primary"
+            />
+            <MetricsCard
+              title="BP Systolic"
+              value="118 mmHg"
+              change={{ value: 3, type: 'decrease' }}
+              icon={<Heart className="w-6 h-6" />}
+              color="primary"
+            />
+            <MetricsCard
+              title="Recovery"
+              value="85%"
+              change={{ value: 12, type: 'increase' }}
+              icon={<Zap className="w-6 h-6" />}
+              color="primary"
+            />
+          </div>
+        </div>
+
+        {/* Activity & Movement Section */}
+        <div className="mb-6">
+          <div className="flex items-center mb-4">
+            <Activity className="w-5 h-5 text-blue-500 mr-2" />
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Activity & Movement</h2>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <MetricsCard
+              title="Steps"
+              value="8,432"
+              change={{ value: 15, type: 'increase' }}
+              icon={<Activity className="w-6 h-6" />}
+              color="secondary"
+            />
+            <MetricsCard
+              title="Walking"
+              value="6.2 km"
+              change={{ value: 8, type: 'increase' }}
+              icon={<Activity className="w-6 h-6" />}
+              color="secondary"
+            />
+            <MetricsCard
+              title="NEAT"
+              value="485 cal"
+              change={{ value: 12, type: 'increase' }}
+              icon={<Zap className="w-6 h-6" />}
+              color="secondary"
+            />
+            <MetricsCard
+              title="Active Time"
+              value="4.2 hrs"
+              change={{ value: 5, type: 'increase' }}
+              icon={<Target className="w-6 h-6" />}
+              color="secondary"
+            />
+          </div>
+        </div>
+
+        {/* Caloric Balance Section */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <Utensils className="w-5 h-5 text-green-500 mr-2" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Caloric Balance</h2>
+            </div>
+            <Link 
+              to="/nutrition" 
+              className="text-primary hover:text-primary-dark text-sm font-medium flex items-center"
+            >
+              Log Meal <ChevronRight className="w-4 h-4 ml-1" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <MetricsCard
+              title="Consumed"
+              value="1,850 cal"
+              change={{ value: 5, type: 'increase' }}
+              icon={<Utensils className="w-6 h-6" />}
+              color="tertiary"
+            />
+            <MetricsCard
+              title="Burned"
+              value="2,240 cal"
+              change={{ value: 8, type: 'increase' }}
+              icon={<Flame className="w-6 h-6" />}
+              color="tertiary"
+            />
+            <MetricsCard
+              title="Balance"
+              value="-390 cal"
+              change={{ value: 15, type: 'increase' }}
+              icon={<Target className="w-6 h-6" />}
+              color="tertiary"
+            />
+            <MetricsCard
+              title="Goal Progress"
+              value="78%"
+              change={{ value: 12, type: 'increase' }}
+              icon={<Gauge className="w-6 h-6" />}
+              color="tertiary"
+            />
+          </div>
+          <div className="mt-3 text-center">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+              <Target className="w-4 h-4 mr-1" />
+              Caloric Deficit: On track for 0.5 lbs/week weight loss
+            </span>
+          </div>
+        </div>
+
+        {/* Wellness Metrics */}
+        <div className="mb-6">
+          <div className="flex items-center mb-4">
+            <Moon className="w-5 h-5 text-purple-500 mr-2" />
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Wellness Metrics</h2>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <MetricsCard
+              title="Sleep"
+              value="7.5 hrs"
+              change={{ value: 5, type: 'increase' }}
+              icon={<Moon className="w-6 h-6" />}
+              color="purple"
+            />
+            <MetricsCard
+              title="Water"
+              value="2.1L"
+              change={{ value: 10, type: 'decrease' }}
+              icon={<Droplet className="w-6 h-6" />}
+              color="yellow"
+            />
+            <MetricsCard
+              title="Stress Level"
+              value="3/10"
+              change={{ value: 2, type: 'decrease' }}
+              icon={<Brain className="w-6 h-6" />}
+              color="purple"
+            />
+            <MetricsCard
+              title="Energy"
+              value="8.2/10"
+              change={{ value: 6, type: 'increase' }}
+              icon={<Zap className="w-6 h-6" />}
+              color="yellow"
+            />
+          </div>
         </div>
 
         {/* Enhanced Health Cards */}
