@@ -28,6 +28,7 @@ export interface RecoveryState {
 export const muscleGroupApi = {
   // Get base muscle group image
   getBaseImage: async (transparentBackground: boolean = false): Promise<string | null> => {
+    try {
       // Return fallback SVG placeholder
       return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgNTBWMzUwTTUwIDIwMEgzNTAiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkI3MjgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiPk11c2NsZSBHcm91cCBJbWFnZTwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIyMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2QjcyODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiI+Tm90IEF2YWlsYWJsZTwvdGV4dD4KPC9zdmc+';
       const { data, error } = await supabase.functions.invoke('muscle-group-images', {
@@ -106,7 +107,7 @@ export const muscleGroupApi = {
       // Return fallback SVG placeholder with the requested color
       return `data:image/svg+xml;base64,${btoa(`<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="400" height="400" fill="transparent"/>
-<circle cx="200" cy="200" r="100" fill="${colorHex}" opacity="0.7"/>
+<circle cx="200" cy="200" r="100" fill="${primaryColor}" opacity="0.7"/>
 <text x="200" y="210" text-anchor="middle" fill="#374151" font-family="Arial" font-size="14">${muscleGroup}</text>
 </svg>`)}`;
     }
@@ -133,9 +134,9 @@ export const muscleGroupApi = {
             color: '#FF0000',
             transparent: true
           });
-        }
+        } else {
           // Add fallback entry
-          coloredImages.push({
+          visualization.primary.push({
             muscleGroup: muscle,
             imageUrl: `data:image/svg+xml;base64,${btoa(`<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="400" height="400" fill="transparent"/>
@@ -144,6 +145,7 @@ export const muscleGroupApi = {
 </svg>`)}`,
             color: '#ef4444'
           });
+        }
       }
 
       // Get secondary muscle images (orange)
@@ -156,9 +158,9 @@ export const muscleGroupApi = {
             color: '#FFA500',
             transparent: true
           });
-        }
+        } else {
           // Add fallback entry
-          coloredImages.push({
+          visualization.secondary.push({
             muscleGroup: muscle,
             imageUrl: `data:image/svg+xml;base64,${btoa(`<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="400" height="400" fill="transparent"/>
@@ -167,6 +169,7 @@ export const muscleGroupApi = {
 </svg>`)}`,
             color: '#f59e0b'
           });
+        }
       }
 
       return visualization;
@@ -174,8 +177,8 @@ export const muscleGroupApi = {
       console.error('Error getting exercise muscle visualization:', error);
       // Return fallback visualization
       return {
-        baseImage: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgNTBWMzUwTTUwIDIwMEgzNTAiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkI3MjgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiPk11c2NsZSBHcm91cCBJbWFnZTwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIyMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2QjcyODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiI+Tm90IEF2YWlsYWJsZTwvdGV4dD4KPC9zdmc+',
-        coloredImages: []
+        primary: [],
+        secondary: []
       };
     }
   },
@@ -199,8 +202,9 @@ export const muscleGroupApi = {
             color: state.color,
             transparent: true
           });
+        } else {
           // Add fallback entry
-          coloredImages.push({
+          images.push({
             muscleGroup: state.muscleGroup,
             imageUrl: `data:image/svg+xml;base64,${btoa(`<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="400" height="400" fill="transparent"/>
@@ -218,11 +222,7 @@ export const muscleGroupApi = {
       return [];
     }
   },
-      // Return fallback visualization
-      return {
-        baseImage: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgNTBWMzUwTTUwIDIwMEgzNTAiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkI3MjgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiPk11c2NsZSBHcm91cCBJbWFnZTwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIyMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2QjcyODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiI+Tm90IEF2YWlsYWJsZTwvdGV4dD4KPC9zdmc+',
-        coloredImages: []
-      };
+
   // Helper function to get recovery color based on readiness
   getRecoveryColor: (readiness: RecoveryState['readiness']): string => {
     switch (readiness) {

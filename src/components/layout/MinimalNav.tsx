@@ -187,7 +187,7 @@ const MinimalNav: React.FC = () => {
                   : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
                 }
                 alt="Biowell" 
-                className="h-8 w-auto object-contain" 
+                className="h-12 w-auto object-contain" 
               />
             </Link>
 
@@ -203,7 +203,7 @@ const MinimalNav: React.FC = () => {
                           className={cn(
                             "flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                             isActive(item.href)
-                              ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white shadow-md"
+                              ? "bg-primary text-white shadow-md"
                               : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/70 dark:hover:bg-gray-700/70"
                           )}
                         >
@@ -248,7 +248,7 @@ const MinimalNav: React.FC = () => {
                         className={cn(
                           "flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                           isActive(item.href)
-                            ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white shadow-md"
+                            ? "bg-primary text-white shadow-md"
                             : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/70 dark:hover:bg-gray-700/70"
                         )}
                       >
@@ -299,7 +299,7 @@ const MinimalNav: React.FC = () => {
                             className={cn(
                               "flex items-center w-full px-4 py-3 text-sm transition-colors",
                               theme === mode 
-                                ? "text-primary bg-primary/10 font-medium" 
+                                ? "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20 font-medium" 
                                 : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                             )}
                           >
@@ -386,9 +386,9 @@ const MinimalNav: React.FC = () => {
                 <div className="hidden lg:flex items-center space-x-3">
                   <Link
                     to="/login"
-                    className="px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors tracking-wide"
+                    className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md tracking-wide"
                   >
-                    Sign in
+                      isActive('/cart') && "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20"
                   </Link>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
@@ -465,7 +465,7 @@ const MinimalNav: React.FC = () => {
                             className={cn(
                               "flex items-center px-4 py-3 rounded-xl text-base font-medium transition-colors",
                               isActive(item.href)
-                                ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white shadow-md"
+                               ? "bg-primary text-white shadow-md"
                                 : "text-gray-700 dark:text-gray-300"
                             )}
                           >
@@ -480,7 +480,7 @@ const MinimalNav: React.FC = () => {
                                 className={cn(
                                   "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
                                   isActive(dropdownItem.href)
-                                    ? "text-primary bg-primary/10"
+                                    ? "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20"
                                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
                                 )}
                                 onClick={() => setIsMobileMenuOpen(false)}
@@ -521,7 +521,7 @@ const MinimalNav: React.FC = () => {
                       </Link>
                       <Link
                         to="/onboarding"
-                        className="block px-4 py-3 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-base font-medium text-center shadow-md tracking-wide"
+                        className="block px-4 py-3 bg-primary text-white rounded-xl text-base font-medium text-center shadow-md tracking-wide"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Get Started
