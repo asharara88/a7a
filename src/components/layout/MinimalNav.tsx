@@ -216,7 +216,7 @@ const MinimalNav: React.FC = () => {
                           className={cn(
                             "flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                             isActive(item.href)
-                              ? "bg-primary text-white shadow-lg scale-105"
+                              ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white shadow-lg scale-105"
                               : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-gray-700/80 hover:scale-105"
                           )}
                         >
@@ -345,6 +345,7 @@ const MinimalNav: React.FC = () => {
                   className={cn(
                     "p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300",
                     isActive('/cart') && "text-primary bg-primary/10"
+                    isActive('/cart') && "text-green-400 bg-green-500/10"
                   )}
                 >
                   <ShoppingCart className="w-4 h-4" />
@@ -412,7 +413,7 @@ const MinimalNav: React.FC = () => {
                   <Link
                     to="/login"
                     className={cn(
-                      "px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md tracking-wide",
+                      "px-6 py-2.5 bg-gradient-to-r from-secondary to-tertiary hover:from-primary hover:to-secondary text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md tracking-wide",
                       isActive('/cart') && "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20"
                     )}
                   >
@@ -421,7 +422,7 @@ const MinimalNav: React.FC = () => {
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
                       to="/onboarding"
-                      className="px-6 py-2.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md tracking-wide"
+                      className="px-6 py-2.5 bg-gradient-to-r from-primary via-tertiary to-secondary hover:from-green-400 hover:to-green-500 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md tracking-wide"
                     >
                       Get Started
                     </Link>
@@ -493,7 +494,7 @@ const MinimalNav: React.FC = () => {
                             className={cn(
                               "flex items-center px-4 py-3 rounded-xl text-base font-medium transition-colors",
                               isActive(item.href)
-                               ? "bg-primary text-white shadow-md"
+                               ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white shadow-md"
                                 : "text-gray-700 dark:text-gray-300"
                             )}
                           >
@@ -508,7 +509,7 @@ const MinimalNav: React.FC = () => {
                                 className={cn(
                                   "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
                                   isActive(dropdownItem.href)
-                                    ? "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20"
+                                    ? "text-green-400 bg-green-500/10 border-l-2 border-green-400"
                                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
                                 )}
                                 onClick={() => setIsMobileMenuOpen(false)}
@@ -549,7 +550,7 @@ const MinimalNav: React.FC = () => {
                       </Link>
                       <Link
                         to="/onboarding"
-                        className="block px-4 py-3 bg-primary text-white rounded-xl text-base font-medium text-center shadow-md tracking-wide"
+                        className="block px-4 py-3 bg-gradient-to-r from-primary via-tertiary to-secondary hover:from-green-400 hover:to-green-500 text-white rounded-xl text-base font-medium text-center shadow-md tracking-wide transition-all duration-300"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Get Started
