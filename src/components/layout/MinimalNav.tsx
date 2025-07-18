@@ -245,14 +245,15 @@ const MinimalNav: React.FC = () => {
                               <div className="space-y-2">
                                 {section.items.map((item) => {
                                   const Icon = item.icon;
+                                  const brandColor = sectionIndex === 0 ? 'primary' : sectionIndex === 1 ? 'secondary' : 'tertiary';
                                   return (
                                     <Link 
                                       key={item.path}
                                       to={item.path} 
                                       className="dropdown-item"
                                     >
-                                      <div className="p-2 bg-primary/10 rounded-lg">
-                                        <Icon size={18} className="text-primary" />
+                                      <div className={`p-2 bg-${brandColor}/10 rounded-lg`}>
+                                        <Icon size={18} className={`text-${brandColor}`} />
                                       </div>
                                       <div>
                                         <span className="font-medium text-gray-900 dark:text-white">{item.name}</span>
@@ -298,13 +299,14 @@ const MinimalNav: React.FC = () => {
                         <div className="space-y-1">
                           {supplementItems.map((item) => {
                             const Icon = item.icon;
+                            const brandColor = index % 3 === 0 ? 'primary' : index % 3 === 1 ? 'secondary' : 'tertiary';
                             return (
                               <Link 
                                 key={item.path}
                                 to={item.path} 
-                                className="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                className={`flex items-center px-3 py-2 rounded-lg hover:bg-${brandColor}/5 dark:hover:bg-${brandColor}/10 transition-colors group`}
                               >
-                                <Icon size={16} className="text-gray-600 dark:text-gray-400 mr-3" />
+                                <Icon size={16} className={`text-${brandColor} mr-3`} />
                                 <span className="text-sm font-medium text-gray-900 dark:text-white">{item.name}</span>
                               </Link>
                             );
@@ -351,7 +353,7 @@ const MinimalNav: React.FC = () => {
                         <div className="space-y-1">
                           <Link to="/cart" className="dropdown-item">
                             <div className="relative">
-                              <ShoppingCart size={16} className="text-gray-600 dark:text-gray-400" />
+                              <ShoppingCart size={16} className="text-secondary" />
                               {cartCount > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                                   {cartCount}
@@ -362,7 +364,7 @@ const MinimalNav: React.FC = () => {
                           </Link>
                           
                           <Link to="/settings" className="dropdown-item">
-                            <Settings size={16} className="text-gray-600 dark:text-gray-400" />
+                            <Settings size={16} className="text-tertiary" />
                             <span>Settings</span>
                           </Link>
                           

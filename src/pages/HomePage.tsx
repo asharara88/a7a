@@ -47,7 +47,7 @@ const HomePage: React.FC = () => {
             >
               <a 
                 href="#evidence-based-health" 
-                className="inline-flex items-center px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/20 hover:border-primary/30 rounded-full text-sm font-medium text-primary transition-all duration-300 mb-8"
+                className="inline-flex items-center px-4 py-2 bg-primary/10 hover:bg-primary/15 border border-primary/20 hover:border-primary/30 rounded-full text-sm font-medium text-primary transition-all duration-300 mb-8"
               >
                 <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
                 Evidence-based health optimization
@@ -63,7 +63,7 @@ const HomePage: React.FC = () => {
               transition={{ delay: 0.2, duration: 0.6 }}
             >
               <span className="text-gray-900 dark:text-white">Your Personal </span>
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary via-tertiary to-secondary bg-clip-text text-transparent">
                 Health Coach
               </span>
             </motion.h1>
@@ -93,7 +93,7 @@ const HomePage: React.FC = () => {
               </Link>
               <Link
                 to="/about"
-                className="border border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-gray-900 dark:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:scale-105"
+                className="border border-secondary/30 dark:border-secondary/50 hover:border-secondary/60 dark:hover:border-secondary/70 text-secondary dark:text-secondary-light hover:bg-secondary/5 dark:hover:bg-secondary/10 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:scale-105"
               >
                 Learn More
               </Link>
@@ -107,15 +107,15 @@ const HomePage: React.FC = () => {
               transition={{ delay: 0.5, duration: 0.6 }}
             >
               <div className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
+                <CheckCircle className="w-5 h-5 text-primary mr-2" />
                 <span>Personalized recommendations</span>
               </div>
               <div className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
+                <CheckCircle className="w-5 h-5 text-secondary mr-2" />
                 <span>Science-backed approach</span>
               </div>
               <div className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
+                <CheckCircle className="w-5 h-5 text-tertiary mr-2" />
                 <span>AI-powered insights</span>
               </div>
             </motion.div>
@@ -182,7 +182,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gray-900 dark:bg-black text-white">
+      <section className="py-24 bg-gradient-to-br from-primary-dark via-secondary-dark to-tertiary-dark text-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -193,12 +193,12 @@ const HomePage: React.FC = () => {
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
               Ready to optimize your health?
             </h2>
-            <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+            <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
               Join thousands of users who have transformed their wellness journey
             </p>
             <Link
               to="/signup" 
-              className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:scale-105 shadow-lg inline-flex items-center"
+              className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/30 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:scale-105 shadow-lg inline-flex items-center"
             >
               Start Your Journey
               <ArrowRight className="w-5 h-5 ml-2" />

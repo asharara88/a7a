@@ -178,6 +178,23 @@
     @apply border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md hover:shadow-lg;
   }
 
+  /* Brand color utilities for dynamic class generation */
+  .text-primary { @apply text-primary; }
+  .text-secondary { @apply text-secondary; }
+  .text-tertiary { @apply text-tertiary; }
+  .bg-primary\/5 { background-color: hsl(var(--color-primary) / 0.05); }
+  .bg-primary\/10 { background-color: hsl(var(--color-primary) / 0.1); }
+  .bg-secondary\/5 { background-color: hsl(var(--color-secondary) / 0.05); }
+  .bg-secondary\/10 { background-color: hsl(var(--color-secondary) / 0.1); }
+  .bg-tertiary\/5 { background-color: hsl(var(--color-tertiary) / 0.05); }
+  .bg-tertiary\/10 { background-color: hsl(var(--color-tertiary) / 0.1); }
+  .hover\:bg-primary\/5:hover { background-color: hsl(var(--color-primary) / 0.05); }
+  .hover\:bg-primary\/10:hover { background-color: hsl(var(--color-primary) / 0.1); }
+  .hover\:bg-secondary\/5:hover { background-color: hsl(var(--color-secondary) / 0.05); }
+  .hover\:bg-secondary\/10:hover { background-color: hsl(var(--color-secondary) / 0.1); }
+  .hover\:bg-tertiary\/5:hover { background-color: hsl(var(--color-tertiary) / 0.05); }
+  .hover\:bg-tertiary\/10:hover { background-color: hsl(var(--color-tertiary) / 0.1); }
+
   /* Consistent section spacing */
   .section-padding {
     @apply py-16 sm:py-20 lg:py-30;
@@ -280,6 +297,14 @@
   
   .nav-submenu {
     @apply pl-5 mt-2 space-y-2 border-l-2 border-gray-200 dark:border-gray-700;
+  }
+
+  .dropdown-menu {
+    @apply absolute top-full mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 min-w-64 z-50;
+  }
+  
+  .dropdown-item {
+    @apply flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm;
   }
 }
 
