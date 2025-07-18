@@ -2,7 +2,7 @@ import React from 'react';
 import { Info } from "lucide-react";
 
 // Placeholder donut chart using SVG
-function DonutChart({ protein, carbs, fat }: { protein: number; carbs: number; fat: number }) {
+function DonutChart() {
   // Simple static arc, replace with <PieChart/> from recharts for production
   return (
     <div className="flex flex-col items-center">
@@ -75,7 +75,7 @@ function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goa
           <Info className="w-5 h-5 text-tertiary cursor-pointer" />
         </span>
       </div>
-      <DonutChart protein={protein} carbs={carbs} fat={fat} />
+      <DonutChart />
       <div className="flex flex-col gap-4 mt-5">
         <div className="flex items-center justify-between text-sm text-left">
           <span className="text-indigo-600 dark:text-indigo-400 tracking-wide">Protein</span>
