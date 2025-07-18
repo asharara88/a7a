@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Target, Activity, RefreshCw } from 'lucide-react';
-import { muscleGroupApi, MuscleGroupVisualization, RecoveryState } from '../../api/muscleGroupApi';
+import { muscleGroupApi, MuscleGroupVisualization as MuscleGroupVisualizationType, RecoveryState } from '../../api/muscleGroupApi';
 import { Card } from '../ui/Card';
 import { motion } from 'framer-motion';
 
@@ -22,6 +22,7 @@ const MuscleGroupVisualization: React.FC<MuscleGroupVisualizationProps> = ({
   height = 400
 }) => {
   const [visualization, setVisualization] = useState<MuscleGroupVisualization | null>(null);
+  const [visualization, setVisualization] = useState<MuscleGroupVisualizationType | null>(null);
   const [recoveryImages, setRecoveryImages] = useState<any[]>([]);
   const [baseImage, setBaseImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
