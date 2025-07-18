@@ -42,9 +42,15 @@ const HomePage: React.FC = () => {
           >
             <a 
               href="#evidence-based-health" 
-              className="inline-block bg-gray-100 dark:bg-gray-800 rounded-xl px-5 py-1.5 mb-8 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer shadow-sm"
+              className="inline-flex items-center bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 border border-primary/20 dark:border-primary/30 rounded-full px-6 py-2.5 mb-8 hover:from-primary/20 hover:to-secondary/20 dark:hover:from-primary/30 dark:hover:to-secondary/30 hover:border-primary/30 dark:hover:border-primary/40 transition-all duration-300 cursor-pointer shadow-md hover:shadow-lg transform hover:-translate-y-0.5 group"
             >
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 tracking-wider">Evidence-based health optimization</span>
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-primary rounded-full mr-3 animate-pulse"></div>
+                <span className="text-sm font-semibold text-primary dark:text-primary-light tracking-wide">Evidence-based health optimization</span>
+                <svg className="w-4 h-4 ml-2 text-primary/70 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </a>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight text-left leading-tight">
               <span>Your Personal </span>
@@ -64,7 +70,7 @@ const HomePage: React.FC = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                  to="/onboarding"
-                  className="bg-blue-700 dark:bg-blue-600 text-white px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg min-w-[200px] tracking-wide"
+                  className="bg-gradient-to-r from-primary to-secondary text-white px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:from-primary-dark hover:to-secondary-dark transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg min-w-[200px] tracking-wide transform hover:-translate-y-0.5 hover:scale-105"
                 >
                  Get Started
                   <ArrowRight className="ml-3 w-5 h-5" />
@@ -73,7 +79,7 @@ const HomePage: React.FC = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link
                  to="/login"
-                  className="bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 border border-gray-200 dark:border-gray-700 px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg min-w-[200px] tracking-wide"
+                  className="bg-white dark:bg-gray-800 text-primary dark:text-primary-light border-2 border-primary/20 dark:border-primary/30 px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:bg-primary/5 dark:hover:bg-primary/10 hover:border-primary/40 dark:hover:border-primary/50 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl text-lg min-w-[200px] tracking-wide transform hover:-translate-y-0.5 hover:scale-105"
                 >
              Create Account
                 </Link>
@@ -82,16 +88,22 @@ const HomePage: React.FC = () => {
             
             <div className="flex flex-wrap gap-7 text-sm text-gray-600 dark:text-gray-400 tracking-wider">
               <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                <span>Personalized recommendations</span>
+                <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                  <CheckCircle className="w-4 h-4 text-primary" />
+                </div>
+                <span className="font-medium">Personalized recommendations</span>
               </div>
               <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                <span>Science-backed approach</span>
+                <div className="w-6 h-6 bg-secondary/10 rounded-full flex items-center justify-center mr-3">
+                  <CheckCircle className="w-4 h-4 text-secondary" />
+                </div>
+                <span className="font-medium">Science-backed approach</span>
               </div>
               <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                <span>AI-powered insights</span>
+                <div className="w-6 h-6 bg-tertiary/10 rounded-full flex items-center justify-center mr-3">
+                  <CheckCircle className="w-4 h-4 text-tertiary" />
+                </div>
+                <span className="font-medium">AI-powered insights</span>
               </div>
             </div>
           </motion.div>
@@ -123,7 +135,7 @@ const HomePage: React.FC = () => {
           </motion.div>
 
           <motion.div 
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10"
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -132,11 +144,11 @@ const HomePage: React.FC = () => {
             {features.map((feature, index) => (
               <motion.div 
                 key={index} 
-                className={`p-8 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 ${
-                  index % 4 === 0 ? 'bg-blue-700' : 
-                  index % 4 === 1 ? 'bg-blue-600' : 
-                  index % 4 === 2 ? 'bg-blue-500' :
-                  'bg-blue-600'
+                className={`p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 relative overflow-hidden group ${
+                  index % 4 === 0 ? 'bg-gradient-to-br from-primary to-primary-dark' : 
+                  index % 4 === 1 ? 'bg-gradient-to-br from-secondary to-secondary-dark' : 
+                  index % 4 === 2 ? 'bg-gradient-to-br from-tertiary to-tertiary-dark' :
+                  'bg-gradient-to-br from-primary-light to-primary'
                 }`}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
@@ -147,15 +159,19 @@ const HomePage: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
+                {/* Background decoration */}
+                <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform duration-500"></div>
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-4 -translate-x-4 group-hover:scale-110 transition-transform duration-500"></div>
+                
                 <div className="flex mb-6">
-                  <div className="p-4 rounded-lg bg-white/20 inline-flex">
+                  <div className="p-4 rounded-xl bg-white/20 backdrop-blur-sm inline-flex shadow-lg group-hover:bg-white/30 transition-all duration-300">
                     {feature.icon}
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-5 text-left tracking-tight">
+                <h3 className="text-2xl font-bold text-white mb-5 text-left tracking-tight relative z-10">
                   {feature.title}
                 </h3>
-                <p className="text-white dark:text-white text-base text-left tracking-wide leading-relaxed">
+                <p className="text-white/90 text-base text-left tracking-wide leading-relaxed relative z-10">
                   {feature.description}
                 </p>
               </motion.div>
@@ -222,9 +238,12 @@ const HomePage: React.FC = () => {
           >
             <Link
              to="/signup" 
-              className="bg-blue-700 dark:bg-blue-600 text-white px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl text-lg tracking-wide"
+              className="bg-gradient-to-r from-primary via-secondary to-tertiary text-white px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:from-primary-dark hover:via-secondary-dark hover:to-tertiary-dark transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl text-lg tracking-wide transform hover:-translate-y-1 hover:scale-105 relative overflow-hidden group"
             >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <span className="relative z-10">
              Create Account
+              </span>
               <ArrowRight className="ml-3 w-6 h-6" />
             </Link>
           </motion.div>
