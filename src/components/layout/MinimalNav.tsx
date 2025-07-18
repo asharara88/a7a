@@ -561,47 +561,6 @@ const MinimalNav: React.FC = () => {
                                   >
                                     <span className="mr-3">{dropdownItem.icon}</span>
                                     <span className="tracking-wide">{dropdownItem.label}</span>
-                                  </Link>
-                                ))}
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                            <ChevronDown className={cn(
-                              "w-4 h-4 transition-transform duration-200",
-                              ((item.label === 'Supplements' && showSupplementsMenu) ||
-                               (item.label === 'MyWellness' && showWellnessMenu)) && "rotate-180"
-                            )} />
-                          </button>
-                          
-                          <AnimatePresence>
-                            {((item.label === 'Supplements' && showSupplementsMenu) ||
-                              (item.label === 'MyWellness' && showWellnessMenu)) && (
-                              <motion.div 
-                                className="ml-6 space-y-1 overflow-hidden"
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.2, ease: "easeOut" }}
-                              >
-                                {item.dropdownItems?.map((dropdownItem) => (
-                                  <Link
-                                    key={dropdownItem.href}
-                                    to={dropdownItem.href}
-                                    className={cn(
-                                      "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                                      isActive(dropdownItem.href)
-                                        ? "text-green-400 bg-green-500/10 border-l-2 border-green-400"
-                                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    )}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                  >
-                                    <span className="mr-3">{dropdownItem.icon}</span>
-                                    <span className="tracking-wide">{dropdownItem.label}</span>
-                                  </Link>
-                                ))}
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
                         </div>
                       ) : (
                         <Link
