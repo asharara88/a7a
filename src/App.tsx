@@ -11,7 +11,6 @@ import AboutPage from './pages/AboutPage';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import OnboardingPage from './pages/auth/OnboardingPage';
-import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 import CartPage from './pages/CartPage';
 import MyStacksPage from './pages/MyStacksPage';
