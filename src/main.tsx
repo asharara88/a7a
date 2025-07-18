@@ -57,9 +57,7 @@ preloadCriticalResources()
 MemoryMonitor.init()
 
 // Enable React concurrent features
-const root = ReactDOM.createRoot(document.getElementById('root')!, {
-  unstable_enableAsyncRendering: true
-})
+const root = ReactDOM.createRoot(document.getElementById('root')!)
 
 root.render(
   <React.StrictMode>
@@ -80,9 +78,9 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
 
 // Web Vitals reporting
 if (import.meta.env.PROD) {
-  import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
+  import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
     onCLS(console.log)
-    onFID(console.log)
+    onINP(console.log)
     onFCP(console.log)
     onLCP(console.log)
     onTTFB(console.log)

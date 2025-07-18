@@ -149,6 +149,22 @@ src/
 ├── hooks/             # Custom React hooks
 ├── contexts/          # React context providers
 └── types/             # TypeScript definitions
+├── components/
+│   ├── auth/           # Authentication components
+│   ├── fitness/        # Fitness tracking & muscle visualization
+│   ├── layout/         # Navigation, headers, layout
+│   ├── nutrition/      # Meal planning & food tracking
+│   ├── supplements/    # Product cards, store, recommendations
+│   └── ui/            # Reusable UI components
+├── pages/
+│   ├── auth/          # Login, signup, onboarding
+│   ├── coach/         # AI coach interface
+│   ├── dashboard/     # Health dashboard
+│   └── store/         # Supplement marketplace
+├── utils/             # Helper functions
+├── hooks/             # Custom React hooks
+├── contexts/          # React context providers
+└── types/             # TypeScript definitions
 
 supabase/
 ├── functions/         # Edge Functions (OpenAI, ElevenLabs)
