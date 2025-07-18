@@ -22,7 +22,7 @@ const FitnessWidget: React.FC<FitnessWidgetProps> = ({ expanded = false, onToggl
   const loadFitnessSummary = async () => {
     setIsLoading(true);
     try {
-      const data = await fitnessApi.getFitnessSummary('demo-user-id', 7);
+      const data = await fitnessApi.getFitnessSummary(7);
       setSummary(data);
     } catch (error) {
       console.error('Error loading fitness summary:', error);
