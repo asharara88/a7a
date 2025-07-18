@@ -59,6 +59,7 @@ function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
 }
 
 function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goalCarbs = 250, goalFat = 70 }) {
+  const percent = Math.round((protein / goalProtein) * 100);
   return (
     <div className="rounded-2xl bg-white dark:bg-surface-1 shadow-lg border border-neutral-200/60 dark:border-neutral-700/60 p-8 w-full h-full hover:shadow-xl transition-all duration-300">
       <div className="flex items-center gap-2.5 mb-5 text-left">
@@ -70,15 +71,11 @@ function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goa
       <DonutChart protein={protein} carbs={carbs} fat={fat} />
       <div className="flex flex-col gap-4 mt-5">
         <div className="flex items-center justify-between text-sm text-left">
+          <span className="text-indigo-600 dark:text-indigo-400 tracking-wide">Protein</span>
           <div 
             className="bg-purple-500 h-2.5 rounded-full transition-all duration-500"
             style={{ width: `${Math.min(percent, 100)}%` }}
           />
-        </div>
-      </div>
-    </div>
-  );
-}
           <span className="font-bold tracking-tight">{protein}g <span className="text-gray-400">/ {goalProtein}g</span></span>
         </div>
         <div className="flex items-center justify-between text-sm text-left">
