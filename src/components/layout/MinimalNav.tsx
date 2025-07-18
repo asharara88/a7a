@@ -2,21 +2,23 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Home, 
-  Leaf, 
+  Activity, 
   Pill, 
+  Sparkles,
   MoreHorizontal, 
   ShoppingCart,
-  Bell,
   User,
   ChevronRight,
-  LayoutDashboard,
-  Activity,
   Utensils,
-  Package,
-  Sparkles,
-  Store,
   Moon,
-  Gauge
+  Gauge,
+  Package,
+  Store,
+  Heart,
+  Brain,
+  TrendingUp,
+  Settings,
+  LogOut
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createClient } from '@supabase/supabase-js';
@@ -29,15 +31,11 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const MinimalNav: React.FC = () => {
   const location = useLocation();
-  const [wellnessDropdownOpen, setWellnessDropdownOpen] = useState(false);
-  const [utilitiesDropdownOpen, setUtilitiesDropdownOpen] = useState(false);
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
-  const [cartCount, setCartCount] = useState(2); // Mock cart count
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [cartCount, setCartCount] = useState(2);
   
-  const wellnessRef = useRef<HTMLDivElement>(null);
-  const utilitiesRef = useRef<HTMLDivElement>(null);
+  const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
   
   // Check for user session on mount
   useEffect(() => {
@@ -65,12 +63,11 @@ const MinimalNav: React.FC = () => {
   // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (wellnessRef.current && !wellnessRef.current.contains(event.target as Node)) {
-        setWellnessDropdownOpen(false);
-      }
-      if (utilitiesRef.current && !utilitiesRef.current.contains(event.target as Node)) {
-        setUtilitiesDropdownOpen(false);
-      }
+      Object.entries(dropdownRefs.current).forEach(([key, ref]) => {
+        if (ref && !ref.contains(event.target as Node)) {
+          setActiveDropdown(null);
+        }
+      });
     }
     
     document.addEventListener('mousedown', handleClickOutside);
@@ -81,30 +78,72 @@ const MinimalNav: React.FC = () => {
   
   // Close dropdowns when route changes
   useEffect(() => {
-    setWellnessDropdownOpen(false);
-    setUtilitiesDropdownOpen(false);
+    setActiveDropdown(null);
   }, [location.pathname]);
   
   // Check if a path is active
-  const isActive = (path: string, exact = false) => {
+  const isActive = (path: string) => {
     if (path === '/') {
       return location.pathname === '/';
     }
     return location.pathname.startsWith(path);
   };
   
-  const toggleSubmenu = (menu: string) => {
-    setOpenSubmenu(openSubmenu === menu ? null : menu);
+  const toggleDropdown = (dropdownName: string) => {
+    setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
   };
   
-  // Determine if we need to show breadcrumbs (when in My Wellness sub-page)
-  const wellnessPages = ['/dashboard', '/fitness', '/nutrition', '/my-stacks', '/recommendations'];
-  const showBreadcrumbs = wellnessPages.some(path => location.pathname.startsWith(path));
+  // Define navigation sections for better organization
+  const wellnessItems = [
+    {
+      title: 'Health Overview',
+      items: [
+        { name: 'Dashboard', path: '/dashboard', icon: TrendingUp, description: 'Your health overview' },
+        { name: 'Health Metrics', path: '/metrics', icon: Heart, description: 'Track vital signs' }
+      ]
+    },
+    {
+      title: 'Nutrition & Diet',
+      items: [
+        { name: 'Nutrition Dashboard', path: '/nutrition', icon: Utensils, description: 'Track meals & macros' },
+        { name: 'Recipes', path: '/recipes', icon: Utensils, description: 'Personalized recipes' },
+        { name: 'Metabolism', path: '/metabolism', icon: Gauge, description: 'Glucose monitoring' }
+      ]
+    },
+    {
+      title: 'Fitness & Recovery',
+      items: [
+        { name: 'Fitness Tracker', path: '/fitness', icon: Activity, description: 'Workouts & progress' },
+        { name: 'Sleep Analysis', path: '/sleep', icon: Moon, description: 'Sleep quality tracking' }
+      ]
+    }
+  ];
+
+  const supplementItems = [
+    { name: 'Browse All', path: '/supplements', icon: Pill, description: 'Explore all supplements' },
+    { name: 'My Stacks', path: '/my-stacks', icon: Package, description: 'Manage your stacks' },
+    { name: 'Recommendations', path: '/recommendations', icon: Brain, description: 'AI-powered suggestions' },
+    { name: 'Store', path: '/supplement-store', icon: Store, description: 'Shop supplements' }
+  ];
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      setActiveDropdown(null);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  // Determine if we're in a wellness section
+  const wellnessPaths = ['/dashboard', '/fitness', '/nutrition', '/sleep', '/metrics', '/metabolism'];
+  const supplementPaths = ['/supplements', '/my-stacks', '/recommendations', '/supplement-store'];
+  const showBreadcrumbs = wellnessPaths.some(path => isActive(path));
   
-  // Generate breadcrumb data
+  // Generate breadcrumbs
   const generateBreadcrumbs = () => {
     const path = location.pathname;
-    const breadcrumbs = [{ name: 'My Wellness', path: '/dashboard' }];
+    const breadcrumbs = [{ name: 'Wellness', path: '/dashboard' }];
     
     if (path.startsWith('/dashboard')) {
       breadcrumbs.push({ name: 'Dashboard', path: '/dashboard' });
@@ -112,10 +151,10 @@ const MinimalNav: React.FC = () => {
       breadcrumbs.push({ name: 'Fitness', path: '/fitness' });
     } else if (path.startsWith('/nutrition')) {
       breadcrumbs.push({ name: 'Nutrition', path: '/nutrition' });
-    } else if (path.startsWith('/my-stacks')) {
-      breadcrumbs.push({ name: 'My Stacks', path: '/my-stacks' });
-    } else if (path.startsWith('/recommendations')) {
-      breadcrumbs.push({ name: 'Recommendations', path: '/recommendations' });
+    } else if (path.startsWith('/sleep')) {
+      breadcrumbs.push({ name: 'Sleep', path: '/sleep' });
+    } else if (path.startsWith('/metabolism')) {
+      breadcrumbs.push({ name: 'Metabolism', path: '/metabolism' });
     }
     
     return breadcrumbs;
@@ -125,368 +164,308 @@ const MinimalNav: React.FC = () => {
   
   return (
     <>
-      <nav className="h-12 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+      <nav className="h-14 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-sm relative z-50">
+        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
-              src={location.pathname.includes('dark') 
-                ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
-                : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
-              }
+              src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
               alt="Biowell Logo"
-             className="h-12 w-auto object-contain" 
+              className="h-8 w-auto object-contain dark:hidden" 
+            />
+            <img
+              src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
+              alt="Biowell Logo"
+              className="h-8 w-auto object-contain hidden dark:block" 
             />
           </Link>
           
-          {/* Main Navigation Icons */}
-          <div className="flex items-center space-x-1">
+          {/* Main Navigation */}
+          <div className="flex items-center space-x-2">
             {!user && (
               <>
-                <Link to="/about" className="relative px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-primary font-medium">
+                <Link to="/about" className="nav-link">
                   About
-                  {isActive('/about') && (
-                    <motion.div 
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
-                      layoutId="activeIndicator"
-                      transition={{ duration: 0.15 }}
-                    />
-                  )}
                 </Link>
-                <Link to="/pricing" className="relative px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-primary font-medium">
+                <Link to="/pricing" className="nav-link">
                   Pricing
-                  {isActive('/pricing') && (
-                    <motion.div 
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
-                      layoutId="activeIndicator"
-                      transition={{ duration: 0.15 }}
-                    />
-                  )}
                 </Link>
+                <div className="flex items-center space-x-3 ml-6">
+                  <Link to="/login" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium">
+                    Sign In
+                  </Link>
+                  <Link to="/signup" className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-dark transition-colors">
+                    Get Started
+                  </Link>
+                </div>
               </>
             )}
             
             {user && (
               <>
+                {/* Dashboard/Home */}
                 <Link 
                   to="/dashboard" 
                   className={cn(
-                    "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                    "hover:scale-105 transition-transform duration-150",
-                    "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    "nav-icon",
+                    isActive('/dashboard') && "text-primary"
                   )}
-                  aria-label="Dashboard"
+                  title="Dashboard"
                 >
                   <Home size={20} />
                   {isActive('/dashboard') && (
                     <motion.div 
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                      className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
                       layoutId="activeIndicator"
-                      transition={{ duration: 0.15 }}
                     />
                   )}
                 </Link>
                 
-                <div ref={wellnessRef} className="relative">
+                {/* Wellness Dropdown */}
+                <div ref={el => dropdownRefs.current.wellness = el} className="relative">
                   <button 
-                    onClick={() => setWellnessDropdownOpen(!wellnessDropdownOpen)}
+                    onClick={() => toggleDropdown('wellness')}
                     className={cn(
-                      "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                      "hover:scale-105 transition-transform duration-150",
-                      "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      "nav-icon",
+                      wellnessPaths.some(path => isActive(path)) && "text-primary"
                     )}
-                    aria-label="My Wellness"
-                    aria-expanded={wellnessDropdownOpen}
-                  >  
-                    <Leaf size={20} />
-                    {wellnessPages.some(path => isActive(path)) && (
+                    title="Wellness"
+                  >
+                    <Activity size={20} />
+                    {wellnessPaths.some(path => isActive(path)) && (
                       <motion.div 
-                        className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
                         layoutId="activeIndicator"
-                        transition={{ duration: 0.15 }}  
                       />
                     )}
                   </button>
                   
-                  {/* Wellness Dropdown */}
-                  {wellnessDropdownOpen && (
+                  {activeDropdown === 'wellness' && (
                     <motion.div 
-                      className="absolute top-full left-0 right-0 w-screen bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-800 py-6 z-20"
+                      className="dropdown-menu left-0"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <div className="max-w-7xl mx-auto px-4">
-                        <div className="mb-4">
-                          <h3 className="text-lg font-medium px-4 py-2 text-gray-900 dark:text-white">My Wellness</h3>
-                        </div>
+                      <div className="p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Wellness Dashboard</h3>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                          {/* Nutrition Section */}
-                          <div className="space-y-3">
-                            <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Nutrition</h4>
-                            <Link to="/nutrition" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3">
-                                <Utensils size={18} className="text-green-600 dark:text-green-400" />
+                        <div className="grid grid-cols-1 gap-6">
+                          {wellnessItems.map((section) => (
+                            <div key={section.title}>
+                              <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                                {section.title}
+                              </h4>
+                              <div className="space-y-2">
+                                {section.items.map((item) => {
+                                  const Icon = item.icon;
+                                  return (
+                                    <Link 
+                                      key={item.path}
+                                      to={item.path} 
+                                      className="dropdown-item"
+                                    >
+                                      <div className="p-2 bg-primary/10 rounded-lg">
+                                        <Icon size={18} className="text-primary" />
+                                      </div>
+                                      <div>
+                                        <span className="font-medium text-gray-900 dark:text-white">{item.name}</span>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">{item.description}</p>
+                                      </div>
+                                    </Link>
+                                  );
+                                })}
                               </div>
-                              <div className="flex-1">
-                                <span className="font-medium text-gray-900 dark:text-white">Nutrition Dashboard</span>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your meals and nutrition</p>
-                              </div>
-                            </Link>
-                            
-                            <Link to="/recipes" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
-                                <Utensils size={18} className="text-green-600 dark:text-green-400" />
-                              </div>
-                              <div className="flex-1">
-                                <span className="font-medium text-gray-900 dark:text-white">Personalized Recipes</span>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">AI-tailored meal suggestions</p>
-                              </div>
-                            </Link>
-                            
-                            <Link to="/metabolism" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
-                                <Gauge size={18} className="text-green-600 dark:text-green-400" />
-                              </div>
-                              <div className="flex-1">
-                                <span className="font-medium text-gray-900 dark:text-white">Metabolism</span>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Continuous glucose monitoring</p>
-                              </div>
-                            </Link>
-                          </div>
-                          
-                          {/* Fitness Section */}
-                          <div className="space-y-3">
-                            <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Fitness</h4>
-                            <Link to="/fitness" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                              <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3">
-                                <Activity size={18} className="text-orange-600 dark:text-orange-400" />
-                              </div>
-                              <div className="flex-1">
-                                <span className="font-medium text-gray-900 dark:text-white">Fitness Tracker</span>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Track your workouts</p>
-                              </div>
-                            </Link>
-                            
-                            <Link to="/fitness/activity" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                              <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
-                                <Activity size={18} className="text-orange-600 dark:text-orange-400" />
-                              </div>
-                              <div className="flex-1">
-                                <span className="font-medium text-gray-900 dark:text-white">Activity</span>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Daily activity metrics</p>
-                              </div>
-                            </Link>
-                          </div>
-                          
-                          {/* Sleep Section */}
-                          <div className="space-y-3">
-                            <h4 className="font-medium text-gray-700 dark:text-gray-300 px-4">Sleep</h4>
-                            <Link to="/sleep" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3">
-                                <Moon size={18} className="text-purple-600 dark:text-purple-400" />
-                              </div>
-                              <div className="flex-1">
-                                <span className="font-medium text-gray-900 dark:text-white">Sleep Quality</span>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Monitor your sleep</p>
-                              </div>
-                            </Link>
-                            
-                            <Link to="/sleep/bioclock" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mr-3 opacity-70">
-                                <Moon size={18} className="text-purple-600 dark:text-purple-400" />
-                              </div>
-                              <div className="flex-1">
-                                <span className="font-medium text-gray-900 dark:text-white">Bioclock™</span>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Circadian health</p>
-                              </div>
-                            </Link>
-                          </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </motion.div>
                   )}
                 </div>
                 
-                
-                {/* My Supplements */}
-                <div className="relative">
+                {/* Supplements Dropdown */}
+                <div ref={el => dropdownRefs.current.supplements = el} className="relative">
                   <button 
-                    onClick={() => toggleSubmenu('supplements')}
+                    onClick={() => toggleDropdown('supplements')}
                     className={cn(
-                      "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                      "hover:scale-105 transition-transform duration-150",
-                      "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                      "nav-icon",
+                      supplementPaths.some(path => isActive(path)) && "text-primary"
                     )}
-                    aria-label="Supplements"
-                    aria-expanded={openSubmenu === 'supplements'}
+                    title="Supplements"
                   >
                     <Pill size={20} />
-                    {(isActive('/my-stacks') || isActive('/supplements') || isActive('/supplement-store')) && (
+                    {supplementPaths.some(path => isActive(path)) && (
                       <motion.div 
-                        className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
                         layoutId="activeIndicator"
-                        transition={{ duration: 0.15 }}
                       />
                     )}
                   </button>
                   
-                  {/* Supplements Dropdown */}
-                  {openSubmenu === 'supplements' && (
+                  {activeDropdown === 'supplements' && (
                     <motion.div 
-                      className="absolute top-full right-0 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-20"
+                      className="dropdown-menu right-0"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Link to="/supplements" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        <Pill size={18} className="text-gray-700 dark:text-gray-300" />
-                        <span className="ml-3 text-gray-700 dark:text-gray-300">Explore Supplements</span>
-                      </Link>
-                      <Link to="/my-stacks" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        <Package size={18} className="text-gray-700 dark:text-gray-300" />
-                        <span className="ml-3 text-gray-700 dark:text-gray-300">My Stacks</span>
-                      </Link>
-                      <Link to="/supplement-store" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        <Store size={18} className="text-gray-700 dark:text-gray-300" />
-                        <span className="ml-3 text-gray-700 dark:text-gray-300">Supplement Store</span>
-                      </Link>
-                      <Link to="/recommendations" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        <Sparkles size={18} className="text-gray-700 dark:text-gray-300" />
-                        <span className="ml-3 text-gray-700 dark:text-gray-300">Recommendations</span>
-                      </Link>
+                      <div className="p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Supplements</h3>
+                        <div className="space-y-2">
+                          {supplementItems.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                              <Link 
+                                key={item.path}
+                                to={item.path} 
+                                className="dropdown-item"
+                              >
+                                <div className="p-2 bg-secondary/10 rounded-lg">
+                                  <Icon size={18} className="text-secondary" />
+                                </div>
+                                <div>
+                                  <span className="font-medium text-gray-900 dark:text-white">{item.name}</span>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">{item.description}</p>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </motion.div>
                   )}
                 </div>
                 
-                {/* MyCoach */}
+                {/* AI Coach */}
                 <Link 
                   to="/mycoach" 
                   className={cn(
-                    "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                    "hover:scale-105 transition-transform duration-150",
-                    "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    "nav-icon",
+                    isActive('/mycoach') && "text-primary"
                   )}
-                  aria-label="MyCoach"
+                  title="MyCoach AI"
                 >
                   <Sparkles size={20} />
                   {isActive('/mycoach') && (
                     <motion.div 
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                      className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
                       layoutId="activeIndicator"
-                      transition={{ duration: 0.15 }}
                     />
                   )}
                 </Link>
+                
+                {/* Account Menu */}
+                <div ref={el => dropdownRefs.current.account = el} className="relative">
+                  <button 
+                    onClick={() => toggleDropdown('account')}
+                    className="nav-icon"
+                    title="Account"
+                  >
+                    <MoreHorizontal size={18} />
+                  </button>
+                  
+                  {activeDropdown === 'account' && (
+                    <motion.div 
+                      className="dropdown-menu right-0 w-64"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="p-4">
+                        <div className="flex items-center space-x-3 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                            <User size={18} className="text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-white">
+                              {user?.user_metadata?.first_name || 'User'}
+                            </p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              {user?.email}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-1">
+                          <Link to="/cart" className="dropdown-item">
+                            <div className="relative">
+                              <ShoppingCart size={16} className="text-gray-600 dark:text-gray-400" />
+                              {cartCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                  {cartCount}
+                                </span>
+                              )}
+                            </div>
+                            <span>Shopping Cart</span>
+                          </Link>
+                          
+                          <Link to="/settings" className="dropdown-item">
+                            <Settings size={16} className="text-gray-600 dark:text-gray-400" />
+                            <span>Settings</span>
+                          </Link>
+                          
+                          <button 
+                            onClick={handleSignOut}
+                            className="dropdown-item w-full text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                          >
+                            <LogOut size={16} />
+                            <span>Sign Out</span>
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
               </>
             )}
-            
-            <div ref={utilitiesRef} className="relative">
-              <button 
-                onClick={() => setUtilitiesDropdownOpen(!utilitiesDropdownOpen)}
-                className={cn(
-                  "relative flex items-center justify-center h-12 w-12 min-w-[48px] text-gray-800 dark:text-gray-200",
-                  "hover:scale-105 transition-transform duration-150",
-                  "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                )}
-                aria-label="Utilities"
-                aria-expanded={utilitiesDropdownOpen}
-              >
-                <MoreHorizontal size={18} />
-                {isActive('/cart') && (
-                  <motion.div 
-                    className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
-                    layoutId="activeIndicator"
-                    transition={{ duration: 0.15 }}
-                  />
-                )}
-              </button>
-              
-              {/* Utilities Dropdown */}
-              {utilitiesDropdownOpen && (
-                <motion.div 
-                  className="absolute top-full right-0 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-20"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Link to="/cart" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <div className="relative">
-                      <ShoppingCart size={16} className="text-gray-700 dark:text-gray-300" />
-                      {cartCount > 0 && (
-                        <motion.span 
-                          className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ 
-                            type: "spring", 
-                            stiffness: 500, 
-                            damping: 15 
-                          }}
-                        >
-                          {cartCount}
-                        </motion.span>
-                      )}
-                    </div>
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">Cart</span>
-                  </Link>
-                  <Link to="/mycoach" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Sparkles size={16} className="text-gray-700 dark:text-gray-300" />
-                    <span className="ml-3 text-gray-700 dark:text-gray-300">MyCoach™</span>
-                  </Link>
-                  {user ? (
-                    <Link to="/profile" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <User size={18} className="text-gray-700 dark:text-gray-300" />
-                      <span className="ml-3 text-gray-700 dark:text-gray-300">Profile</span>
-                    </Link>
-                  ) : (
-                    <>
-                    <Link to="/signup" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <User size={18} className="text-gray-700 dark:text-gray-300" />
-                      <span className="ml-3 text-gray-700 dark:text-gray-300">Sign Up</span>
-                    </Link>
-                    <Link to="/login" className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <User size={18} className="text-gray-700 dark:text-gray-300" />
-                      <span className="ml-3 text-gray-700 dark:text-gray-300">Sign In</span>
-                    </Link>
-                    </>
-                  )}
-                </motion.div>
-              )}
-            </div>
           </div>
         </div>
       </nav>
       
       {/* Breadcrumbs */}
       {showBreadcrumbs && (
-        <div className="h-10 bg-gray-50 dark:bg-gray-850 border-b border-gray-200 dark:border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 h-full flex items-center">
+        <div className="h-8 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-6 h-full flex items-center">
             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-            {breadcrumbs.map((crumb, index) => (
-              <React.Fragment key={crumb.path}>
-                {index > 0 && (
-                  <ChevronRight size={16} className="mx-2 text-gray-400" />
-                )}
-                <Link 
-                  to={crumb.path}
-                  className={cn(
-                    "hover:text-gray-900 dark:hover:text-white transition-colors",
-                    index === breadcrumbs.length - 1 && "font-medium text-gray-900 dark:text-white"
+              {breadcrumbs.map((crumb, index) => (
+                <React.Fragment key={crumb.path}>
+                  {index > 0 && (
+                    <ChevronRight size={14} className="mx-2 text-gray-400" />
                   )}
-                >
-                  {crumb.name}
-                </Link>
-              </React.Fragment>
-            ))}
+                  <Link 
+                    to={crumb.path}
+                    className={cn(
+                      "hover:text-gray-900 dark:hover:text-white transition-colors",
+                      index === breadcrumbs.length - 1 && "font-medium text-gray-900 dark:text-white"
+                    )}
+                  >
+                    {crumb.name}
+                  </Link>
+                </React.Fragment>
+              ))}
             </div>
           </div>
         </div>
       )}
+      
+      <style jsx>{`
+        .nav-link {
+          @apply relative px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium transition-colors;
+        }
+        
+        .nav-icon {
+          @apply relative flex items-center justify-center h-12 w-12 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all duration-200;
+        }
+        
+        .dropdown-menu {
+          @apply absolute top-full mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 min-w-80 max-w-96 z-50;
+        }
+        
+        .dropdown-item {
+          @apply flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors;
+        }
+      `}</style>
     </>
   );
 };
