@@ -28,7 +28,9 @@ function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
           <span className="text-2xl font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
             BW Score
           </span>
-          <Info className="w-5 h-5 text-primary cursor-pointer" title="Biowell Score: Composite of sleep, fitness, and consistency." />
+          <span title="Biowell Score: Composite of sleep, fitness, and consistency.">
+            <Info className="w-5 h-5 text-primary cursor-pointer" />
+          </span>
         </div>
         <span className="text-4xl font-bold text-primary tracking-tight">{score}</span>
       </div>
@@ -42,14 +44,18 @@ function BWScoreCard({ score = 76, sleep = 78, fitness = 82 }) {
         <div className="flex items-center justify-between text-left">
           <span className="flex items-center gap-2 text-sm text-secondary font-medium tracking-wide">
             Sleep
-            <Info className="w-4 h-4 text-secondary/60" title="Based on sleep duration, quality, and consistency." />
+            <span title="Based on sleep duration, quality, and consistency.">
+              <Info className="w-4 h-4 text-secondary/60" />
+            </span>
           </span>
           <span className="text-lg font-bold text-secondary tracking-tight">{sleep}</span>
         </div>
         <div className="flex items-center justify-between text-left">
           <span className="flex items-center gap-2 text-sm text-tertiary font-medium tracking-wide">
             Fitness
-            <Info className="w-4 h-4 text-tertiary/60" title="Based on activity levels, workouts, and recovery." />
+            <span title="Based on activity levels, workouts, and recovery.">
+              <Info className="w-4 h-4 text-tertiary/60" />
+            </span>
           </span>
           <span className="text-lg font-bold text-tertiary tracking-tight">{fitness}</span>
         </div>
@@ -65,7 +71,9 @@ function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goa
         <span className="text-2xl font-semibold text-neutral-800 dark:text-neutral-100 tracking-tight">
           Macros
         </span>
-        <Info className="w-5 h-5 text-tertiary cursor-pointer" title="Macronutrient breakdown based on daily intake and goals." />
+        <span title="Macronutrient breakdown based on daily intake and goals.">
+          <Info className="w-5 h-5 text-tertiary cursor-pointer" />
+        </span>
       </div>
       <DonutChart protein={protein} carbs={carbs} fat={fat} />
       <div className="flex flex-col gap-4 mt-5">
@@ -86,16 +94,18 @@ function MacroCard({ protein = 95, carbs = 210, fat = 65, goalProtein = 120, goa
   );
 }
 
-function SleepCard({ totalSleep = 7.5, deepSleep = 1.2, remSleep = 1.0, sleepGoal = 8 }) {
-  const percent = Math.round((totalSleep / sleepGoal) * 100);
-  return (
-    <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-7 w-full h-full">
-      <div className="flex items-center gap-2.5 mb-5 text-left">
-        <span className="text-xl font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
-          Sleep Analysis
-        </span>
-        <Info className="w-5 h-5 text-purple-500 cursor-pointer" title="Total, Deep, and REM sleep compared to optimal targets." />
-      </div>
+  function SleepCard({ totalSleep = 7.5, deepSleep = 1.8, remSleep = 1.5, sleepGoal = 8 }) {
+    const percent = Math.round((totalSleep / sleepGoal) * 100);
+    return (
+      <div className="rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-neutral-100 dark:border-neutral-800 p-7 w-full h-full">
+        <div className="flex items-center gap-2.5 mb-5 text-left">
+          <span className="text-xl font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
+            Sleep Analysis
+          </span>
+          <span title="Total, Deep, and REM sleep compared to optimal targets.">
+            <Info className="w-5 h-5 text-purple-500 cursor-pointer" />
+          </span>
+        </div>
       <div className="flex items-start gap-5 text-left">
         <div className="text-left">
           <span className="text-3xl font-bold text-purple-500 tracking-tight">{totalSleep}h</span>
