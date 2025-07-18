@@ -173,7 +173,7 @@ const MinimalNav: React.FC = () => {
       icon: <Utensils className="w-4 h-4" />,
       hasDropdown: true,
       dropdownItems: [
-        { href: '/nutrition', label: 'Food Logging', icon: <Utensils className="w-4 h-4" /> },
+        { href: '/nutrition', label: 'Nutrition', icon: <Utensils className="w-4 h-4" /> },
         { href: '/nutrition/myplate', label: 'MyPlate', icon: <Camera className="w-4 h-4" /> },
         { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> },
         { href: '/recipes', label: 'Recipes', icon: <Heart className="w-4 h-4" /> },
