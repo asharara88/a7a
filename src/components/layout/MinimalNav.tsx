@@ -160,6 +160,7 @@ const MinimalNav: React.FC = () => {
     { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> },
     { href: '/mycoach', label: 'MyCoach', icon: <Sparkles className="w-4 h-4" /> },
     { href: '/nutrition', label: 'Nutrition', icon: <Utensils className="w-4 h-4" /> },
+   { href: '/recipes', label: 'Recipes', icon: <Utensils className="w-4 h-4" /> },
     { 
       href: '/supplements', 
       label: 'Supplements', 
