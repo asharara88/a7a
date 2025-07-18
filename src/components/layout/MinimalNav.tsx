@@ -202,7 +202,6 @@ const MinimalNav: React.FC = () => {
       icon: <User className="w-5 h-5" />,
       hasDropdown: true,
       dropdownItems: [
-      dropdownItems: [
         { name: 'Profile', href: '/profile', icon: <User className="w-4 h-4" /> },
         { name: 'Settings', href: '/settings', icon: <Settings className="w-4 h-4" /> },
         { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> }
