@@ -17,7 +17,12 @@ import {
   Moon,
   DollarSign,
   LogIn,
-  UserPlus
+  UserPlus,
+  Gauge,
+  Heart,
+  Brain,
+  TrendingUp,
+  Store
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
@@ -33,6 +38,8 @@ interface NavigationItem {
   href: string;
   icon: React.ReactNode;
   children?: NavigationItem[];
+  description?: string;
+  badge?: string | number;
 }
 
 const Navigation: React.FC<NavigationProps> = ({ 
@@ -51,43 +58,121 @@ const Navigation: React.FC<NavigationProps> = ({
 
   const mainNavigation: NavigationItem[] = [
     { 
-      name: 'Home', 
-      href: '/',
-      icon: <Home className="w-4 h-4" />,
+      name: 'Dashboard', 
+      href: '/dashboard',
+      icon: <TrendingUp className="w-5 h-5" />,
+      description: 'Your health overview'
+    },
+    { 
+      name: 'Wellness', 
+      href: '/wellness',
+      icon: <Heart className="w-5 h-5" />,
+      description: 'Complete wellness tracking',
       children: [
-        { name: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-        { name: 'Fitness', href: '/fitness', icon: <Activity className="w-4 h-4" /> },
-        { name: 'Nutrition', href: '/nutrition', icon: <Utensils className="w-4 h-4" /> }
+        { 
+          name: 'Fitness Tracker', 
+          href: '/fitness', 
+          icon: <Activity className="w-4 h-4" />,
+          description: 'Workouts & progress'
+        },
+        { 
+          name: 'Nutrition Dashboard', 
+          href: '/nutrition', 
+          icon: <Utensils className="w-4 h-4" />,
+          description: 'Track meals & macros'
+        },
+        { 
+          name: 'Recipes', 
+          href: '/recipes', 
+          icon: <Utensils className="w-4 h-4" />,
+          description: 'Personalized recipes'
+        },
+        { 
+          name: 'Metabolism', 
+          href: '/metabolism', 
+          icon: <Gauge className="w-4 h-4" />,
+          description: 'Glucose monitoring'
+        },
+        { 
+          name: 'Sleep Analysis', 
+          href: '/sleep', 
+          icon: <Moon className="w-4 h-4" />,
+          description: 'Sleep quality tracking'
+        }
       ]
     },
     { 
-      name: 'MyCoach', 
+      name: 'AI Coach', 
       href: '/mycoach', 
-      icon: <Sparkles className="w-5 h-5" /> 
+      icon: <Sparkles className="w-5 h-5" />,
+      description: 'Your personal AI assistant'
     },
     { 
-      name: 'Personalized Supplements', 
-      href: '/supplements', 
-      icon: null,
+      name: 'Supplements', 
+      href: '/supplements',
+      icon: <Pill className="w-5 h-5" />,
+      description: 'Science-backed supplements',
       children: [
-        { name: 'My Stacks', href: '/my-stacks', icon: null },
-        { name: 'Recommendations', href: '/recommendations', icon: null },
-        { name: 'Supplement Store', href: '/supplement-store', icon: null },
-        { name: 'All Supplements', href: '/supplements', icon: null },
-        { name: 'My Cart', href: '/cart', icon: null }
+        { 
+          name: 'Browse All', 
+          href: '/supplements', 
+          icon: <Pill className="w-4 h-4" />,
+          description: 'Explore all supplements'
+        },
+        { 
+          name: 'My Stacks', 
+          href: '/my-stacks', 
+          icon: <Package className="w-4 h-4" />,
+          description: 'Manage your stacks'
+        },
+        { 
+          name: 'Recommendations', 
+          href: '/recommendations', 
+          icon: <Brain className="w-4 h-4" />,
+          description: 'AI-powered suggestions'
+        },
+        { 
+          name: 'Store', 
+          href: '/supplement-store', 
+          icon: <Store className="w-4 h-4" />,
+          description: 'Shop supplements'
+        },
+        { 
+          name: 'My Cart', 
+          href: '/cart', 
+          icon: <ShoppingCart className="w-4 h-4" />,
+          description: 'Review your selections',
+          badge: 2
+        }
       ]
     }
   ];
   
   const accountNavigation: NavigationItem[] = [
     { 
-      name: 'Account', 
-      href: '/login', 
-      icon: <User className="w-5 h-5" />,
+      name: 'Account Settings', 
+      href: '/settings', 
+      icon: <Settings className="w-5 h-5" />,
+      description: 'Manage your preferences',
       children: [
-        { name: 'Profile', href: '/profile', icon: <User className="w-4 h-4" /> },
-        { name: 'Settings', href: '/settings', icon: <Settings className="w-4 h-4" /> },
-        { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> }
+        { 
+          name: 'Profile', 
+          href: '/settings#profile', 
+          icon: <User className="w-4 h-4" />,
+          description: 'Personal information'
+        },
+        { 
+          name: 'Preferences', 
+          href: '/settings#preferences', 
+          icon: <Settings className="w-4 h-4" />,
+          description: 'App settings'
+        },
+        { 
+          name: 'About', 
+          href: '/about', 
+          icon: <Info className="w-4 h-4" />,
+          description: 'Learn about Biowell'
+        }
       ]
     }
   ];
@@ -97,19 +182,45 @@ const Navigation: React.FC<NavigationProps> = ({
     if (!isLoggedIn) {
       if (type === 'main') {
         return [
-          { name: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
-          { name: 'About', href: '/about', icon: <Info className="w-4 h-4" /> },
-          { name: 'Pricing', href: '/pricing', icon: <DollarSign className="w-4 h-4" /> }
+          { 
+            name: 'Home', 
+            href: '/', 
+            icon: <Home className="w-5 h-5" />,
+            description: 'Welcome to Biowell'
+          },
+          { 
+            name: 'About', 
+            href: '/about', 
+            icon: <Info className="w-5 h-5" />,
+            description: 'Learn about our mission'
+          },
+          { 
+            name: 'Pricing', 
+            href: '/pricing', 
+            icon: <DollarSign className="w-5 h-5" />,
+            description: 'Choose your plan'
+          }
         ];
       } else {
         return [
           { 
-            name: 'Account', 
-            href: '/login', 
-            icon: <User className="w-5 h-5" />,
+            name: 'Get Started', 
+            href: '/signup', 
+            icon: <UserPlus className="w-5 h-5" />,
+            description: 'Create your account',
             children: [
-              { name: 'Login', href: '/login', icon: <LogIn className="w-4 h-4" /> },
-              { name: 'Sign Up', href: '/signup', icon: <UserPlus className="w-4 h-4" /> }
+              { 
+                name: 'Sign Up', 
+                href: '/signup', 
+                icon: <UserPlus className="w-4 h-4" />,
+                description: 'Create new account'
+              },
+              { 
+                name: 'Login', 
+                href: '/login', 
+                icon: <LogIn className="w-4 h-4" />,
+                description: 'Access existing account'
+              }
             ]
           }
         ];
@@ -137,28 +248,31 @@ const Navigation: React.FC<NavigationProps> = ({
     }
     return location.pathname === item.href || 
            (item.href !== '/' && location.pathname.startsWith(item.href)) ||
-           (item.children?.some(child => location.pathname === child.href || 
-                                        (child.href !== '/' && location.pathname.startsWith(child.href))));
+           (item.children?.some(child => 
+             location.pathname === child.href || 
+             (child.href !== '/' && location.pathname.startsWith(child.href))
+           ));
   };
 
   const renderNavItem = (item: NavigationItem, depth = 0) => {
     const hasChildren = item.children && item.children.length > 0;
     const isItemActive = isActive(item);
     const isSubmenuOpen = openSubmenu === item.name || 
-                         (hasChildren && item.children?.some(child => isActive(child)));
+                         (hasChildren && item.children?.some(child => isActive({ ...child, children: [] })));
 
     return (
       <div key={item.name} className={cn(
         "w-full",
-        depth > 0 && "pl-4"
+        depth > 0 && "ml-4"
       )}>
         <div className="flex flex-col w-full">
           <div className={cn(
-            "flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors",
+            "group flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all duration-200",
             isItemActive 
-              ? "text-primary font-medium" 
-              : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800",
-            hasChildren && "cursor-pointer"
+              ? "bg-primary/10 text-primary border border-primary/20" 
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white",
+            hasChildren && "cursor-pointer",
+            isMobile ? "text-base" : "text-sm"
           )}
           onClick={() => {
             if (hasChildren) {
@@ -168,22 +282,53 @@ const Navigation: React.FC<NavigationProps> = ({
             }
           }}
           >
-            <Link 
-              to={item.href}
-              className="flex items-center flex-1 tracking-wide"
-              onClick={(e) => {
-                if (hasChildren) {
+            <div className="flex items-center flex-1 min-w-0">
+              <Link 
+                to={item.href}
+                className="flex items-center flex-1 min-w-0"
+                onClick={(e) => {
+                  if (hasChildren) {
                     e.preventDefault();
                     e.stopPropagation();
                     toggleSubmenu(item.name);
-                } else if (onItemClick) {
-                  onItemClick();
-                }
-              }}
-            >
-              {item.icon && <span className="mr-3">{item.icon}</span>}
-              <span>{item.name}</span>
-            </Link>
+                  } else if (onItemClick) {
+                    onItemClick();
+                  }
+                }}
+              >
+                <div className={cn(
+                  "flex-shrink-0 mr-3 p-2 rounded-lg transition-colors",
+                  isItemActive 
+                    ? "bg-primary/20 text-primary" 
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:bg-gray-200 dark:group-hover:bg-gray-700"
+                )}>
+                  {item.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center">
+                    <span className={cn(
+                      "font-medium truncate",
+                      isItemActive ? "text-primary" : ""
+                    )}>
+                      {item.name}
+                    </span>
+                    {item.badge && (
+                      <span className="ml-2 bg-primary text-white text-xs rounded-full px-2 py-0.5 font-medium">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                  {item.description && (
+                    <p className={cn(
+                      "text-xs mt-0.5 truncate",
+                      isItemActive ? "text-primary/70" : "text-gray-500 dark:text-gray-400"
+                    )}>
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            </div>
             
             {hasChildren && (
               <button
@@ -192,7 +337,10 @@ const Navigation: React.FC<NavigationProps> = ({
                   e.stopPropagation();
                   toggleSubmenu(item.name);
                 }}
-                className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+                className={cn(
+                  "p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors",
+                  isItemActive ? "text-primary" : "text-gray-400"
+                )}
               >
                 {isSubmenuOpen ? (
                   <ChevronDown className="w-4 h-4" />
@@ -204,7 +352,7 @@ const Navigation: React.FC<NavigationProps> = ({
           </div>
           
           {hasChildren && isSubmenuOpen && (
-            <div className="mt-1 space-y-1">
+            <div className="mt-2 ml-2 space-y-1 border-l-2 border-gray-200 dark:border-gray-700 pl-4">
               {item.children?.map(child => renderNavItem(child, depth + 1))}
             </div>
           )}
@@ -215,8 +363,8 @@ const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <nav className={cn(
-      "flex flex-col space-y-1",
-      isMobile ? "w-full" : "hidden md:flex md:space-x-8 md:flex-row md:space-y-0"
+      "flex flex-col space-y-2",
+      isMobile ? "w-full p-2" : "hidden md:flex md:space-x-8 md:flex-row md:space-y-0"
     )}>
       {navigation.map(item => renderNavItem(item))}
     </nav>
