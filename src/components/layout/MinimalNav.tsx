@@ -561,6 +561,11 @@ const MinimalNav: React.FC = () => {
                                   >
                                     <span className="mr-3">{dropdownItem.icon}</span>
                                     <span className="tracking-wide">{dropdownItem.label}</span>
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
                       ) : (
                         <Link
