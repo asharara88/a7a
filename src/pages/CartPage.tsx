@@ -6,7 +6,7 @@ import ChatMessage from '../components/chat/ChatMessage';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../utils/cn'; 
 import { elevenlabsApi, Voice } from '../api/elevenlabsApi';
-import VoicePreferences from './VoicePreferences';
+import VoicePreferences from '../components/chat/VoicePreferences';
 
 // Sample question sets that will rotate after each response
 const QUESTION_SETS = [
