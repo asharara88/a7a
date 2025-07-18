@@ -166,7 +166,7 @@ const MinimalNav: React.FC = () => {
         { href: '/cart', label: 'Cart', icon: <ShoppingCart className="w-4 h-4" /> }
       ]
     },
-    { href: '/bioclock', label: 'MyBio', icon: <User className="w-4 h-4" /> },
+    { href: '/profile', label: 'MyBio', icon: <User className="w-4 h-4" /> },
     { 
       href: '/nutrition', 
       label: 'MyWellness', 
@@ -176,7 +176,8 @@ const MinimalNav: React.FC = () => {
         { href: '/nutrition', label: 'Food Logging', icon: <Utensils className="w-4 h-4" /> },
         { href: '/nutrition/myplate', label: 'MyPlate', icon: <Camera className="w-4 h-4" /> },
         { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> },
-        { href: '/recipes', label: 'Recipes', icon: <Heart className="w-4 h-4" /> }
+        { href: '/recipes', label: 'Recipes', icon: <Heart className="w-4 h-4" /> },
+        { href: '/bioclock', label: 'BioClock', icon: <Moon className="w-4 h-4" /> }
       ]
     }
   ];
@@ -401,14 +402,6 @@ const MinimalNav: React.FC = () => {
                             <Home className="w-4 h-4 mr-3" />
                             <span className="tracking-wide">Dashboard</span>
                           </Link>
-                          <Link
-                            to="/bioclock"
-                            className="flex items-center w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                            onClick={() => setShowUserMenu(false)}
-                          >
-                            <Settings className="w-4 h-4 mr-3" />
-                            <span className="tracking-wide">Bioclock™</span>
-                          </Link>
                           <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
                           <button
                             onClick={handleSignOut}
@@ -612,14 +605,6 @@ const MinimalNav: React.FC = () => {
                       >
                         <Home className="w-4 h-4 mr-3" />
                         <span className="tracking-wide">Dashboard</span>
-                      </Link>
-                      <Link
-                        to="/bioclock"
-                        className="flex items-center px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <Settings className="w-4 h-4 mr-3" />
-                        <span className="tracking-wide">Bioclock™</span>
                       </Link>
                       <button
                         onClick={() => {
