@@ -1,0 +1,38 @@
+=== Analyzing duplicates for safe removal ===
+
+--- UI Components Analysis ---
+
+Button components:
+  ./src/components/ui/Button.tsx (imports: 4, exports: 2, lines: 64)
+
+Card components:
+  ./src/components/dashboard/RecommendationsCard.tsx (imports: 5, exports: 1, lines: 88)
+  ./src/components/dashboard/WearableDeviceCard.tsx (imports: 5, exports: 1, lines: 112)
+  ./src/components/dashboard/HealthScoreCard.tsx (imports: 4, exports: 1, lines: 94)
+  ./src/components/dashboard/BWScoreCard.tsx (imports: 6, exports: 2, lines: 185)
+  ./src/components/dashboard/MacroCard.tsx (imports: 0, exports: 0, lines: 18)
+  ./src/components/dashboard/MetricsCard.tsx (imports: 4, exports: 1, lines: 69)
+  ./src/components/dashboard/DashboardCards.tsx (imports: 2, exports: 1, lines: 140)
+  ./src/components/ui/card.tsx (imports: 1, exports: 4, lines: 45)
+  ./src/components/ui/Card.tsx (imports: 3, exports: 2, lines: 40)
+  ./src/components/nutrition/RecipeCard.tsx (imports: 6, exports: 1, lines: 110)
+  ./src/components/supplements/SupplementCard.tsx (imports: 6, exports: 1, lines: 204)
+
+Input components:
+  ./src/components/ui/Input.tsx (imports: 2, exports: 2, lines: 24)
+
+Modal components:
+  ./src/components/supplements/StackBuilderModal.tsx (imports: 7, exports: 1, lines: 489)
+
+Form components:
+  ./src/components/onboarding/EnhancedOnboardingForm.tsx (imports: 7, exports: 1, lines: 913)
+
+Table components:
+
+List components:
+
+--- Utility Files Analysis ---
+
+--- Type Definition Files ---
+
+--- Multiple index files ---
