@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate, Outlet } from 'react-router-dom'
+import { useNavigate, Outlet, useLocation } from 'react-router-dom'
 import MinimalNav from './MinimalNav'
 import MobileNav from '../ui/MobileNav'
 import { createClient } from '@supabase/supabase-js'
