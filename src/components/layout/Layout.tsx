@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom'
 import { ShoppingCart, User, Menu, X, Sparkles, Moon, Sun, Monitor } from 'lucide-react'
 import { cn } from '../../utils/cn'
 import Navigation from './Navigation'
@@ -48,11 +48,7 @@ const shouldUseDarkMode = (theme: ThemeMode): boolean => {
   }
 };
 
-interface LayoutProps {
-  children: React.ReactNode
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [theme, setTheme] = React.useState<ThemeMode>(getInitialTheme)
   const [showThemeMenu, setShowThemeMenu] = React.useState(false)
@@ -209,7 +205,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Main Content */}
       <main className="flex-1 min-h-[calc(100vh-48px-88px)] pt-8">
-        {children}
+        <Outlet />
       </main>
 
       {/* Footer */}
