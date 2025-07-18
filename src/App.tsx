@@ -10,6 +10,7 @@ import AboutPage from './pages/AboutPage';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import OnboardingPage from './pages/auth/OnboardingPage';
+import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 import CartPage from './pages/CartPage';
 import MyStacksPage from './pages/MyStacksPage';
@@ -30,6 +31,7 @@ function App() {
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route path="dashboard" element={<DashboardPage />} />
         <Route path="coach" element={<MyCoachPage />} />
         <Route path="nutrition" element={<NutritionPage />} />
         <Route path="nutrition/dashboard" element={<NutritionDashboardPage />} />
