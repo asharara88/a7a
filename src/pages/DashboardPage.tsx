@@ -1159,6 +1159,13 @@ const DashboardPage: React.FC = () => {
               currentGlucose={95}
               trend="stable"
             />
+            
+            {/* Recovery Visualization */}
+            <MuscleGroupVisualization
+              mode="recovery"
+              recoveryStates={recoveryStates}
+              height={300}
+            />
           </motion.div>
         </motion.div>
       </div>

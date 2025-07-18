@@ -15,7 +15,8 @@ import {
   Package,
   Sparkles,
   Store,
-  Moon
+  Moon,
+  BarChart2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createClient } from '@supabase/supabase-js';
@@ -246,13 +247,33 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
-                        <Link to="/fitness" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <Link to="/fitness?tab=history" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                           <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
                             <Activity size={18} className="text-orange-600 dark:text-orange-400" />
                           </div>
                           <div className="flex-1">
                             <span className="font-medium text-gray-900 dark:text-white">Workout History</span>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">View past workouts</p>
+                          </div>
+                        </Link>
+                        
+                        <Link to="/fitness?tab=muscles" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
+                            <LayoutDashboard size={18} className="text-orange-600 dark:text-orange-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">Muscle Groups</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Visualize muscle targeting</p>
+                          </div>
+                        </Link>
+                        
+                        <Link to="/fitness?tab=analytics" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
+                            <BarChart2 size={18} className="text-orange-600 dark:text-orange-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">Fitness Analytics</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Progress charts & trends</p>
                           </div>
                         </Link>
                       </div>
