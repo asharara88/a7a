@@ -186,7 +186,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                       className={cn(
                         "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 relative group",
                         isActive(item.href)
-                          ? "bg-white dark:bg-gray-700 text-primary shadow-sm border border-gray-200/50 dark:border-gray-600/50"
+                          ? "bg-gradient-to-r from-primary/10 via-tertiary/10 to-secondary/10 text-primary border border-primary/30 shadow-lg shadow-primary/10"
                           : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-gray-700/50"
                       )}
                     >
@@ -268,7 +268,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                   className="p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-300 backdrop-blur-sm border border-transparent hover:border-gray-200/50 dark:hover:border-gray-700/50 relative"
                   aria-label="Shopping cart"
                 >
-                  <ShoppingCart className="w-4 h-4" />
+                      ? "bg-gradient-to-r from-primary/10 to-tertiary/10 dark:from-primary/20 dark:to-tertiary/20 text-primary border border-primary/20 shadow-sm backdrop-blur-sm"
                 </Link>
               </motion.div>
 
@@ -302,15 +302,15 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                         >
                           <Link
                             to="/dashboard"
-                            className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-700/80 transition-all duration-200"
+                            className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-primary/5 hover:to-tertiary/5 hover:text-primary transition-all duration-200"
                             onClick={() => setShowUserMenu(false)}
                           >
                             <User className="w-4 h-4 mr-3" />
                             <span className="tracking-wide">Dashboard</span>
-                          </Link>
+                                  ? "text-primary bg-gradient-to-r from-primary/10 to-tertiary/10 border-r-2 border-primary" 
                           <button
                             onClick={handleSignOut}
-                            className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50/80 dark:hover:bg-red-900/20 transition-all duration-200"
+                            className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-red-500 dark:text-red-400 hover:bg-gradient-to-r hover:from-red-50/80 hover:to-red-100/80 dark:hover:from-red-900/20 dark:hover:to-red-800/20 hover:text-red-600 dark:hover:text-red-300 transition-all duration-200"
                           >
                             <LogOut className="w-4 h-4 mr-3" />
                             <span className="tracking-wide">Sign out</span>
@@ -339,7 +339,7 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                   >
                     <Link
                       to="/signup"
-                      className="px-5 py-2.5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md backdrop-blur-sm tracking-wide"
+                      className="px-5 py-2.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-sm font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 shadow-md backdrop-blur-sm tracking-wide hover:from-primary-light hover:via-tertiary-light hover:to-secondary-light"
                     >
                       Get Started
                     </Link>
@@ -421,9 +421,9 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode }) => {
                       </Link>
                       <Link
                         to="/signup"
-                        className="block px-4 py-3.5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl text-base font-medium hover:shadow-lg transition-all duration-300 text-center tracking-wide"
+                        className="block px-4 py-3.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-base font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 text-center tracking-wide hover:from-primary-light hover:via-tertiary-light hover:to-secondary-light"
                         onClick={() => setIsMobileMenuOpen(false)}
-                      >
+                      className="absolute inset-0 bg-gradient-to-r from-primary/5 via-tertiary/5 to-secondary/5 rounded-lg border border-primary/10"
                         Get Started
                       </Link>
                     </motion.div>
