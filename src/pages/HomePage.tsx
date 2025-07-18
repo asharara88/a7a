@@ -33,22 +33,28 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen">
       {/* Hero Section with consistent styling */}
       <section className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white py-28 sm:py-36 md:py-44 relative overflow-hidden">
-        {/* Backdrop Image */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <img 
-            src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/stack%20dash%20metalic%20favicon.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9zdGFjayBkYXNoIG1ldGFsaWMgZmF2aWNvbi5zdmciLCJpYXQiOjE3NTI4NDIyMTAsImV4cCI6MTc4NDM3ODIxMH0.J4JBhQ9A4sGJ_rZKF4frDrrTdN8SvQrxMnE6dYaB4VI"
-            alt=""
-            className="w-[800px] h-[800px] object-contain opacity-[0.02] dark:opacity-[0.04] scale-150 transform rotate-12"
-          />
-        </div>
         
         <div className="mobile-container max-w-6xl mx-auto">
           <motion.div 
-            className="max-w-4xl mx-auto relative z-10"
+            className="max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
+            {/* Hero Logo */}
+            <motion.div 
+              className="flex justify-center mb-12"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <img 
+                src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/stack%20dash%20metalic%20favicon.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9zdGFjayBkYXNoIG1ldGFsaWMgZmF2aWNvbi5zdmciLCJpYXQiOjE3NTI4NDIyMTAsImV4cCI6MTc4NDM3ODIxMH0.J4JBhQ9A4sGJ_rZKF4frDrrTdN8SvQrxMnE6dYaB4VI"
+                alt="Biowell Hero Logo"
+                className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain drop-shadow-lg"
+              />
+            </motion.div>
+            
             <a 
               href="#evidence-based-health" 
               className="inline-block bg-gray-100 dark:bg-gray-800 rounded-xl px-5 py-1.5 mb-8 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer shadow-sm"
