@@ -174,7 +174,7 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
     ]
   };
 
-  const chartOptions = {
+  const chartOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -265,7 +265,7 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
     }
   };
 
-  const pieChartOptions = {
+  const pieChartOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
