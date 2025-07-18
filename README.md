@@ -1,53 +1,347 @@
-# Biowell AI - Personal Digital Health Coach
+# Biowell AI - Precision Wellness Platform
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/5239b3f1-f78c-4857-ad9d-ad1bb351d322/deploy-status)](https://app.netlify.com/projects/biowellai/deploys)
 
-Biowell AI is a digital health platform that connects your wearable devices, delivers personalized insights, and offers evidence‑based supplement recommendations through an AI coach.
+**Biowell** is a digital wellness platform that combines personalized coaching, smart data integration, and precision supplementation to help users optimize their health. It integrates wearable data, user input, and evidence-based recommendations to deliver real-time, goal-driven guidance.
 
-## Features
+---
 
-- **Personal Health Dashboard**: View your health score and metrics from connected wearable devices
-- **AI Health Coach**: Chat with an AI powered by OpenAI to get personalized health advice
-- **Supplement Recommendations**: Receive custom supplement suggestions based on your health data
-- **Onboarding Quiz**: Detailed health assessment to personalize your experience
-- **Wearable Integration**: Connect with Apple Health, Oura Ring, Garmin, and more
-- **Subscription Management**: Subscribe to recommended supplements for monthly delivery
-- **Shopping Cart**: Save supplements in your cart with quantity tracking
+## 📲 Core Features
 
-> **Disclaimer**: Biowell AI does not provide medical diagnosis or treatment. The AI coach offers general wellness guidance based on the information you share. Always consult a qualified healthcare professional for medical concerns.
+- **Home Dashboard**  
+  Central hub displaying real-time wellness metrics from connected devices and user logs.
 
-## Tech Stack
+- **MyCoach (AI Coach)**  
+  Personalized coaching via chat and voice (OpenAI + ElevenLabs), responding to user data, habits, and preferences.
 
-- **Frontend**: React, TypeScript, TailwindCSS, Framer Motion
-- **Backend**: Supabase (Authentication, Database, Realtime)
-- **Serverless**: Supabase Edge Functions for OpenAI proxy
-- **Payments**: Stripe integration (currently unused placeholder)
+- **Supplement Store**  
+  Curated stacks by use-case (muscle, sleep, gut, fertility, etc.), with dynamic pricing and subscription discounts.  
+  **Premium users** receive an automatic **15% discount** on all supplement purchases.
 
-## Getting Started
+- **Fertility Mode** 🧬  
+  Couples-based module integrating with femtech platforms (Flo, Clue, Apple Cycle Tracking). Supports:
+  - Ovulation prediction & fertility window tracking  
+  - Female cycle data syncing  
+  - Couple-based supplement & lifestyle recommendations  
+  - Frontend UX for joint health goals and tracking
+
+- **Metabolic Mode (CGM Integration)** 🔬  
+  Continuous glucose monitoring (CGM) support for real-time metabolic health tracking. Includes:
+  - CGM integrations (FreeStyle Libre, Dexcom planned)  
+  - Blood sugar mapping, insulin sensitivity insights  
+  - AI-powered fasting & nutrition guidance  
+  - Metabolic scoring dashboard
+
+- **Premium Nutrition Module** 🍽️  
+  Exclusive to premium users:
+  - **Personalized meal plans and recipes** tailored from wearable data and quiz inputs  
+  - **Camera-based macronutrient tracker** (real-time food recognition and macro breakdown)  
+  - Full access to dietary pattern scoring and nutrition trends
+
+- **Data Integration**  
+  Seamless sync with Apple Watch, Oura, Garmin, smart scales, CGMs, and menstrual trackers via secure APIs.
+
+- **Recovery Mode**  
+  Supports dopamine balance, sleep repair, emotional regulation, and habit rewiring.
+
+---
+
+## 🧠 Tech Stack
+
+- **Frontend:** React, TypeScript, Tailwind CSS, Framer Motion  
+  - Premium UI modules for nutrition, food camera, and supplement discounts  
+- **Backend:** Supabase (PostgreSQL + Edge Functions)  
+  - User role logic (Premium vs Standard)  
+  - Nutrition scoring, CGM ingestion, camera uploads  
+- **AI:** OpenAI (prompt routing), ElevenLabs (voice), custom food classifier (planned)  
+- **Integrations:**  
+  - Wearables: Apple, Oura, Garmin  
+  - Femtech: Flo, Clue, Apple Cycle  
+  - CGM: FreeStyle Libre, Dexcom (planned)  
+  - Camera-based food logging: in development  
+- **Deployment:** Netlify (frontend), Supabase (backend)
+
+---
+
+## 🧩 Folder Structure
+
+```
+biowell-ai/
+├── src/
+│   ├── components/
+│   │   ├── layout/           # Header, Footer, Navigation
+│   │   ├── onboarding/       # User onboarding flow
+│   │   ├── ui/               # Reusable UI components
+│   │   ├── chat/             # AI Coach chat interface
+│   │   ├── dashboard/        # Home dashboard widgets
+│   │   ├── supplements/      # Supplement store components
+│   │   ├── fertility/        # Fertility mode components (planned)
+│   │   ├── metabolic/        # CGM & metabolic tracking (planned)
+│   │   └── nutrition/        # Premium nutrition module (planned)
+│   ├── pages/
+│   │   ├── auth/             # Authentication pages
+│   │   ├── HomePage.tsx      # Landing page
+│   │   ├── DashboardPage.tsx # Main dashboard
+│   │   ├── SupplementsPage.tsx # Supplement store
+│   │   └── CartPage.tsx      # Shopping cart
+│   ├── utils/                # Utility functions
+│   ├── hooks/                # Custom React hooks
+│   ├── api/                  # API client functions
+│   ├── types/                # TypeScript type definitions
+│   └── store/                # State management (Zustand)
+├── supabase/
+│   ├── functions/            # Edge Functions
+│   │   ├── openai-proxy/     # OpenAI API proxy
+│   │   ├── elevenlabs-proxy/ # ElevenLabs voice proxy
+│   │   ├── cgm-ingestion/    # CGM data processing (planned)
+│   │   └── nutrition-score/  # Nutrition scoring (planned)
+│   └── migrations/           # Database schema migrations
+├── public/
+│   ├── icons/                # App icons
+│   └── manifest.json         # PWA manifest
+├── docs/                     # Documentation
+├── tests/                    # Test files
+└── deployment/               # Deployment configurations
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- Supabase account
-- OpenAI API key (for AI coach functionality)
-- Stripe account (optional - integration not currently used)
-- Supabase CLI installed globally (`npm install -g supabase`)
+- **Node.js 18+** and npm
+- **Supabase account** (free tier available)
+- **OpenAI API key** (for AI coach functionality)
+- **ElevenLabs API key** (optional - for voice features)
+- **Supabase CLI** installed globally: `npm install -g supabase`
 
 ### Local Development
 
-1. Clone the repository:
-
+1. **Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/biowell-ai.git
+git clone https://github.com/asharara88/biowell-ai.git
 cd biowell-ai
 ```
 
-### 3. Deploy Edge Functions
+2. **Install dependencies:**
+```bash
+npm install
+```
 
-Deploy the required Edge Functions to your Supabase project:
+3. **Set up environment variables:**
+```bash
+cp .env.example .env
+```
+
+Fill in your environment variables:
+```env
+VITE_SUPABASE_URL=your-supabase-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+VITE_OPENAI_API_KEY=your-openai-api-key
+VITE_ELEVENLABS_API_KEY=your-elevenlabs-api-key
+```
+
+4. **Link to your Supabase project:**
+```bash
+supabase link --project-ref your-project-ref
+```
+
+5. **Run database migrations:**
+```bash
+supabase db push
+```
+
+6. **Deploy Edge Functions:**
+```bash
+supabase functions deploy openai-proxy
+supabase functions deploy elevenlabs-proxy
+```
+
+7. **Set API keys as Supabase secrets:**
+```bash
+supabase secrets set OPENAI_API_KEY=your-openai-api-key
+supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-api-key
+```
+
+8. **Start the development server:**
+```bash
+npm run dev
+```
+
+Visit `http://localhost:5173` to see the app running.
+
+---
+
+## 📊 Database Schema
+
+### Core Tables
+
+- **`profiles`** - User profiles and preferences
+- **`health_metrics`** - Wearable device data and health scores
+- **`quiz_responses`** - Onboarding questionnaire responses
+- **`supplements`** - Supplement catalog and inventory
+- **`user_supplements`** - User supplement subscriptions
+- **`cart_items`** - Shopping cart functionality
+- **`chat_history`** - AI coach conversation history
+- **`wearable_connections`** - Device integration status
+- **`audio_cache`** - Cached voice responses
+- **`cgm_data`** - Continuous glucose monitoring data (planned)
+
+### Premium Features Tables (Planned)
+
+- **`meal_plans`** - Personalized nutrition plans
+- **`food_logs`** - Camera-based food tracking
+- **`fertility_data`** - Cycle tracking and fertility insights
+- **`metabolic_scores`** - CGM-derived metabolic health metrics
+
+---
+
+## 🔧 Development Commands
 
 ```bash
-# Link your local project to Supabase
+# Development
+npm run dev              # Start development server
+npm run build           # Build for production
+npm run preview         # Preview production build
+
+# Testing
+npm run test            # Run tests
+npm run test:watch      # Watch mode testing
+npm run test:coverage   # Test coverage report
+
+# Linting & Formatting
+npm run lint            # Run ESLint
+npm run format          # Format code with Prettier
+
+# Database
+supabase db reset       # Reset local database
+supabase db push        # Push schema changes
+supabase gen types      # Generate TypeScript types
+
+# Deployment
+npm run deploy          # Deploy to Netlify
+```
+
+---
+
+## 🔐 Authentication & Security
+
+- **Row Level Security (RLS)** policies on all tables
+- **JWT-based authentication** via Supabase Auth
+- **API key management** through Supabase secrets
+- **CORS protection** on all Edge Functions
+- **Data encryption** in transit and at rest
+- **Privacy-first design** with user data control
+
+---
+
+## 📱 Mobile Support
+
+- **Progressive Web App (PWA)** with offline capabilities
+- **Responsive design** optimized for mobile devices
+- **Apple Watch integration** for real-time health metrics
+- **Push notifications** for coaching reminders
+- **Biometric authentication** support (Face ID, Touch ID)
+
+---
+
+## 🎯 Premium Features
+
+### Standard vs Premium
+
+| Feature | Standard | Premium |
+|---------|----------|---------|
+| AI Coach | ✅ Basic | ✅ Advanced |
+| Supplement Store | ✅ Full price | ✅ 15% discount |
+| Nutrition Module | ❌ | ✅ Full access |
+| Camera Food Tracking | ❌ | ✅ Unlimited |
+| CGM Integration | ❌ | ✅ Real-time |
+| Fertility Mode | ❌ | ✅ Couples support |
+| Advanced Analytics | ❌ | ✅ Detailed insights |
+
+---
+
+## 🔗 Integrations
+
+### Wearables
+- **Apple Health** (HealthKit)
+- **Oura Ring** (API v2)
+- **Garmin Connect** (Connect IQ)
+- **Fitbit** (Web API)
+- **Withings** (Health Mate)
+
+### Health Platforms
+- **Flo** (Fertility tracking)
+- **Clue** (Menstrual cycle)
+- **Apple Cycle Tracking**
+- **FreeStyle Libre** (CGM)
+- **Dexcom** (CGM - planned)
+
+### AI Services
+- **OpenAI GPT-4** (Conversational AI)
+- **ElevenLabs** (Voice synthesis)
+- **Custom food classifier** (Computer vision - planned)
+
+---
+
+## 📈 Roadmap
+
+### Q3 2025
+- [ ] Fertility Mode launch
+- [ ] Camera-based food tracking
+- [ ] Premium nutrition module
+- [ ] Apple Watch app
+
+### Q4 2025
+- [ ] CGM integration (FreeStyle Libre)
+- [ ] Advanced metabolic scoring
+- [ ] Couples dashboard
+- [ ] Mobile app launch
+
+### Q1 2026
+- [ ] Dexcom integration
+- [ ] Garmin Connect IQ app
+- [ ] Advanced AI coaching
+- [ ] Telehealth integration
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new features
+5. Submit a pull request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 📞 Support
+
+- **Documentation:** [docs.biowell.ai](https://docs.biowell.ai)
+- **Discord Community:** [discord.gg/biowell](https://discord.gg/biowell)
+- **Email Support:** support@biowell.ai
+- **Bug Reports:** [GitHub Issues](https://github.com/asharara88/biowell-ai/issues)
+
+---
+
+> **Medical Disclaimer:** Biowell AI provides general wellness information and is not intended to diagnose, treat, cure, or prevent any disease. Always consult with a qualified healthcare provider before making changes to your health routine.
+
+---
+
+<div align="center">
+  <strong>Built with ❤️ by the Biowell team</strong>
+</div>
 supabase link --project-ref YOUR_PROJECT_REF
 
 # Deploy the OpenAI proxy function
