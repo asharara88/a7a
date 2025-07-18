@@ -1,5 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { CheckCircle, AlertCircle, Info, Loader2, Shield } from "lucide-react";
+import Breadcrumbs from '../components/ui/Breadcrumbs';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { supplementApi } from '../api/supplementApi';
@@ -107,8 +109,9 @@ export default function SupplementStorePage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="mobile-container">
+        <Breadcrumbs />
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Supplement Store</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Supplement Store</h1>
           <p className="text-gray-600 dark:text-gray-400">Browse our evidence-based supplements by tier ({supplements.length} supplements available)</p>
         </div>
 
@@ -246,7 +249,7 @@ export default function SupplementStorePage() {
         ) : (
           <>
             {/* Results Summary */}
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Showing {filteredSupplements.length} of {supplements.length} supplements
                 {searchQuery && ` for "${searchQuery}"`}
@@ -268,7 +271,7 @@ export default function SupplementStorePage() {
               )}
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredSupplements.map((supp) => {
                 // Calculate discount price if available
                 const discount = supp.subscription_discount_percent || 0;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Activity, Heart, Zap, Moon, Utensils, Target } from 'lucide-react';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
 import DashboardCards from '../components/dashboard/DashboardCards';
 import BWScoreCard from '../components/dashboard/BWScoreCard';
 import MetricsCard from '../components/dashboard/MetricsCard';
@@ -163,13 +164,14 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 sm:py-8 transition-all duration-200">
       <div className="mobile-container">
+        <Breadcrumbs />
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Health Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Health Dashboard</h1>
           <p className="text-gray-600 dark:text-gray-400">Your personalized health overview and insights</p>
         </div>
 
         {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* BW Score - Takes up 1 column */}
           <div className="lg:col-span-1">
             <BWScoreCard 
@@ -179,7 +181,7 @@ const DashboardPage: React.FC = () => {
           </div>
           
           {/* Metrics Cards - Takes up 2 columns */}
-          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <MetricsCard
               title="Steps Today"
               value="8,247"
@@ -212,7 +214,7 @@ const DashboardPage: React.FC = () => {
         </div>
 
         {/* Secondary Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div className="space-y-6">
             <SupplementTracker 
               supplements={todaysSupplements}

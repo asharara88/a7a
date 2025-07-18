@@ -124,7 +124,7 @@ function SleepCard({ totalSleep = 7.5, deepSleep = 1.2, remSleep = 1.0, sleepGoa
 // Main Dashboard Cards component
 const DashboardCards: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
       <div className="md:col-span-1">
         <BWScoreCard />
       </div>

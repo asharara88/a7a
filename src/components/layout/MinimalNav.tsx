@@ -228,7 +228,7 @@ const MinimalNav: React.FC = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center">
-              <div className="flex items-center space-x-1 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-1.5 shadow-sm">
+              <div className="flex items-center space-x-1 bg-gray-100/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl p-1.5 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
                 {navItems.map((item) => (
                   <div key={item.href} className="relative">
                     {item.hasDropdown ? (
@@ -244,8 +244,8 @@ const MinimalNav: React.FC = () => {
                           className={cn(
                             "flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                             isActive(item.href)
-                              ? "bg-primary text-white shadow-md"
-                              : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/70 dark:hover:bg-gray-700/70"
+                              ? "bg-primary text-white shadow-lg scale-105"
+                              : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-gray-700/80 hover:scale-105"
                           )}
                         >
                           <span className="mr-2">{item.icon}</span>
@@ -265,7 +265,7 @@ const MinimalNav: React.FC = () => {
                                 }}
                               />
                               <motion.div
-                                className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50"
+                                className="absolute top-full left-0 mt-2 w-56 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 py-2 z-50"
                                 initial={{ opacity: 0, scale: 0.95, y: -10 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: -10 }}
@@ -275,7 +275,12 @@ const MinimalNav: React.FC = () => {
                                   <Link
                                     key={dropdownItem.href}
                                     to={dropdownItem.href}
-                                    className="flex items-center w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                    className={cn(
+                                      "flex items-center w-full px-4 py-3 text-sm transition-all duration-200",
+                                      isActive(dropdownItem.href)
+                                        ? "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20 font-medium"
+                                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary-light"
+                                    )}
                                     onClick={() => {
                                       setShowSupplementsMenu(false);
                                       setShowWellnessMenu(false);
@@ -296,8 +301,8 @@ const MinimalNav: React.FC = () => {
                         className={cn(
                           "flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                           isActive(item.href)
-                            ? "bg-primary text-white shadow-md"
-                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/70 dark:hover:bg-gray-700/70"
+                            ? "bg-primary text-white shadow-lg scale-105"
+                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-gray-700/80 hover:scale-105"
                         )}
                       >
                         <span className="mr-2">{item.icon}</span>
