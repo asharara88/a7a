@@ -1,15 +1,10 @@
-import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { useEffect, useState, useMemo } from "react";
 import { CheckCircle, AlertCircle, Info, Loader2, Shield } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { supplementApi } from '../api/supplementApi';
 import StackBuilderModal from '../components/supplements/StackBuilderModal';
-
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { getAllSupplements, getUniqueCategories, searchSupplements, ProcessedSupplement } from '../utils/supplementData';
 
 const TIER_COLORS = {
   green: "bg-green-100 text-green-700 border-green-500 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700",
@@ -34,8 +29,10 @@ function formatAED(price) {
 }
 
 export default function SupplementStorePage() {
-  const [supplements, setSupplements] = useState([]);
+  const [supplements, setSupplements] = useState<ProcessedSupplement[]>([]);
   const [tierFilter, setTierFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [addingToCart, setAddingToCart] = useState(null);
@@ -44,90 +41,49 @@ export default function SupplementStorePage() {
   const [showTierInfo, setShowTierInfo] = useState(false);
 
   useEffect(() => {
-    async function fetchSupplements() {
-      setLoading(true);
-      try {
-        // Load supplements from the "Supplement Stacks Demo" table
-        const { data, error: fetchError } = await supabase
-          .from('supplement_stacks')
-          .select('*');
-        
-        if (fetchError) {
-          throw fetchError;
-        }
-        
-        if (data) {
-          // Process the data - convert prices and assign tiers
-          const processedData = data.map(item => {
-            const tier = assignTier(item);
-            return {
-              ...item,
-              price_aed: parseFloat(item.price || 0) * 3.67, // Convert USD to AED
-              tier: tier, // Assign tier based on category/name
-              subscription_discount_percent: tier === 'green' ? 15 : tier === 'yellow' ? 12 : 10,
-              // Generate a mock image URL if none exists
-              image_url: item.image_url || `https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300`
-            };
-          });
-          setSupplements(processedData);
-        } else {
-          // Fallback to mock data if no data returned
-          setSupplements(getMockSupplements());
-        }
-      } catch (err) {
-        console.error("Error fetching supplements:", err);
-        setError("Failed to load supplements. Please try again.");
-        // Fallback to mock data
-        setSupplements(getMockSupplements());
-      } finally {
-        setLoading(false);
-      }
-    }
-    
-    fetchSupplements();
+    loadSupplements();
   }, []);
 
-  // Helper function to assign tier based on category or name
-  const assignTier = (item) => {
-  // Try to use existing tier if available
-  if (item.tier && ['green', 'yellow', 'orange'].includes(item.tier.toLowerCase())) {
-    return item.tier.toLowerCase();
-  }
-  
-  const category = (item.category || '').toLowerCase();
-  const name = (item.name || '').toLowerCase();
-  const description = (item.description || '').toLowerCase();  
-  
-  // Green tier - strong evidence
-  if (name.includes('creatine') || 
-      name.includes('vitamin d') || 
-      name.includes('protein') || 
-      name.includes('whey') ||
-     name.includes('caffeine') ||
-      category.includes('muscle building')) {
-    return 'green'; 
-  } 
-  
-  // Yellow tier - moderate evidence
-  if (name.includes('ashwagandha') || 
-      name.includes('rhodiola') || 
-      name.includes('magnesium') ||
-      name.includes('beta-alanine') ||
-      name.includes('berberine') ||
-      name.includes('theanine') ||
-     name.includes('zinc') ||
-     name.includes('electrolytes') ||
-     name.includes('b-complex') ||
-     name.includes('glutamine') ||
-      category.includes('cognitive') || 
-      category.includes('sleep') || 
-      category.includes('endurance')) {
-    return 'yellow';
-  } 
-  
-  // Default to orange - preliminary evidence
-  return 'orange';
-};
+  const loadSupplements = () => {
+    setLoading(true);
+    try {
+      const supplementData = getAllSupplements();
+      setSupplements(supplementData);
+      setError(null);
+    } catch (err) {
+      console.error("Error loading supplements:", err);
+      setError("Failed to load supplements. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Get unique categories from loaded supplements
+  const categories = useMemo(() => {
+    return getUniqueCategories();
+  }, []);
+
+  // Filter supplements based on current filters
+  const filteredSupplements = useMemo(() => {
+    let filtered = supplements;
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      filtered = searchSupplements(searchQuery);
+    }
+
+    // Apply tier filter
+    if (tierFilter !== "all") {
+      filtered = filtered.filter(s => s.tier === tierFilter);
+    }
+
+    // Apply category filter
+    if (categoryFilter !== "all") {
+      filtered = filtered.filter(s => s.category === categoryFilter);
+    }
+
+    return filtered;
+  }, [supplements, tierFilter, categoryFilter, searchQuery]);
 
   const handleAddToCart = (suppId) => {
     setAddingToCart(suppId);
@@ -151,16 +107,12 @@ export default function SupplementStorePage() {
     }
   };
 
-  const filteredSupps = tierFilter === "all"
-    ? supplements
-    : supplements.filter((s) => s.tier === tierFilter);
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="mobile-container">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Supplement Store</h1>
-          <p className="text-gray-600 dark:text-gray-400">Browse our evidence-based supplements by tier</p>
+          <p className="text-gray-600 dark:text-gray-400">Browse our evidence-based supplements by tier ({supplements.length} supplements available)</p>
         </div>
 
         {/* Tier Information */}
@@ -197,13 +149,29 @@ export default function SupplementStorePage() {
         <Card className="p-6 mb-8">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Filter by Evidence Tier</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Filter & Search Supplements</h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                 Supplements are categorized by the strength of scientific evidence supporting their efficacy
               </p>
             </div>
-            
+          </div>
+          
+          {/* Search Bar */}
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search supplements by name, category, or use case..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            />
+          </div>
+          
+          {/* Filters */}
+          <div className="space-y-4">
+            {/* Tier Filter */}
             <div className="flex flex-wrap gap-2">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">Evidence Tier:</span>
               <Button
                 variant={tierFilter === "all" ? "default" : "outline"}
                 onClick={() => setTierFilter("all")}
@@ -235,6 +203,28 @@ export default function SupplementStorePage() {
               >
                 {TIER_ICONS.orange} Orange Tier
               </Button>
+            </div>
+            
+            {/* Category Filter */}
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">Category:</span>
+              <Button
+                variant={categoryFilter === "all" ? "default" : "outline"}
+                onClick={() => setCategoryFilter("all")}
+                className="px-4 py-2"
+              >
+                All Categories
+              </Button>
+              {categories.slice(0, 8).map(category => (
+                <Button
+                  key={category}
+                  variant={categoryFilter === category ? "default" : "outline"}
+                  onClick={() => setCategoryFilter(category)}
+                  className="px-4 py-2 text-xs"
+                >
+                  {category}
+                </Button>
+              ))}
             </div>
           </div>
           
@@ -275,109 +265,145 @@ export default function SupplementStorePage() {
             </Button>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredSupps.map((supp) => {
-              // Calculate discount price if available
-              const discount = supp.subscription_discount_percent || 0;
-              const price = parseFloat(supp.price_aed || supp.price * 3.67 || 100);
-              const discounted = discount > 0 ? Math.round((price * (1 - discount / 100)) * 100) / 100 : price;
+          <>
+            {/* Results Summary */}
+            <div className="mb-6 flex items-center justify-between">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Showing {filteredSupplements.length} of {supplements.length} supplements
+                {searchQuery && ` for "${searchQuery}"`}
+                {tierFilter !== "all" && ` in ${tierFilter} tier`}
+                {categoryFilter !== "all" && ` in ${categoryFilter} category`}
+              </p>
+              {(searchQuery || tierFilter !== "all" || categoryFilter !== "all") && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setTierFilter("all");
+                    setCategoryFilter("all");
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              )}
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {filteredSupplements.map((supp) => {
+                // Calculate discount price if available
+                const discount = supp.subscription_discount_percent || 0;
+                const price = parseFloat(supp.price_aed || 100);
+                const discounted = discount > 0 ? Math.round((price * (1 - discount / 100)) * 100) / 100 : price;
 
-              return (
-                <Card key={supp.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
-                  <div className="relative h-48 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                    {/* Always show an image even if it's a placeholder */}
-                    <div className="w-full h-full relative overflow-hidden">
-                      <img 
-                        src={supp.image_url || "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300"} 
-                        alt={supp.name} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    
-                    <div className="absolute top-2 left-2">
-                      <div 
-                        className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-lg border font-semibold ${TIER_COLORS[supp.tier]}`} 
-                        title={TIER_LABELS[supp.tier]}
-                      >
-                        <span className="flex items-center gap-1">
-                          {TIER_ICONS[supp.tier]}
-                          {supp.tier.charAt(0).toUpperCase() + supp.tier.slice(1)}
-                        </span>
+                return (
+                  <Card key={supp.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
+                    <div className="relative h-48 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                      {/* Always show an image even if it's a placeholder */}
+                      <div className="w-full h-full relative overflow-hidden">
+                        <img 
+                          src={supp.image_url || "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300"} 
+                          alt={supp.name} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      
+                      <div className="absolute top-2 left-2">
+                        <div 
+                          className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-lg border font-semibold ${TIER_COLORS[supp.tier]}`} 
+                          title={TIER_LABELS[supp.tier]}
+                        >
+                          <span className="flex items-center gap-1">
+                            {TIER_ICONS[supp.tier]}
+                            {supp.tier.charAt(0).toUpperCase() + supp.tier.slice(1)}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="p-4 flex-1 flex flex-col">
-                    <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1 line-clamp-1">
-                      {supp.name}
-                    </h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                      {supp.brand || 'Biowell'}
-                    </p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 flex-1 line-clamp-3">
-                      {supp.description || supp.category || 'General health support'}
-                    </p>
                     
-                    <div className="flex items-baseline gap-2 mb-4">
-                      <span className="font-bold text-lg text-primary dark:text-primary-light">
-                        {formatAED(discounted || price)}
-                      </span>
-                      {discount > 0 && price > 0 && discounted < price && (
-                        <span className="line-through text-gray-400 text-xs">
-                          {formatAED(price)}
-                        </span>
-                      )}
-                      {discount > 0 && (
-                        <span className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 rounded px-2 py-0.5 text-xs font-semibold">
-                          {discount}% off
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex-1"
-                        onClick={() => {
-                          if (typeof handleAddToStack === 'function') {
-                            handleAddToStack(supp.id);
-                          } else {
-                            console.warn("handleAddToStack is not defined");
-                          }
-                        }}
-                      >
-                        Add to Stack
-                      </Button>
+                    <div className="p-4 flex-1 flex flex-col">
+                      <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1 line-clamp-1">
+                        {supp.name}
+                      </h3>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                        {supp.brand} • {supp.category}
+                      </p>
+                      <p className="text-xs text-green-600 dark:text-green-400 mb-2">
+                        {supp.evidence_quality} Evidence • {supp.dosage}
+                      </p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 flex-1 line-clamp-3">
+                        {supp.description}
+                      </p>
                       
-                      <Button
-                        className="flex-1"
-                        onClick={() => handleAddToCart(supp.id)}
-                        disabled={addingToCart === supp.id}
-                      >
-                        {addingToCart === supp.id ? (
-                          <>
-                            <CheckCircle className="w-4 h-4 mr-2" />
-                            Added
-                          </>
-                        ) : (
-                          "Buy Now"
+                      <div className="flex items-baseline gap-2 mb-4">
+                        <span className="font-bold text-lg text-primary dark:text-primary-light">
+                          {formatAED(supp.discounted_price_aed || price)}
+                        </span>
+                        {discount > 0 && (
+                          <span className="line-through text-gray-400 text-xs">
+                            {formatAED(price)}
+                          </span>
                         )}
-                      </Button>
+                        {discount > 0 && (
+                          <span className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 rounded px-2 py-0.5 text-xs font-semibold">
+                            {discount}% off
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() => {
+                            if (typeof handleAddToStack === 'function') {
+                              handleAddToStack(supp.id);
+                            } else {
+                              console.warn("handleAddToStack is not defined");
+                            }
+                          }}
+                        >
+                          Add to Stack
+                        </Button>
+                        
+                        <Button
+                          className="flex-1"
+                          onClick={() => handleAddToCart(supp.id)}
+                          disabled={addingToCart === supp.id}
+                        >
+                          {addingToCart === supp.id ? (
+                            <>
+                              <CheckCircle className="w-4 h-4 mr-2" />
+                              Added
+                            </>
+                          ) : (
+                            "Buy Now"
+                          )}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              );
-            })}
+                  </Card>
+                );
+              })}
+            </div>
             
-            {filteredSupps.length === 0 && (
+            {filteredSupplements.length === 0 && (
               <div className="col-span-full text-center py-12">
-                <p className="text-gray-600 dark:text-gray-400 mb-4">No supplements found in this tier.</p>
-                <Button onClick={() => setTierFilter("all")}>
-                  View All Supplements
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  No supplements found matching your criteria.
+                </p>
+                <Button 
+                  onClick={() => {
+                    setSearchQuery("");
+                    setTierFilter("all");
+                    setCategoryFilter("all");
+                  }}
+                >
+                  Clear All Filters
                 </Button>
               </div>
             )}
-          </div>
+          </>
         )}
       </div>
       
@@ -390,98 +416,4 @@ export default function SupplementStorePage() {
       />
     </div>
   );
-}
-
-// Mock data function for development and fallback
-function getMockSupplements() {
-  return [
-    {
-      id: '1',
-      name: 'Creatine Monohydrate',
-      brand: 'Biowell',
-      description: 'Increases intramuscular phosphocreatine for rapid ATP regeneration, enhancing strength and power output during high-intensity exercise.',
-      tier: 'green',
-      use_case: 'Muscle strength & power',
-      price_aed: 85.00,
-      subscription_discount_percent: 15,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-    },
-    {
-      id: '2',
-      name: 'Vitamin D3',
-      brand: 'Biowell',
-      description: 'Essential fat-soluble vitamin that supports immune function, bone health, and mood regulation.',
-      tier: 'green',
-      use_case: 'Immune & bone health',
-      price_aed: 40.00,
-      subscription_discount_percent: 10,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-    },
-    {
-      id: '3',
-      name: 'Ashwagandha KSM-66',
-      brand: 'Biowell',
-      description: 'Adaptogenic herb that helps the body manage stress and supports overall wellbeing.',
-      tier: 'yellow',
-      use_case: 'Stress & anxiety',
-      price_aed: 95.00,
-      subscription_discount_percent: 12,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-    },
-    {
-      id: '4',
-      name: 'Magnesium Glycinate',
-      brand: 'Biowell',
-      description: 'Highly bioavailable form of magnesium that supports sleep, muscle recovery, and nervous system function.',
-      tier: 'green',
-      use_case: 'Sleep & recovery',
-      price_aed: 75.00,
-      subscription_discount_percent: 10,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-    },
-    {
-      id: '5',
-      name: 'Tongkat Ali',
-      brand: 'Biowell',
-      description: 'Traditional herb used to support male hormonal health and vitality.',
-      tier: 'orange',
-      use_case: 'Hormonal support',
-      price_aed: 135.00,
-      subscription_discount_percent: 15,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-    },
-    {
-      id: '6',
-      name: 'Berberine',
-      brand: 'Biowell',
-      description: 'Plant compound that supports metabolic health and glucose metabolism.',
-      tier: 'yellow',
-      use_case: 'Metabolic health',
-      price_aed: 110.00,
-      subscription_discount_percent: 12,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-    },
-    {
-      id: '7',
-      name: 'Rhodiola Rosea',
-      brand: 'Biowell',
-      description: 'Adaptogenic herb that helps combat fatigue and supports cognitive function during stress.',
-      tier: 'yellow',
-      use_case: 'Energy & focus',
-      price_aed: 95.00,
-      subscription_discount_percent: 10,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-    },
-    {
-      id: '8',
-      name: 'Beta-Alanine',
-      brand: 'Biowell',
-      description: 'Non-essential amino acid that helps buffer lactic acid in muscles, potentially improving endurance.',
-      tier: 'yellow',
-      use_case: 'Endurance',
-      price_aed: 95.00,
-      subscription_discount_percent: 10,
-      image_url: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300',
-    }
-  ];
 }
