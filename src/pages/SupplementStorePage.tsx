@@ -65,7 +65,6 @@ const MinimalNav: React.FC = () => {
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [user, setUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSupplementsMenu, setShowSupplementsMenu] = useState(false);
@@ -99,20 +98,17 @@ const MinimalNav: React.FC = () => {
 
   useEffect(() => {
     const checkUser = async () => {
-      setIsLoading(true);
+    const checkUser = async () => {
       try {
         const { data } = await supabase.auth.getUser();
         setUser(data.user);
       } catch (error) {
         console.error('Error checking auth status:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
-    
     checkUser();
     
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
     });
     

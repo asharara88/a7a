@@ -42,7 +42,26 @@ git clone https://github.com/yourusername/biowell-ai.git
 cd biowell-ai
 ```
 
-### 3. Deploy Edge Functions
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Copy `.env.production.example` to `.env` and add your credentials:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+VITE_STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key # optional, not currently used
+VITE_OPENAI_API_KEY=your-openai-api-key # for local dev only; for production, set as a Supabase secret
+VITE_CAPTCHA_SECRET_KEY=your-captcha-secret-key # optional; only required if you enable CAPTCHA verification for forms (e.g., signup or contact forms)
+JWT_SECRET=your-jwt-secret
+```
+
+4. For production builds, copy `.env.production.example` to `.env.production` and supply your production values (this file is ignored by Git). Ensure `JWT_SECRET` is set in this file for token verification.
+
+5. Deploy Edge Functions
 
 Deploy the required Edge Functions to your Supabase project:
 
@@ -64,26 +83,7 @@ supabase functions deploy recommendations
 2. Navigate to Edge Functions
 3. Confirm that `openai-proxy` is deployed and active
 
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Copy `.env.production.example` to `.env` and add your credentials:
-
-```
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-VITE_STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key # optional, not currently used
-VITE_OPENAI_API_KEY=your-openai-api-key # optional for local dev
-VITE_CAPTCHA_SECRET_KEY=your-captcha-secret-key # optional
-JWT_SECRET=your-jwt-secret
-```
-
-4. For production builds, copy `.env.production.example` to `.env.production` and supply your production values (this file is ignored by Git). Ensure `JWT_SECRET` is set in this file for token verification.
-
-5. Start the development server:
+6. Start the development server:
 
 ```bash
 npm run dev
@@ -143,6 +143,42 @@ dependencies automatically before running tests locally.
 
 #### Setting up OpenAI API Key (Required for AI Chat)
 
+**IMPORTANT**: The AI chat functionality requires an OpenAI API key to be configured as a Supabase secret. Follow these steps carefully:
+
+1. **Get your OpenAI API key** from [OpenAI's platform](https://platform.openai.com/api-keys)
+
+2. **Login to Supabase CLI**:
+
+```bash
+supabase login
+```
+
+3. **Link your project** (replace with your actual project reference):
+
+```bash
+supabase link --project-ref your-project-ref
+```
+
+4. **Set the OpenAI API key as a Supabase secret** (replace `your-actual-openai-api-key` with your real OpenAI API key):
+
+```bash
+supabase secrets set OPENAI_API_KEY=your-actual-openai-api-key
+```
+
+5. **Deploy the Edge Function** for OpenAI proxy:
+
+supabase functions deploy openai-proxy
+
+```
+
+6. **Verify the setup** by checking that the secret was set correctly:
+
+```bash
+supabase secrets list
+```
+
+You should see `OPENAI_API_KEY` in the list of secrets.
+
 #### Setting up ElevenLabs API Key (Optional for Text-to-Speech)
 
 **OPTIONAL**: The text-to-speech functionality requires an ElevenLabs API key to be configured as a Supabase secret. If not configured, the app will work normally but without voice responses.
@@ -161,7 +197,7 @@ supabase secrets set ELEVENLABS_API_KEY=your-elevenlabs-api-key
 supabase functions deploy elevenlabs-proxy
 ```
 
-1. **Verify the setup** by checking that the secret was set correctly:
+4. **Verify the setup** by checking that the secret was set correctly:
 
 ```bash
 supabase secrets list
@@ -170,46 +206,6 @@ supabase secrets list
 You should see `ELEVENLABS_API_KEY` in the list of secrets.
 
 **Note**: If you don't configure the ElevenLabs API key, the app will still work normally but text-to-speech features will be disabled.
-
-**IMPORTANT**: The AI chat functionality requires an OpenAI API key to be configured as a Supabase secret. Follow these steps carefully:
-
-1. **Get your OpenAI API key** from [OpenAI's platform](https://platform.openai.com/api-keys)
-
-2. **Login to Supabase CLI**:
-
-```bash
-supabase login
-```
-
-3. **Link your project** (replace with your actual project reference):
-
-```bash
-supabase link --project-ref your-project-ref
-```
-
-```bash
-supabase link --project-ref your-project-ref
-```
-
-4. **Set the OpenAI API key as a Supabase secret** (replace `your-actual-openai-api-key` with your real OpenAI API key):
-
-```bash
-supabase secrets set OPENAI_API_KEY=your-actual-openai-api-key
-```
-
-5. **Deploy the Edge Function** for OpenAI proxy:
-
-```bash
-supabase functions deploy openai-proxy
-```
-
-6. **Verify the setup** by checking that the secret was set correctly:
-
-```bash
-supabase secrets list
-```
-
-You should see `OPENAI_API_KEY` in the list of secrets.
 
 #### Troubleshooting OpenAI Integration
 
@@ -302,21 +298,19 @@ user can only manage their own cart items.
 ## Project Structure
 
 ```
-/components      // UI components 
-/contexts        // React context providers
-/hooks          // Custom React hooks
-/pages          // Application pages
-/supabase       // Supabase-related files
-  /functions    // Edge Functions 
-  /migrations   // SQL migration files
-/utils          // Utility functions
+/components      - UI components 
+/contexts        - React context providers
+/hooks           - Custom React hooks
+/pages           - Application pages
+/supabase        - Supabase-related files
+  /functions     - Edge Functions 
+  /migrations    - SQL migration files
+/utils           - Utility functions
 ```
 
 ## Deployment
 
-The `netlify.toml` file specifies a Node.js 18 environment and uses the
-`netlify-plugin-fetch-feeds` plugin to download the latest Hacker News front page
-into `public/feeds/hn.xml` during each build.
+The `netlify.toml` file specifies a Node.js 18 environment for deployment.
 
 ## Customizing Supabase Auth
 

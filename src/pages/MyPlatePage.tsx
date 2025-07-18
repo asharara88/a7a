@@ -4,6 +4,65 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { motion } from 'framer-motion';
 
+/**
+ * MyPlatePage - AI-powered food analysis component
+ * 
+ * A React functional component that provides an interface for users to capture or upload
+ * images of their meals and receive AI-powered nutritional analysis. The component supports
+ * both camera capture and file upload functionality with comprehensive food analysis results.
+ * 
+ * @component
+ * @example
+ * ```tsx
+ * import MyPlatePage from './pages/MyPlatePage';
+ * 
+ * function App() {
+ *   return <MyPlatePage />;
+ * }
+ * ```
+ * 
+ * ## Features
+ * - Image capture via device camera (simulated in demo mode)
+ * - File upload for meal images
+ * - AI-powered food identification and analysis
+ * - Nutritional breakdown (calories, macros, micronutrients)
+ * - Health score calculation
+ * - Personalized dietary recommendations
+ * - Responsive design with dark mode support
+ * - Error handling and loading states
+ * 
+ * ## State Management
+ * - `selectedImage`: Base64 string of the selected/captured image
+ * - `isAnalyzing`: Boolean flag for analysis loading state
+ * - `analysis`: Object containing nutritional analysis results
+ * - `error`: String for error message display
+ * 
+ * ## Mock Analysis Data Structure
+ * ```tsx
+ * interface MockAnalysis {
+ *   meal: string;
+ *   calories: number;
+ *   macros: {
+ *     protein: number;
+ *     carbs: number;
+ *     fat: number;
+ *   };
+ *   healthScore: number;
+ *   recommendations: string[];
+ *   nutrients: {
+ *     fiber: number;
+ *     sodium: number;
+ *     sugar: number;
+ *     iron: number;
+ *   };
+ * }
+ * ```
+ * 
+ * @returns {React.FC} The MyPlatePage component
+ * 
+ * @author GitHub Copilot
+ * @since 1.0.0
+ */
 const MyPlatePage: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
