@@ -21,7 +21,6 @@ import {
   Camera,
   Shield,
   BookOpen,
-  Moon,
   Clock} from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
