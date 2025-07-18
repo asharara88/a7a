@@ -1,398 +1,582 @@
-import { useEffect, useState, useMemo } from "react";
-import { CheckCircle, AlertCircle, Info, Loader2, Shield } from "lucide-react";
-import { Button } from "../components/ui/Button";
-import { Card } from "../components/ui/Card";
-import { supplementApi } from '../api/supplementApi';
-import StackBuilderModal from '../components/supplements/StackBuilderModal';
-import { getAllSupplements, getUniqueCategories, searchSupplements, ProcessedSupplement } from '../utils/supplementData';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { 
+  Home, 
+  Activity, 
+  Sparkles, 
+  Pill, 
+  ShoppingCart, 
+  User, 
+  Menu, 
+  Sun, 
+  Moon, 
+  Monitor,
+  LogOut,
+  X,
+  ChevronDown,
+  Settings,
+  Utensils,
+  BarChart3,
+  Heart
+} from 'lucide-react';
+import { createClient } from '@supabase/supabase-js';
+import { cn } from '../../utils/cn';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const TIER_COLORS = {
-  green: "bg-green-100 text-green-700 border-green-500 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700",
-  yellow: "bg-yellow-100 text-yellow-700 border-yellow-500 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700"
-};
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-const TIER_LABELS = {
-  green: "Strong evidence – Supported by multiple high-quality human clinical trials and major scientific consensus.",
-  yellow: "Moderate/emerging evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus. Also includes preliminary evidence from early-stage research."
-};
-
-const TIER_ICONS = {
-  green: <Shield className="w-4 h-4 text-green-600 dark:text-green-400" />,
-  yellow: <AlertCircle className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
-};
-
-function formatAED(price) {
-  return `${parseFloat(price).toFixed(2)} AED`;
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error("Supabase environment variables are missing. Check your .env file.");
 }
 
-export default function SupplementStorePage() {
-  const [supplements, setSupplements] = useState<ProcessedSupplement[]>([]);
-  const [tierFilter, setTierFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [addingToCart, setAddingToCart] = useState(null);
-  const [showStackBuilder, setShowStackBuilder] = useState(false);
-  const [selectedSupplementId, setSelectedSupplementId] = useState(null);
-  const [showTierInfo, setShowTierInfo] = useState(false);
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+type ThemeMode = 'light' | 'dark' | 'auto';
+
+const getInitialTheme = (): ThemeMode => {
+  const savedTheme = localStorage.getItem('theme') as ThemeMode;
+  if (savedTheme && ['light', 'dark', 'auto'].includes(savedTheme)) {
+    return savedTheme;
+  }
+  return 'auto';
+};
+
+const isCurrentlyPM = () => {
+  const hour = new Date().getHours();
+  return hour >= 18 || hour < 6;
+};
+
+const shouldUseDarkMode = (theme: ThemeMode): boolean => {
+  switch (theme) {
+    case 'dark':
+      return true;
+    case 'light':
+      return false;
+    case 'auto':
+      return isCurrentlyPM();
+    default:
+      return false;
+  }
+};
+
+const MinimalNav: React.FC = () => {
+  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showSupplementsMenu, setShowSupplementsMenu] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  const isDarkMode = shouldUseDarkMode(theme);
 
   useEffect(() => {
-    loadSupplements();
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme, isDarkMode]);
+
+  // Auto mode: check time every minute when in auto mode
+  useEffect(() => {
+    if (theme !== 'auto') return;
+
+    const interval = setInterval(() => {
+      const newIsDarkMode = shouldUseDarkMode('auto');
+      if (newIsDarkMode !== isDarkMode) {
+        setTheme('auto');
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [theme, isDarkMode]);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      setIsLoading(true);
+      try {
+        const { data } = await supabase.auth.getUser();
+        setUser(data.user);
+      } catch (error) {
+        console.error('Error checking auth status:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    checkUser();
+    
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
-  const loadSupplements = () => {
-    setLoading(true);
+  const handleSignOut = async () => {
     try {
-      const supplementData = getAllSupplements();
-      setSupplements(supplementData);
-      setError(null);
-    } catch (err) {
-      console.error("Error loading supplements:", err);
-      setError("Failed to load supplements. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Get unique categories from loaded supplements
-  const categories = useMemo(() => {
-    return getUniqueCategories();
-  }, []);
-
-  // Filter supplements based on current filters
-  const filteredSupplements = useMemo(() => {
-    let filtered = supplements;
-
-    // Apply search filter
-    if (searchQuery.trim()) {
-      filtered = searchSupplements(searchQuery);
-    }
-
-    // Apply tier filter
-    if (tierFilter !== "all") {
-      filtered = filtered.filter(s => s.tier === tierFilter);
-    }
-
-    // Apply category filter
-    if (categoryFilter !== "all") {
-      filtered = filtered.filter(s => s.category === categoryFilter);
-    }
-
-    return filtered;
-  }, [supplements, tierFilter, categoryFilter, searchQuery]);
-
-  const handleAddToCart = (suppId) => {
-    setAddingToCart(suppId);
-    // Simulate adding to cart
-    setTimeout(() => {
-      setAddingToCart(null);
-    }, 1000);
-  };
-
-  const handleAddToStack = (supplementId) => {
-    setSelectedSupplementId(supplementId);
-    setShowStackBuilder(true);
-  };
-
-  const handleSaveStack = async (stackData) => {
-    try {
-      await supplementApi.createSupplementStack(stackData);
+      await supabase.auth.signOut();
+      setShowUserMenu(false);
+      navigate('/');
     } catch (error) {
-      console.error('Error saving stack:', error);
-      throw error;
+      console.error('Error signing out:', error);
     }
   };
+
+  const handleThemeChange = (newTheme: ThemeMode) => {
+    setTheme(newTheme);
+    setShowThemeMenu(false);
+  };
+
+  const getThemeIcon = () => {
+    switch (theme) {
+      case 'light':
+        return <Sun className="w-4 h-4" />;
+      case 'dark':
+        return <Moon className="w-4 h-4" />;
+      case 'auto':
+        return <Monitor className="w-4 h-4" />;
+      default:
+        return <Monitor className="w-4 h-4" />;
+    }
+  };
+
+  const isActive = (path: string) => {
+    if (path === '/' && location.pathname !== '/') return false;
+    return location.pathname === path || 
+           (path !== '/' && location.pathname.startsWith(path));
+  };
+
+  const navItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: <Home className="w-4 h-4" /> },
+    { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> },
+    { href: '/mycoach', label: 'MyCoach', icon: <Sparkles className="w-4 h-4" /> },
+    { 
+      href: '/nutrition', 
+      label: 'Nutrition', 
+      icon: <Utensils className="w-4 h-4" />,
+      hasDropdown: true,
+      dropdownItems: [
+        { href: '/nutrition', label: 'Food Logging', icon: <Utensils className="w-4 h-4" /> },
+        { href: '/recipes', label: 'Personalized Recipes', icon: <Utensils className="w-4 h-4" /> },
+      ]
+    },
+    { 
+      href: '/supplements', 
+      label: 'Supplements', 
+      icon: <Pill className="w-4 h-4" />,
+      hasDropdown: true,
+      dropdownItems: [
+        { href: '/supplements', label: 'Browse All', icon: <Pill className="w-4 h-4" /> },
+        { href: '/supplements/recommendations', label: 'Recommendations', icon: <Heart className="w-4 h-4" /> },
+        { href: '/my-stacks', label: 'My Stacks', icon: <BarChart3 className="w-4 h-4" /> },
+        { href: '/cart', label: 'Cart', icon: <ShoppingCart className="w-4 h-4" /> }
+      ]
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-      <div className="mobile-container">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Supplement Store</h1>
-          <p className="text-gray-600 dark:text-gray-400">Browse our evidence-based supplements by tier ({supplements.length} supplements available)</p>
-        </div>
+    <>
+      <nav className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 transition-all duration-300 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
+              <img 
+                src={isDarkMode 
+                  ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
+                  : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
+                }
+                alt="Biowell" 
+                className="h-12 w-auto object-contain" 
+              />
+            </Link>
 
-        {/* Tier Information */}
-        <div className="mb-6">
-          <button 
-            onClick={() => setShowTierInfo(!showTierInfo)}
-            className="flex items-center text-primary hover:text-primary-dark font-medium"
-          >
-            <Info className="w-5 h-5 mr-2" />
-            {showTierInfo ? 'Hide' : 'Show'} Evidence Tier Information
-          </button>
-          
-          {showTierInfo && (
-            <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-              <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Evidence Tier Definitions</h3>
-              <div className="space-y-3">
-                <div className="flex items-start">
-                  <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 mr-3 mt-0.5">Green</span>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">Strong evidence – Supported by multiple high-quality human clinical trials and major scientific consensus (e.g., creatine, vitamin D).</p>
-                </div>
-                <div className="flex items-start">
-                  <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 mr-3 mt-0.5">Yellow</span>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">Moderate/emerging evidence – Some supporting studies, but either limited in scale, mixed results, or moderate scientific consensus (e.g., ashwagandha, beta-alanine). Also includes preliminary evidence from early-stage research (e.g., tongkat ali, shilajit).</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <Card className="p-6 mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Filter & Search Supplements</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Supplements are categorized by the strength of scientific evidence supporting their efficacy
-              </p>
-            </div>
-          </div>
-          
-          {/* Search Bar */}
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Search supplements by name, category, or use case..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-            />
-          </div>
-          
-          {/* Filters */}
-          <div className="space-y-4">
-            {/* Tier Filter */}
-            <div className="flex flex-wrap gap-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">Evidence Tier:</span>
-              <Button
-                variant={tierFilter === "all" ? "default" : "outline"}
-                onClick={() => setTierFilter("all")}
-                className="px-4 py-2"
-              >
-                All Tiers
-              </Button>
-              
-              <Button
-                variant={tierFilter === "green" ? "default" : "outline"}
-                onClick={() => setTierFilter("green")}
-                className="px-4 py-2 flex items-center gap-1.5"
-              >
-                {TIER_ICONS.green} Green Tier
-              </Button>
-              
-              <Button
-                variant={tierFilter === "yellow" ? "default" : "outline"}
-                onClick={() => setTierFilter("yellow")}
-                className="px-4 py-2 flex items-center gap-1.5"
-              >
-                {TIER_ICONS.yellow} Yellow Tier
-              </Button>
-            </div>
-            
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">Category:</span>
-              <Button
-                variant={categoryFilter === "all" ? "default" : "outline"}
-                onClick={() => setCategoryFilter("all")}
-                className="px-4 py-2"
-              >
-                All Categories
-              </Button>
-              {categories.slice(0, 8).map(category => (
-                <Button
-                  key={category}
-                  variant={categoryFilter === category ? "default" : "outline"}
-                  onClick={() => setCategoryFilter(category)}
-                  className="px-4 py-2 text-xs"
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div className="flex items-center gap-1">
-                {TIER_ICONS.green}
-                <span className="font-medium text-gray-800 dark:text-gray-200">Strong Evidence:</span>
-                <span className="text-gray-600 dark:text-gray-400">Multiple clinical trials</span>
-              </div>
-              
-              <div className="flex items-center gap-1">
-                {TIER_ICONS.yellow}
-                <span className="font-medium text-gray-800 dark:text-gray-200">Moderate/Emerging Evidence:</span>
-                <span className="text-gray-600 dark:text-gray-400">Some studies & early research</span>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {loading ? (
-          <div className="flex justify-center items-center py-12">
-            <Loader2 className="w-12 h-12 text-primary animate-spin" />
-            <span className="ml-3 text-lg text-gray-600 dark:text-gray-400">Loading supplements...</span>
-          </div>
-        ) : error ? (
-          <Card className="p-6 text-center">
-            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-500 mb-4">{error}</p>
-            <Button onClick={() => window.location.reload()}>
-              Try Again
-            </Button>
-          </Card>
-        ) : (
-          <>
-            {/* Results Summary */}
-            <div className="mb-6 flex items-center justify-between">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Showing {filteredSupplements.length} of {supplements.length} supplements
-                {searchQuery && ` for "${searchQuery}"`}
-                {tierFilter !== "all" && ` in ${tierFilter} tier`}
-                {categoryFilter !== "all" && ` in ${categoryFilter} category`}
-              </p>
-              {(searchQuery || tierFilter !== "all" || categoryFilter !== "all") && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setTierFilter("all");
-                    setCategoryFilter("all");
-                  }}
-                >
-                  Clear Filters
-                </Button>
-              )}
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {filteredSupplements.map((supp) => {
-                // Calculate discount price if available
-                const discount = supp.subscription_discount_percent || 0;
-                const price = parseFloat(supp.price_aed || 100);
-                const discounted = discount > 0 ? Math.round((price * (1 - discount / 100)) * 100) / 100 : price;
-
-                return (
-                  <Card key={supp.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
-                    <div className="relative h-48 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                      {/* Always show an image even if it's a placeholder */}
-                      <div className="w-full h-full relative overflow-hidden">
-                        <img 
-                          src={supp.image_url || "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=300"} 
-                          alt={supp.name} 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      
-                      <div className="absolute top-2 left-2">
-                        <div 
-                          className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-lg border font-semibold ${TIER_COLORS[supp.tier]}`} 
-                          title={TIER_LABELS[supp.tier]}
-                        >
-                          <span className="flex items-center gap-1">
-                            {TIER_ICONS[supp.tier]}
-                            {supp.tier.charAt(0).toUpperCase() + supp.tier.slice(1)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 flex-1 flex flex-col">
-                      <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1 line-clamp-1">
-                        {supp.name}
-                      </h3>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                        {supp.brand} • {supp.category}
-                      </p>
-                      <p className="text-xs text-green-600 dark:text-green-400 mb-2">
-                        {supp.evidence_quality} Evidence • {supp.dosage}
-                      </p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 flex-1 line-clamp-3">
-                        {supp.description}
-                      </p>
-                      
-                      <div className="flex items-baseline gap-2 mb-4">
-                        <span className="font-bold text-lg text-primary dark:text-primary-light">
-                          {formatAED(supp.discounted_price_aed || price)}
-                        </span>
-                        {discount > 0 && (
-                          <span className="line-through text-gray-400 text-xs">
-                            {formatAED(price)}
-                          </span>
-                        )}
-                        {discount > 0 && (
-                          <span className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 rounded px-2 py-0.5 text-xs font-semibold">
-                            {discount}% off Premium Users
-                          </span>
-                        )}
-                      </div>
-                      
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          className="flex-1"
-                          onClick={() => {
-                            if (typeof handleAddToStack === 'function') {
-                              handleAddToStack(supp.id);
-                            } else {
-                              console.warn("handleAddToStack is not defined");
-                            }
-                          }}
-                        >
-                          Add to Stack
-                        </Button>
-                        
-                        <Button
-                          className="flex-1"
-                          onClick={() => handleAddToCart(supp.id)}
-                          disabled={addingToCart === supp.id}
-                        >
-                          {addingToCart === supp.id ? (
-                            <>
-                              <CheckCircle className="w-4 h-4 mr-2" />
-                              Added
-                            </>
-                          ) : (
-                            "Buy Now"
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center">
+              <div className="flex items-center space-x-1 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-1.5 shadow-sm">
+                {navItems.map((item) => (
+                  <div key={item.href} className="relative">
+                    {item.hasDropdown ? (
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowSupplementsMenu(!showSupplementsMenu)}
+                          className={cn(
+                            "flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
+                            isActive(item.href)
+                              ? "bg-primary text-white shadow-md"
+                              : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/70 dark:hover:bg-gray-700/70"
                           )}
-                        </Button>
+                        >
+                          <span className="mr-2">{item.icon}</span>
+                          <span className="tracking-wide">{item.label}</span>
+                          <ChevronDown className="w-3 h-3 ml-1" />
+                        </button>
+                        
+                        <AnimatePresence>
+                          {showSupplementsMenu && (
+                            <>
+                              <div 
+                                className="fixed inset-0 z-40" 
+                                onClick={() => setShowSupplementsMenu(false)}
+                              />
+                              <motion.div
+                                className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50"
+                                initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                                transition={{ duration: 0.15 }}
+                              >
+                                {item.dropdownItems?.map((dropdownItem) => (
+                                  <Link
+                                    key={dropdownItem.href}
+                                    to={dropdownItem.href}
+                                    className="flex items-center w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                    onClick={() => setShowSupplementsMenu(false)}
+                                  >
+                                    <span className="mr-3">{dropdownItem.icon}</span>
+                                    <span className="tracking-wide">{dropdownItem.label}</span>
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            </>
+                          )}
+                        </AnimatePresence>
                       </div>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-            
-            {filteredSupplements.length === 0 && (
-              <div className="col-span-full text-center py-12">
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  No supplements found matching your criteria.
-                </p>
-                <Button 
-                  onClick={() => {
-                    setSearchQuery("");
-                    setTierFilter("all");
-                    setCategoryFilter("all");
-                  }}
-                >
-                  Clear All Filters
-                </Button>
+                    ) : (
+                      <Link
+                        to={item.href}
+                        className={cn(
+                          "flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
+                          isActive(item.href)
+                            ? "bg-primary text-white shadow-md"
+                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/70 dark:hover:bg-gray-700/70"
+                        )}
+                      >
+                        <span className="mr-2">{item.icon}</span>
+                        <span className="tracking-wide">{item.label}</span>
+                      </Link>
+                    )}
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center space-x-2">
+              {/* Theme Toggle */}
+              <div className="relative">
+                <motion.button
+                  onClick={() => setShowThemeMenu(!showThemeMenu)}
+                  className="p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {getThemeIcon()}
+                </motion.button>
+                
+                <AnimatePresence>
+                  {showThemeMenu && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setShowThemeMenu(false)}
+                      />
+                      <motion.div
+                        className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50"
+                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        {[
+                          { mode: 'light' as ThemeMode, icon: Sun, label: 'Light Mode' },
+                          { mode: 'dark' as ThemeMode, icon: Moon, label: 'Dark Mode' },
+                          { mode: 'auto' as ThemeMode, icon: Monitor, label: 'Auto Mode' }
+                        ].map(({ mode, icon: Icon, label }) => (
+                          <button
+                            key={mode}
+                            onClick={() => handleThemeChange(mode)}
+                            className={cn(
+                              "flex items-center w-full px-4 py-3 text-sm transition-colors",
+                              theme === mode 
+                                ? "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20 font-medium" 
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            )}
+                          >
+                            <Icon className="w-4 h-4 mr-3" />
+                            <span className="tracking-wide">{label}</span>
+                          </button>
+                        ))}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Cart */}
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link
+                  to="/cart"
+                  className={cn(
+                    "p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300",
+                    isActive('/cart') && "text-primary bg-primary/10"
+                  )}
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                </Link>
+              </motion.div>
+
+              {/* User Menu or Auth Buttons */}
+              {user ? (
+                <div className="relative">
+                  <motion.button
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className="flex items-center p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <User className="w-4 h-4 mr-1" />
+                    <ChevronDown className="w-3 h-3" />
+                  </motion.button>
+                  
+                  <AnimatePresence>
+                    {showUserMenu && (
+                      <>
+                        <div 
+                          className="fixed inset-0 z-40" 
+                          onClick={() => setShowUserMenu(false)}
+                        />
+                        <motion.div
+                          className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50"
+                          initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                          transition={{ duration: 0.15 }}
+                        >
+                          <Link
+                            to="/dashboard"
+                            className="flex items-center w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            <Home className="w-4 h-4 mr-3" />
+                            <span className="tracking-wide">Dashboard</span>
+                          </Link>
+                          <Link
+                            to="/bioclock"
+                            className="flex items-center w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            <Settings className="w-4 h-4 mr-3" />
+                            <span className="tracking-wide">Bioclock™</span>
+                          </Link>
+                          <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
+                          <button
+                            onClick={handleSignOut}
+                            className="flex items-center w-full px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                          >
+                            <LogOut className="w-4 h-4 mr-3" />
+                            <span className="tracking-wide">Sign out</span>
+                          </button>
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <div className="hidden lg:flex items-center space-x-3">
+                  <Link
+                    to="/login"
+                    className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md tracking-wide"
+                  >
+                      isActive('/cart') && "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20"
+                  </Link>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Link
+                      to="/onboarding"
+                      className="px-6 py-2.5 bg-gradient-to-r from-primary via-tertiary to-secondary text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all duration-300 shadow-md tracking-wide"
+                    >
+                      Get Started
+                    </Link>
+                  </motion.div>
+                </div>
+              )}
+
+              {/* Mobile Menu Button */}
+              <motion.button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="lg:hidden p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <AnimatePresence mode="wait">
+                  {isMobileMenuOpen ? (
+                    <motion.div
+                      key="close"
+                      initial={{ rotate: 0 }}
+                      animate={{ rotate: 90 }}
+                      exit={{ rotate: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <X className="w-4 h-4" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="menu"
+                      initial={{ rotate: 0 }}
+                      animate={{ rotate: 0 }}
+                      exit={{ rotate: -90 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Menu className="w-4 h-4" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Advanced Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <motion.div
+              className="fixed top-16 left-0 right-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 z-50 lg:hidden shadow-xl"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+                <div className="space-y-2">
+                  {navItems.map((item) => (
+                    <div key={item.href}>
+                      {item.hasDropdown ? (
+                        <div className="space-y-1">
+                          <div
+                            className={cn(
+                              "flex items-center px-4 py-3 rounded-xl text-base font-medium transition-colors",
+                              isActive(item.href)
+                               ? "bg-primary text-white shadow-md"
+                                : "text-gray-700 dark:text-gray-300"
+                            )}
+                          >
+                            <span className="mr-3">{item.icon}</span>
+                            <span className="tracking-wide">{item.label}</span>
+                          </div>
+                          <div className="ml-6 space-y-1">
+                            {item.dropdownItems?.map((dropdownItem) => (
+                              <Link
+                                key={dropdownItem.href}
+                                to={dropdownItem.href}
+                                className={cn(
+                                  "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                                  isActive(dropdownItem.href)
+                                    ? "text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20"
+                                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                                )}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                              >
+                                <span className="mr-3">{dropdownItem.icon}</span>
+                                <span className="tracking-wide">{dropdownItem.label}</span>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <Link
+                          to={item.href}
+                          className={cn(
+                            "flex items-center px-4 py-3 rounded-xl text-base font-medium transition-colors",
+                            isActive(item.href)
+                              ? "bg-gradient-to-r from-primary via-tertiary to-secondary text-white shadow-md"
+                              : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                          )}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <span className="mr-3">{item.icon}</span>
+                          <span className="tracking-wide">{item.label}</span>
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+                  
+                  {/* Mobile Auth Section */}
+                  {!user && (
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+                      <Link
+                        to="/login"
+                        className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors tracking-wide"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Sign in
+                      </Link>
+                      <Link
+                        to="/onboarding"
+                        className="block px-4 py-3 bg-primary text-white rounded-xl text-base font-medium text-center shadow-md tracking-wide"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Get Started
+                      </Link>
+                    </div>
+                  )}
+
+                  {/* Mobile User Menu */}
+                  {user && (
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-1">
+                      <Link
+                        to="/dashboard"
+                        className="flex items-center px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Home className="w-4 h-4 mr-3" />
+                        <span className="tracking-wide">Dashboard</span>
+                      </Link>
+                      <Link
+                        to="/bioclock"
+                        className="flex items-center px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Settings className="w-4 h-4 mr-3" />
+                        <span className="tracking-wide">Bioclock™</span>
+                      </Link>
+                      <button
+                        onClick={() => {
+                          handleSignOut();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="flex items-center w-full px-4 py-3 text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
+                      >
+                        <LogOut className="w-4 h-4 mr-3" />
+                        <span className="tracking-wide">Sign out</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
           </>
         )}
-      </div>
-      
-      {/* Stack Builder Modal */}
-      <StackBuilderModal
-        isOpen={showStackBuilder}
-        onClose={() => setShowStackBuilder(false)}
-        initialSupplementId={selectedSupplementId || undefined}
-        onSaveStack={handleSaveStack}
-      />
-    </div>
+      </AnimatePresence>
+    </>
   );
-}
+};
+
+export default MinimalNav;
