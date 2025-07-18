@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import FitnessTracker from '../components/fitness/FitnessTracker';
+import AIWorkoutGenerator from '../components/fitness/AIWorkoutGenerator';
 
 const FitnessPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -47,6 +48,16 @@ const FitnessPage: React.FC = () => {
                 Muscle Groups
               </a>
               <a
+                href="/fitness?tab=ai-generator"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === 'ai-generator'
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                }`}
+              >
+                AI Generator
+              </a>
+              <a
                 href="/fitness?tab=analytics"
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeTab === 'analytics'
@@ -60,7 +71,11 @@ const FitnessPage: React.FC = () => {
           </div>
         </div>
         
-        <FitnessTracker activeTab={activeTab} />
+        {activeTab === 'ai-generator' ? (
+          <AIWorkoutGenerator />
+        ) : (
+          <FitnessTracker activeTab={activeTab} />
+        )}
       </div>
     </div>
   );

@@ -224,6 +224,16 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           </div>
                         </Link>
                         
+                        <Link to="/nutrition?tab=ai-analyzer" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
+                            <Sparkles size={18} className="text-green-600 dark:text-green-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">AI Food Analyzer</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Analyze meals with AI</p>
+                          </div>
+                        </Link>
+                        
                         <Link to="/metabolism" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                           <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full mr-3 opacity-70">
                             <Activity size={18} className="text-green-600 dark:text-green-400" />
@@ -275,6 +285,16 @@ const MinimalNav: React.FC<MinimalNavProps> = ({ isDarkMode = false }) => {
                           <div className="flex-1">
                             <span className="font-medium text-gray-900 dark:text-white">Fitness Analytics</span>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Progress charts & trends</p>
+                          </div>
+                        </Link>
+                        
+                        <Link to="/fitness?tab=ai-generator" className="flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                          <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mr-3 opacity-70">
+                            <Sparkles size={18} className="text-orange-600 dark:text-orange-400" />
+                          </div>
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900 dark:text-white">AI Workout Generator</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Generate personalized workouts</p>
                           </div>
                         </Link>
                       </div>
