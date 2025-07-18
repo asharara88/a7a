@@ -4,6 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { fitnessApi } from '../../api/fitnessApi';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface QuickWorkoutLoggerProps {
   onWorkoutLogged?: () => void;
@@ -12,6 +18,7 @@ interface QuickWorkoutLoggerProps {
 const QuickWorkoutLogger: React.FC<QuickWorkoutLoggerProps> = ({ onWorkoutLogged }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLogging, setIsLogging] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [workout, setWorkout] = useState({
     type: 'Strength Training',
     duration: 45,
@@ -22,11 +29,31 @@ const QuickWorkoutLogger: React.FC<QuickWorkoutLoggerProps> = ({ onWorkoutLogged
     'Strength Training', 'Cardio', 'HIIT', 'Yoga', 'Running', 'Cycling'
   ];
 
+  useEffect(() => {
+    // Get current user ID
+    const getCurrentUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setCurrentUserId(user?.id || null);
+      } catch (error) {
+        console.error('Error getting current user:', error);
+        setCurrentUserId(null);
+      }
+    };
+    
+    getCurrentUser();
+  }, []);
+
   const handleQuickLog = async () => {
+    if (!currentUserId) {
+      console.warn('No user ID available');
+      return;
+    }
+    
     setIsLogging(true);
     try {
       await fitnessApi.logWorkout({
-        userId: 'demo-user-id',
+        userId: currentUserId,
         workoutType: workout.type,
         duration: workout.duration,
         caloriesBurned: workout.calories,

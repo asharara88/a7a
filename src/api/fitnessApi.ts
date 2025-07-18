@@ -6,6 +6,17 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Get current user ID helper
+const getCurrentUserId = async (): Promise<string | null> => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user?.id || null;
+  } catch (error) {
+    console.error('Error getting current user:', error);
+    return null;
+  }
+};
+
 // Types
 export interface WorkoutSession {
   id: string;
@@ -113,14 +124,22 @@ export const fitnessApi = {
   },
   
   // Get workout history
-  getWorkoutHistory: async (userId: string, days: number = 30): Promise<WorkoutSession[]> => {
+  getWorkoutHistory: async (userId: string | null = null, days: number = 30): Promise<WorkoutSession[]> => {
     try {
+      // Get current user ID if not provided
+      const currentUserId = userId || await getCurrentUserId();
+      
+      if (!currentUserId) {
+        console.warn('No user ID available, returning mock data');
+        return mockWorkoutHistory('demo-user-id', days);
+      }
+      
       const startDate = subDays(new Date(), days);
       
       const { data, error } = await supabase
         .from('workout_sessions')
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_id', currentUserId)
         .gte('timestamp', startDate.toISOString())
         .order('timestamp', { ascending: false });
       
@@ -138,7 +157,7 @@ export const fitnessApi = {
     } catch (error) {
       console.error('Error getting workout history:', error);
       // Fallback to mock data for demo purposes
-      return mockWorkoutHistory(userId, days);
+      return mockWorkoutHistory('demo-user-id', days);
     }
   },
   
@@ -169,9 +188,10 @@ export const fitnessApi = {
   },
   
   // Get fitness summary
-  getFitnessSummary: async (userId: string, days: number = 30): Promise<FitnessSummary> => {
+  getFitnessSummary: async (userId: string | null = null, days: number = 30): Promise<FitnessSummary> => {
     try {
-      const workouts = await fitnessApi.getWorkoutHistory(userId, days);
+      const currentUserId = userId || await getCurrentUserId();
+      const workouts = await fitnessApi.getWorkoutHistory(currentUserId, days);
       
       if (workouts.length === 0) {
         return mockFitnessSummary(days);

@@ -10,6 +10,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import MuscleGroupVisualization from './MuscleGroupVisualization';
 import { muscleGroupApi } from '../../api/muscleGroupApi';
 import ProgressRing from '../dashboard/ProgressRing';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface FitnessTrackerProps {
   activeTab?: string;
@@ -31,10 +37,76 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
     notes: ''
   });
 
-  // Mock user ID for demo purposes
-  const userId = 'demo-user-id';
+  // Get current user
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // Get current user ID
+    const getCurrentUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setCurrentUserId(user?.id || null);
+      } catch (error) {
+        console.error('Error getting current user:', error);
+        setCurrentUserId(null);
+      }
+    };
+    
+    getCurrentUser();
+  }, []);
 
   useEffect(() => {
+    if (currentUserId !== null) {
+      loadFitnessData();
+    }
+  }, [timeRange, currentUserId]);
+
+  const loadFitnessData = async () => {
+    setIsLoading(true);
+    try {
+      const history = await fitnessApi.getWorkoutHistory(currentUserId, timeRange);
+      const summary = await fitnessApi.getFitnessSummary(currentUserId, timeRange);
+      
+      setWorkoutHistory(history);
+      setFitnessSummary(summary);
+    } catch (error) {
+      console.error('Error loading fitness data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddWorkout = async () => {
+    if (!currentUserId) {
+      console.warn('No user ID available');
+      return;
+    }
+    
+    try {
+      await fitnessApi.logWorkout({
+        userId: currentUserId,
+        workoutType: newWorkout.workoutType,
+        duration: newWorkout.duration,
+        caloriesBurned: newWorkout.caloriesBurned,
+        timestamp: new Date().toISOString(),
+        notes: newWorkout.notes
+      });
+      
+      // Refresh data
+      loadFitnessData();
+      setShowAddWorkout(false);
+      
+      // Reset form
+      setNewWorkout({
+        workoutType: 'Strength Training',
+        duration: 45,
+        caloriesBurned: 300,
+        notes: ''
+      });
+    } catch (error) {
+      console.error('Error adding workout:', error);
+    }
+  };
     loadFitnessData();
   }, [timeRange]);
 
