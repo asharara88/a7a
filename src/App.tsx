@@ -3,6 +3,7 @@ import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
 import MyCoachPage from './pages/MyCoachPage';
+import MyPlatePage from './pages/MyPlatePage';
 import NutritionPage from './pages/NutritionPage';
 import FitnessPage from './pages/FitnessPage';
 import SupplementsPage from './pages/SupplementsPage';
