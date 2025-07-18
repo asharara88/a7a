@@ -191,7 +191,7 @@ const CartPage: React.FC = () => {
           </Link>
         </div>
 
-        cartItems.length === 0 ? (
+        {cartItems.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
             {isLoading ? (
               <div className="flex justify-center items-center py-10">
@@ -285,7 +285,7 @@ const CartPage: React.FC = () => {
                             }`}
                             onClick={() => handleRemoveItem(item.id)}
                             disabled={removingItem === item.id}
-                            }`}
+                          >
                             {removingItem === item.id ? (
                               <Loader2 className="w-4 h-4 animate-spin" />
                             ) : (
