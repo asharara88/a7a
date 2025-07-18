@@ -182,11 +182,7 @@ const MinimalNav: React.FC = () => {
           
           {/* Main Navigation */}
           <div className="flex items-center space-x-2">
-        {/* Simplified dropdowns */}
-                </div>
-              </>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Wellness</h3>
-            
+            {/* Simplified dropdowns */}
             {user && (
               <>
                 {/* Dashboard/Home */}
@@ -237,7 +233,7 @@ const MinimalNav: React.FC = () => {
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Wellness Dashboard</h3>
                         
                         <div className="grid grid-cols-1 gap-6">
-                          {wellnessItems.map((section) => (
+                          {wellnessItems.map((section, sectionIndex) => (
                             <div key={section.title}>
                               <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
                                 {section.title}
@@ -293,11 +289,14 @@ const MinimalNav: React.FC = () => {
                   {activeDropdown === 'supplements' && (
                     <motion.div 
                       className="dropdown-menu right-0"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
                     >
                       <div className="p-6">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Supplements</h3>
                         <div className="space-y-1">
-                          {supplementItems.map((item) => {
+                          {supplementItems.map((item, index) => {
                             const Icon = item.icon;
                             const brandColor = index % 3 === 0 ? 'primary' : index % 3 === 1 ? 'secondary' : 'tertiary';
                             return (
@@ -339,8 +338,25 @@ const MinimalNav: React.FC = () => {
                 <div ref={el => dropdownRefs.current.account = el} className="relative">
                   <button 
                     onClick={() => toggleDropdown('account')}
-            <div className="space-y-1">
+                    className="nav-icon"
                     title="Account"
+                  >
+                    <User size={20} />
+                  </button>
+                  
+                  {activeDropdown === 'account' && (
+                    <motion.div 
+                      className="dropdown-menu right-0"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="p-4">
+                        <div className="flex items-center space-x-3 pb-3 border-b border-gray-200 dark:border-gray-700 mb-3">
+                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                            <User size={20} className="text-primary" />
+                          </div>
+                          <div className="space-y-1">
                             <p className="font-medium text-gray-900 dark:text-white">
                               {user?.user_metadata?.first_name || 'User'}
                             </p>
@@ -372,19 +388,14 @@ const MinimalNav: React.FC = () => {
                             onClick={handleSignOut}
                             className="dropdown-item w-full text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                           >
-                section.items.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link 
-                      key={item.path}
-                      to={item.path} 
-                      className="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
-                    >
-                      <Icon size={16} className="text-gray-600 dark:text-gray-400 mr-3" />
-                      <span className="text-sm font-medium text-gray-900 dark:text-white">{item.name}</span>
-                    </Link>
-                  );
-                })
+                            <LogOut size={16} />
+                            <span>Sign Out</span>
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
               </>
             )}
           </div>
