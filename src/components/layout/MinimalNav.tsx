@@ -18,7 +18,9 @@ import {
   Utensils,
   BarChart3,
   Heart,
-  Camera} from 'lucide-react';
+  Camera,
+  Shield,
+  BookOpen} from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -170,13 +172,13 @@ const MinimalNav: React.FC = () => {
     { 
       href: '/nutrition', 
       label: 'MyWellness', 
-      icon: <Utensils className="w-4 h-4" />,
+      icon: <Shield className="w-4 h-4" />,
       hasDropdown: true,
       dropdownItems: [
         { href: '/nutrition', label: 'Nutrition', icon: <Utensils className="w-4 h-4" /> },
         { href: '/nutrition/myplate', label: 'MyPlate', icon: <Camera className="w-4 h-4" /> },
         { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> },
-        { href: '/recipes', label: 'Recipes', icon: <Heart className="w-4 h-4" /> },
+        { href: '/recipes', label: 'Recipes', icon: <BookOpen className="w-4 h-4" /> },
         { href: '/bioclock', label: 'BioClock', icon: <Moon className="w-4 h-4" /> }
       ]
     }
