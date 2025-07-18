@@ -33,7 +33,7 @@ export default defineConfig({
           'chart-vendor': ['chart.js', 'react-chartjs-2'],
           'supabase': ['@supabase/supabase-js', '@supabase/auth-helpers-react'],
           'supplements': ['./src/components/supplements/SupplementCard.tsx', './src/components/supplements/SupplementGrid.tsx'],
-          'chat': ['./src/components/chat/AIHealthCoach.tsx', './src/components/chat/ChatMessage.tsx'],
+          'chat': ['./src/components/chat/MyCoach.tsx', './src/components/chat/ChatMessage.tsx'],
         },
         // Optimize chunk names
         chunkFileNames: 'assets/js/[name]-[hash].js',
