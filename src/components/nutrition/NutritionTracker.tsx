@@ -345,19 +345,24 @@ const NutritionTracker: React.FC = () => {
                             </div>
                           </div>
                           <div className="text-right">
+                            <p className="font-medium">{food.calories} cal</p>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
                               P: {food.protein}g | C: {food.carbs}g | F: {food.fat}g
                             </p>
                           </div>
                         </div>
                       ))}
+                    </div>
                 )}
+                
                 <div className="flex justify-end space-x-2 mt-4">
                   <Button variant="outline" onClick={() => setShowAddMeal(false)}>
                     Cancel
                   </Button>
+                  <Button onClick={handleSearch} disabled={!searchQuery.trim() || isSearching}>
                     Search
                   </Button>
+                </div>
               </Card>
             </div>
           )}
