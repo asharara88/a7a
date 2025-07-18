@@ -182,24 +182,10 @@ const MinimalNav: React.FC = () => {
           
           {/* Main Navigation */}
           <div className="flex items-center space-x-2">
-            {!user && (
-              <>
-                <Link to="/about" className="nav-link">
-                  About
-                </Link>
-                <Link to="/pricing" className="nav-link">
-                  Pricing
-                </Link>
-                <div className="flex items-center space-x-3 ml-6">
-                  <Link to="/login" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium">
-                    Sign In
-                  </Link>
-                  <Link to="/signup" className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-dark transition-colors">
-                    Get Started
-                  </Link>
+        {/* Simplified dropdowns */}
                 </div>
               </>
-            )}
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Wellness</h3>
             
             {user && (
               <>
@@ -306,28 +292,20 @@ const MinimalNav: React.FC = () => {
                   {activeDropdown === 'supplements' && (
                     <motion.div 
                       className="dropdown-menu right-0"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.2 }}
                     >
                       <div className="p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Supplements</h3>
-                        <div className="space-y-2">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Supplements</h3>
+                        <div className="space-y-1">
                           {supplementItems.map((item) => {
                             const Icon = item.icon;
                             return (
                               <Link 
                                 key={item.path}
                                 to={item.path} 
-                                className="dropdown-item"
+                                className="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                               >
-                                <div className="p-2 bg-secondary/10 rounded-lg">
-                                  <Icon size={18} className="text-secondary" />
-                                </div>
-                                <div>
-                                  <span className="font-medium text-gray-900 dark:text-white">{item.name}</span>
-                                  <p className="text-xs text-gray-500 dark:text-gray-400">{item.description}</p>
-                                </div>
+                                <Icon size={16} className="text-gray-600 dark:text-gray-400 mr-3" />
+                                <span className="text-sm font-medium text-gray-900 dark:text-white">{item.name}</span>
                               </Link>
                             );
                           })}
@@ -359,25 +337,8 @@ const MinimalNav: React.FC = () => {
                 <div ref={el => dropdownRefs.current.account = el} className="relative">
                   <button 
                     onClick={() => toggleDropdown('account')}
-                    className="nav-icon"
+            <div className="space-y-1">
                     title="Account"
-                  >
-                    <MoreHorizontal size={18} />
-                  </button>
-                  
-                  {activeDropdown === 'account' && (
-                    <motion.div 
-                      className="dropdown-menu right-0 w-64"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <div className="p-4">
-                        <div className="flex items-center space-x-3 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                            <User size={18} className="text-primary" />
-                          </div>
-                          <div>
                             <p className="font-medium text-gray-900 dark:text-white">
                               {user?.user_metadata?.first_name || 'User'}
                             </p>
@@ -409,14 +370,19 @@ const MinimalNav: React.FC = () => {
                             onClick={handleSignOut}
                             className="dropdown-item w-full text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                           >
-                            <LogOut size={16} />
-                            <span>Sign Out</span>
-                          </button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </div>
+                section.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link 
+                      key={item.path}
+                      to={item.path} 
+                      className="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
+                    >
+                      <Icon size={16} className="text-gray-600 dark:text-gray-400 mr-3" />
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">{item.name}</span>
+                    </Link>
+                  );
+                })
               </>
             )}
           </div>
