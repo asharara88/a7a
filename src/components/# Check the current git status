@@ -1,0 +1,11 @@
+# Check the current git status
+git status
+
+# See what changes are staged
+git diff --staged
+
+# If you want to commit with a proper message
+git commit -m "Fix merge conflicts and reorganize dashboard components"
+
+# Or if you want to see what's in the staged area before committing
+git diff --cached --name-only
