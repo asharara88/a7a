@@ -346,7 +346,7 @@ export default function SupplementStorePage() {
                         )}
                         {discount > 0 && (
                           <span className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 rounded px-2 py-0.5 text-xs font-semibold">
-                            {discount}% off
+                            {discount}% off Premium Users
                           </span>
                         )}
                       </div>
