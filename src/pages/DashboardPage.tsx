@@ -473,6 +473,14 @@ const DashboardPage: React.FC = () => {
               <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-500" />
             </motion.div>
           </button>
+          <div className="flex items-center justify-between mb-4">
+            <Link 
+              to="/fitness" 
+              className="text-primary hover:text-primary-dark text-sm font-medium flex items-center"
+            >
+              View Fitness Dashboard <ChevronRight className="w-4 h-4 ml-1" />
+            </Link>
+          </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <MetricsCard
               title="Steps"
