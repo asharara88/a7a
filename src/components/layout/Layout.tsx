@@ -142,7 +142,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header with consistent styling */}
       <div className="relative">
-        <MinimalNav />
+        <MinimalNav isDarkMode={isDarkMode} />
         
         {/* Theme Switcher Button */}
         <div className="absolute top-2 right-4">
