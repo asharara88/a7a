@@ -35,6 +35,7 @@ function App() {
         <Route path="mycoach" element={<MyCoachPage />} />
         <Route path="nutrition" element={<NutritionPage />} />
         <Route path="nutrition/dashboard" element={<NutritionDashboardPage />} />
+        <Route path="nutrition/myplate" element={<MyPlatePage />} />
         <Route path="fitness" element={<FitnessPage />} />
         <Route path="supplements" element={<SupplementsPage />} />
         <Route path="supplements/store" element={<SupplementStorePage />} />

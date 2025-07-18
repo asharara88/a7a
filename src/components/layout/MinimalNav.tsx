@@ -69,6 +69,7 @@ const MinimalNav: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSupplementsMenu, setShowSupplementsMenu] = useState(false);
+  const [showWellnessMenu, setShowWellnessMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -156,11 +157,8 @@ const MinimalNav: React.FC = () => {
   };
 
   const navItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: <Home className="w-4 h-4" /> },
-    { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> },
+    { href: '/dashboard', label: 'Home', icon: <Home className="w-4 h-4" /> },
     { href: '/mycoach', label: 'MyCoach', icon: <Sparkles className="w-4 h-4" /> },
-    { href: '/nutrition', label: 'Nutrition', icon: <Utensils className="w-4 h-4" /> },
-   { href: '/recipes', label: 'Recipes', icon: <Utensils className="w-4 h-4" /> },
     { 
       href: '/supplements', 
       label: 'Supplements', 
@@ -171,6 +169,19 @@ const MinimalNav: React.FC = () => {
         { href: '/supplements/recommendations', label: 'Recommendations', icon: <Heart className="w-4 h-4" /> },
         { href: '/my-stacks', label: 'My Stacks', icon: <BarChart3 className="w-4 h-4" /> },
         { href: '/cart', label: 'Cart', icon: <ShoppingCart className="w-4 h-4" /> }
+      ]
+    },
+    { href: '/bioclock', label: 'MyBio', icon: <User className="w-4 h-4" /> },
+    { 
+      href: '/nutrition', 
+      label: 'MyWellness', 
+      icon: <Utensils className="w-4 h-4" />,
+      hasDropdown: true,
+      dropdownItems: [
+        { href: '/nutrition', label: 'Food Logging', icon: <Utensils className="w-4 h-4" /> },
+        { href: '/recipes', label: 'Personalized Recipes', icon: <Utensils className="w-4 h-4" /> },
+        { href: '/nutrition/myplate', label: 'MyPlate', icon: <Activity className="w-4 h-4" /> },
+        { href: '/fitness', label: 'Fitness', icon: <Activity className="w-4 h-4" /> }
       ]
     },
   ];
@@ -200,7 +211,13 @@ const MinimalNav: React.FC = () => {
                     {item.hasDropdown ? (
                       <div className="relative">
                         <button
-                          onClick={() => setShowSupplementsMenu(!showSupplementsMenu)}
+                          onClick={() => {
+                            if (item.label === 'Supplements') {
+                              setShowSupplementsMenu(!showSupplementsMenu);
+                            } else if (item.label === 'MyWellness') {
+                              setShowWellnessMenu(!showWellnessMenu);
+                            }
+                          }}
                           className={cn(
                             "flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                             isActive(item.href)
@@ -214,11 +231,15 @@ const MinimalNav: React.FC = () => {
                         </button>
                         
                         <AnimatePresence>
-                          {showSupplementsMenu && (
+                          {((item.label === 'Supplements' && showSupplementsMenu) || 
+                            (item.label === 'MyWellness' && showWellnessMenu)) && (
                             <>
                               <div 
                                 className="fixed inset-0 z-40" 
-                                onClick={() => setShowSupplementsMenu(false)}
+                                onClick={() => {
+                                  setShowSupplementsMenu(false);
+                                  setShowWellnessMenu(false);
+                                }}
                               />
                               <motion.div
                                 className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50"
@@ -232,7 +253,10 @@ const MinimalNav: React.FC = () => {
                                     key={dropdownItem.href}
                                     to={dropdownItem.href}
                                     className="flex items-center w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                                    onClick={() => setShowSupplementsMenu(false)}
+                                    onClick={() => {
+                                      setShowSupplementsMenu(false);
+                                      setShowWellnessMenu(false);
+                                    }}
                                   >
                                     <span className="mr-3">{dropdownItem.icon}</span>
                                     <span className="tracking-wide">{dropdownItem.label}</span>
