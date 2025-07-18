@@ -59,7 +59,6 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
     if (currentUserId !== null) {
       loadFitnessData();
     }
-    }
   }, [timeRange, currentUserId]);
 
   const loadFitnessData = async () => {
