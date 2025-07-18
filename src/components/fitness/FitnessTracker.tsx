@@ -185,7 +185,7 @@ const FitnessTracker: React.FC<FitnessTrackerProps> = ({ activeTab = 'dashboard'
           boxWidth: 8,
           font: {
             size: 13,
-            weight: '500'
+            weight: 'normal' as const
           },
           color: '#6B7280'
         }
