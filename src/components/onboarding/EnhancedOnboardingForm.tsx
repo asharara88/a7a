@@ -1,233 +1,203 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff } from 'lucide-react'
-import { createClient } from '@supabase/supabase-js'
-import { Button } from '../../components/ui/Button'
+import React, { useState } from 'react';
+import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Button } from '../ui/Button';
+import { Card } from '../ui/Card';
+import { Input } from '../ui/Input';
 
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// Debug environment variables
-console.log('Environment check:', {
-  hasUrl: !!supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  urlPreview: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : 'missing',
-  keyPreview: supabaseAnonKey ? `${supabaseAnonKey.substring(0, 20)}...` : 'missing'
-});
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables:', {
-    url: !!supabaseUrl,
-    key: !!supabaseAnonKey
-  });
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  age: number;
+  healthGoals: string[];
+  activityLevel: string;
+  dietPreference: string;
 }
 
-let supabase;
-try {
-  supabase = createClient(
-    supabaseUrl || 'https://placeholder.supabase.co', 
-    supabaseAnonKey || 'placeholder-key'
-  );
-  console.log('Supabase client created successfully');
-} catch (err) {
-  console.error('Failed to create Supabase client:', err);
-}
-
-const LoginPage: React.FC = () => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [formData, setFormData] = useState({
+const EnhancedOnboardingForm: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState<FormData>({
+    firstName: '',
+    lastName: '',
     email: '',
-    password: ''
-  })
-  const navigate = useNavigate()
+    age: 0,
+    healthGoals: [],
+    activityLevel: '',
+    dietPreference: ''
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    // Comprehensive validation
-    if (!supabaseUrl) {
-      setError('Missing Supabase URL. Please check environment variables.')
-      console.error('VITE_SUPABASE_URL is not set');
-      return
-    }
-    
-    if (!supabaseAnonKey) {
-      setError('Missing Supabase API key. Please check environment variables.')
-      console.error('VITE_SUPABASE_ANON_KEY is not set');
-      return
-    }
+  const totalSteps = 4;
 
-    if (!supabase) {
-      setError('Supabase client initialization failed.')
-      return
+  const handleNext = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
     }
+  };
 
-    if (!formData.email || !formData.password) {
-      setError('Please enter both email and password')
-      return
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
     }
-    
-    setIsLoading(true)
-    setError(null)
-    
-    try {
-      console.log('Attempting to sign in with:', { email: formData.email });
-      
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password
-      })
-      
-      if (signInError) {
-        console.error('Supabase sign in error:', signInError);
-        throw signInError;
-      }
-      
-      if (data?.user) {
-        console.log('Sign in successful:', data.user.id);
-        // Successful login, redirect to dashboard
-        navigate('/dashboard')
-      } else {
-        console.warn('No user data returned from successful sign in');
-        setError('Login successful but no user data received. Please try again.');
-      }
-    } catch (err: any) {
-      console.error('Login error:', err)
-      
-      // More specific error messages
-      if (err.message?.includes('Invalid API key') || err.message?.includes('API key')) {
-        setError('Configuration error: Please check your Supabase API key configuration.')
-      } else if (err.message?.includes('Invalid login credentials')) {
-        setError('Invalid email or password. Please check your credentials.')
-      } else if (err.message?.includes('Email not confirmed')) {
-        setError('Please check your email and click the confirmation link.')
-      } else if (err.message?.includes('User not found')) {
-        setError('No account found with this email address. Please sign up first.')
-      } else if (err.message?.includes('Too many requests')) {
-        setError('Too many login attempts. Please wait a moment and try again.')
-      } else {
-        setError(err.message || 'Failed to sign in. Please try again.')
-      }
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+  const handleSubmit = () => {
+    console.log('Onboarding completed:', formData);
+    // Handle form submission
+  };
+
+  const updateFormData = (field: keyof FormData, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+    <Card className="max-w-2xl mx-auto p-8">
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Welcome to Biowell
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link
-              to="/signup"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              create a new account
-            </Link>
-          </p>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Step {currentStep} of {totalSteps}
+          </span>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter your email"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1 relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {error && (
-            <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                Forgot your password?
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Signing in...' : 'Sign in'}
-            </Button>
-          </div>
-        </form>
+        
+        {/* Progress bar */}
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div 
+            className="bg-primary h-2 rounded-full transition-all duration-300"
+            style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+          />
+        </div>
       </div>
-    </div>
-  )
-}
 
-export default LoginPage
+      <motion.div
+        key={currentStep}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        transition={{ duration: 0.3 }}
+      >
+        {currentStep === 1 && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold mb-4">Personal Information</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                placeholder="First Name"
+                value={formData.firstName}
+                onChange={(e) => updateFormData('firstName', e.target.value)}
+              />
+              <Input
+                placeholder="Last Name"
+                value={formData.lastName}
+                onChange={(e) => updateFormData('lastName', e.target.value)}
+              />
+            </div>
+            <Input
+              type="email"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={(e) => updateFormData('email', e.target.value)}
+            />
+            <Input
+              type="number"
+              placeholder="Age"
+              value={formData.age || ''}
+              onChange={(e) => updateFormData('age', parseInt(e.target.value))}
+            />
+          </div>
+        )}
+
+        {currentStep === 2 && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold mb-4">Health Goals</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              Select your primary health goals (choose multiple):
+            </p>
+            {['Weight Management', 'Muscle Building', 'Better Sleep', 'Increased Energy', 'Stress Reduction'].map(goal => (
+              <label key={goal} className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  checked={formData.healthGoals.includes(goal)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      updateFormData('healthGoals', [...formData.healthGoals, goal]);
+                    } else {
+                      updateFormData('healthGoals', formData.healthGoals.filter(g => g !== goal));
+                    }
+                  }}
+                  className="rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <span className="text-gray-700 dark:text-gray-300">{goal}</span>
+              </label>
+            ))}
+          </div>
+        )}
+
+        {currentStep === 3 && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold mb-4">Activity Level</h3>
+            {['Sedentary', 'Lightly Active', 'Moderately Active', 'Very Active', 'Extremely Active'].map(level => (
+              <label key={level} className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  name="activityLevel"
+                  value={level}
+                  checked={formData.activityLevel === level}
+                  onChange={(e) => updateFormData('activityLevel', e.target.value)}
+                  className="text-primary focus:ring-primary"
+                />
+                <span className="text-gray-700 dark:text-gray-300">{level}</span>
+              </label>
+            ))}
+          </div>
+        )}
+
+        {currentStep === 4 && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold mb-4">Diet Preference</h3>
+            {['Omnivore', 'Vegetarian', 'Vegan', 'Pescatarian', 'Keto', 'Paleo'].map(diet => (
+              <label key={diet} className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  name="dietPreference"
+                  value={diet}
+                  checked={formData.dietPreference === diet}
+                  onChange={(e) => updateFormData('dietPreference', e.target.value)}
+                  className="text-primary focus:ring-primary"
+                />
+                <span className="text-gray-700 dark:text-gray-300">{diet}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </motion.div>
+
+      <div className="flex justify-between mt-8">
+        <Button
+          variant="outline"
+          onClick={handlePrevious}
+          disabled={currentStep === 1}
+          className="flex items-center"
+        >
+          <ChevronLeft className="w-4 h-4 mr-2" />
+          Previous
+        </Button>
+
+        {currentStep < totalSteps ? (
+          <Button onClick={handleNext} className="flex items-center">
+            Next
+            <ChevronRight className="w-4 h-4 ml-2" />
+          </Button>
+        ) : (
+          <Button onClick={handleSubmit} className="flex items-center">
+            Complete
+            <Check className="w-4 h-4 ml-2" />
+          </Button>
+        )}
+      </div>
+    </Card>
+  );
+};
+
+export default EnhancedOnboardingForm;
