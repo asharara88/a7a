@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
 
   try {
     // Get RapidAPI credentials from environment
-    const rapidApiKey = Deno.env.get("RAPIDAPI_MUSCLE_GROUP_KEY");
+    const rapidApiKey = Deno.env.get("VITE_RAPIDAPI_MUSCLE_GROUP_KEY");
     const rapidApiHost = "muscle-group-image-generator.p.rapidapi.com";
     
     if (!rapidApiKey) {

@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
 
   try {
     // Get RapidAPI credentials from environment
-    const rapidApiKey = Deno.env.get("RAPIDAPI_WORKOUT_PLANNER_KEY");
+    const rapidApiKey = Deno.env.get("VITE_RAPIDAPI_WORKOUT_PLANNER_KEY");
     const rapidApiHost = "ai-workout-planner-exercise-fitness-nutrition-guide.p.rapidapi.com";
     
     if (!rapidApiKey) {
