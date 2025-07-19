@@ -1,37 +1,47 @@
-import React from 'react'
-import { useNavigate, Outlet } from 'react-router-dom'
-import MinimalNav from './MinimalNav'
-import MobileNav from '../ui/MobileNav'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
+import { Button } from '../../components/ui/Button'
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Create Supabase client with error handling
-let supabase: any = null;
-let supabaseError: string | null = null;
+// Debug environment variables
+console.log('Environment check:', {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  urlPreview: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : 'missing',
+  keyPreview: supabaseAnonKey ? `${supabaseAnonKey.substring(0, 20)}...` : 'missing'
+});
 
-try {
-  if (!supabaseUrl || !supabaseAnonKey) {
-    supabaseError = "Supabase environment variables are missing. Please check your environment configuration.";
-    console.error('Missing Supabase environment variables:', {
-      VITE_SUPABASE_URL: !!supabaseUrl,
-      VITE_SUPABASE_ANON_KEY: !!supabaseAnonKey,
-      NODE_ENV: import.meta.env.MODE
-    });
-  } else {
-    supabase = createClient(supabaseUrl, supabaseAnonKey);
-  }
-} catch (error) {
-  supabaseError = "Failed to initialize Supabase client. Please check your configuration.";
-  console.error('Supabase initialization error:', error);
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables:', {
+    url: !!supabaseUrl,
+    key: !!supabaseAnonKey
+  });
 }
 
-const Layout: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-  const [user, setUser] = React.useState<any>(null)
-  const [connectionError, setConnectionError] = React.useState<string | null>(supabaseError)
+let supabase;
+try {
+  supabase = createClient(
+    supabaseUrl || 'https://placeholder.supabase.co', 
+    supabaseAnonKey || 'placeholder-key'
+  );
+  console.log('Supabase client created successfully');
+} catch (err) {
+  console.error('Failed to create Supabase client:', err);
+}
+
+const LoginPage: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
   const navigate = useNavigate()
 
   // Check for user session on mount
@@ -43,7 +53,9 @@ const Layout: React.FC = () => {
 
     const checkUser = async () => {
       try {
+        console.log('Checking user authentication status...');
         const { data } = await supabase.auth.getUser();
+        console.log('Auth check result:', { hasUser: !!data.user, userId: data.user?.id });
         setUser(data.user);
         setConnectionError(null);
       } catch (error) {
@@ -57,6 +69,7 @@ const Layout: React.FC = () => {
     // Set up auth state listener only if supabase is available
     if (supabase) {
       const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+        console.log('Auth state changed:', { event: _event, hasSession: !!session });
         setUser(session?.user || null);
       });
       
@@ -66,91 +79,186 @@ const Layout: React.FC = () => {
     }
   }, []);
 
-  const handleSignOut = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Comprehensive validation
+    if (!supabaseUrl) {
+      setError('Missing Supabase URL. Please check environment variables.')
+      console.error('VITE_SUPABASE_URL is not set');
+      return
+    }
+    
+    if (!supabaseAnonKey) {
+      setError('Missing Supabase API key. Please check environment variables.')
+      console.error('VITE_SUPABASE_ANON_KEY is not set');
+      return
+    }
+
     if (!supabase) {
-      console.error('Supabase client not available');
-      return;
+      setError('Supabase client initialization failed.')
+      return
     }
 
+    if (!formData.email || !formData.password) {
+      setError('Please enter both email and password')
+      return
+    }
+    
+    setIsLoading(true)
+    setError(null)
+    
     try {
-      await supabase.auth.signOut();
-      navigate('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
-
-  // Show connection error if Supabase is not available
-  if (connectionError) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
-          <div className="text-red-500 mb-4">
-            <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-          </div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            Connection Error
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {connectionError}
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Retry Connection
-          </button>
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      {/* Header */}
-      <div className="relative">
-        <MinimalNav />
-      </div>
+      console.log('Attempting to sign in with:', { email: formData.email });
       
-      {/* Mobile Navigation */}
-      <MobileNav 
-        isOpen={isMenuOpen} 
-        onClose={() => setIsMenuOpen(false)} 
-        isLoggedIn={!!user}
-        onSignOut={handleSignOut}
-      />
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password
+      })
+      
+      if (signInError) {
+        console.error('Supabase sign in error:', signInError);
+        throw signInError;
+      }
+      
+      if (data?.user) {
+        console.log('Sign in successful:', data.user.id);
+        // Successful login, redirect to dashboard
+        navigate('/dashboard')
+      } else {
+        console.warn('No user data returned from successful sign in');
+        setError('Login successful but no user data received. Please try again.');
+      }
+    } catch (err: any) {
+      console.error('Login error:', err)
+      
+      // More specific error messages
+      if (err.message?.includes('Invalid API key')) {
+        setError('Configuration error: Invalid Supabase API key. Please contact support.')
+      } else if (err.message?.includes('Invalid login credentials')) {
+        setError('Invalid email or password. Please check your credentials.')
+      } else if (err.message?.includes('Email not confirmed')) {
+        setError('Please check your email and click the confirmation link.')
+      } else {
+        setError(err.message || 'Failed to sign in. Please try again.')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-      {/* Main Content */}
-      <main className="flex-1 min-h-[calc(100vh-64px)]">
-        <Outlet />
-      </main>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
 
-      {/* Footer */}
-      <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-800 dark:text-white transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-5 sm:px-7 lg:px-9 py-10">
-          <div className="flex flex-col md:flex-row justify-between items-start">
-            <div className="flex items-center mb-5 md:mb-0 text-left">
-              <img 
-                src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
-                alt="Biowell Logo" 
-                className="h-18 w-auto dark:hidden" 
-              />
-              <img 
-                src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
-                alt="Biowell Logo" 
-                className="h-18 w-auto hidden dark:block" 
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Sign in to your account
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Or{' '}
+            <Link
+              to="/signup"
+              className="font-medium text-blue-600 hover:text-blue-500"
+            >
+              create a new account
+            </Link>
+          </p>
+        </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Enter your email"
               />
             </div>
-            <div className="text-left md:text-right">
-              <p className="font-medium tracking-wide">&copy; 2025 Biowell AI - Personal Digital Health Coach</p>
-              <p className="text-gray-500 dark:text-white/70 mt-2 tracking-wide">All rights reserved.</p>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </footer>
+
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                Remember me
+              </label>
+            </div>
+
+            <div className="text-sm">
+              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                Forgot your password?
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing in...' : 'Sign in'}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
 
-export default Layout
+export default LoginPage
