@@ -183,6 +183,7 @@ const MinimalNav: React.FC = () => {
         { href: '/recipes', label: 'Recipes', icon: <BookOpen className="w-4 h-4" /> },
         { href: '/bioclock', label: 'BioClock', icon: <Clock className="w-4 h-4" /> }
       ]
+      },
       dropdownColumns: [
         {
           title: 'Nutrition',
