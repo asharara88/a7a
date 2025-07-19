@@ -20,7 +20,8 @@ import {
   Camera,
   Shield,
   BookOpen,
-  Clock} from 'lucide-react';
+  Clock,
+  Target} from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { cn } from '../../utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -182,6 +183,33 @@ const MinimalNav: React.FC = () => {
         { href: '/recipes', label: 'Recipes', icon: <BookOpen className="w-4 h-4" /> },
         { href: '/bioclock', label: 'BioClock', icon: <Clock className="w-4 h-4" /> }
       ]
+      dropdownColumns: [
+        {
+          title: 'Nutrition',
+          items: [
+            { href: '/nutrition', label: 'Nutrition Tracking', icon: <Utensils className="w-4 h-4" /> },
+            { href: '/nutrition/myplate', label: 'MyPlate™', icon: <Camera className="w-4 h-4" /> },
+            { href: '/recipes', label: 'Recipes', icon: <BookOpen className="w-4 h-4" /> },
+            { href: '/metabolism', label: 'Metabolism (CGM)', icon: <BarChart3 className="w-4 h-4" /> }
+          ]
+        },
+        {
+          title: 'Fitness',
+          items: [
+            { href: '/fitness', label: 'Fitness Dashboard', icon: <Activity className="w-4 h-4" /> },
+            { href: '/fitness?tab=ai-generator', label: 'AI Workouts', icon: <Sparkles className="w-4 h-4" /> },
+            { href: '/fitness?tab=muscles', label: 'Muscle Groups', icon: <Target className="w-4 h-4" /> },
+            { href: '/fitness?tab=analytics', label: 'Analytics', icon: <BarChart3 className="w-4 h-4" /> }
+          ]
+        },
+        {
+          title: 'Sleep & Recovery',
+          items: [
+            { href: '/sleep', label: 'Sleep Tracking', icon: <Moon className="w-4 h-4" /> },
+            { href: '/bioclock', label: 'BioClock™', icon: <Clock className="w-4 h-4" /> }
+          ]
+        }
+      ]
     }
   ];
 
@@ -250,37 +278,76 @@ const MinimalNav: React.FC = () => {
                                 }}
                               />
                               <motion.div
-                                className="absolute top-full left-0 mt-2 w-64 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 py-3 z-50"
+                                className={`absolute top-full left-0 mt-2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 py-4 z-50 ${
+                                  item.dropdownColumns ? 'w-[720px]' : 'w-64'
+                                }`}
                                 initial={{ opacity: 0, scale: 0.95, y: -10 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: -10 }}
                                 transition={{ duration: 0.2, ease: "easeOut" }}
                               >
-                                <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 mb-2">
-                                  <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    {item.label === 'Supplements' ? 'Supplement Tools' : 'Wellness Tools'}
-                                  </h3>
-                                </div>
-                                {item.dropdownItems?.map((dropdownItem) => (
-                                  <Link
-                                    key={dropdownItem.href}
-                                    to={dropdownItem.href}
-                                    className={cn(
-                                      "flex items-center w-full px-4 py-3 text-sm transition-all duration-200 group",
-                                      isActive(dropdownItem.href)
-                                        ? "text-green-400 bg-green-500/10 font-medium border-l-2 border-green-400"
-                                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-green-400 hover:translate-x-1"
-                                    )}
-                                    onClick={() => {
-                                      setShowSupplementsMenu(false);
-                                      setShowWellnessMenu(false);
-                                    }}
-                                  >
-                                    <span className="mr-3">{dropdownItem.icon}</span>
-                                    <span className="tracking-wide">{dropdownItem.label}</span>
-                                    <ChevronDown className="w-3 h-3 ml-auto rotate-[-90deg] opacity-0 group-hover:opacity-100 transition-opacity" />
-                                  </Link>
-                                ))}
+                                {item.dropdownColumns ? (
+                                  // Three-column layout for MyWellness
+                                  <div className="grid grid-cols-3 gap-6 px-6">
+                                    {item.dropdownColumns.map((column, columnIndex) => (
+                                      <div key={columnIndex} className="space-y-1">
+                                        <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 mb-3">
+                                          <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            {column.title}
+                                          </h3>
+                                        </div>
+                                        {column.items.map((columnItem) => (
+                                          <Link
+                                            key={columnItem.href}
+                                            to={columnItem.href}
+                                            className={cn(
+                                              "flex items-center w-full px-3 py-2.5 text-sm transition-all duration-200 group rounded-lg",
+                                              isActive(columnItem.href)
+                                                ? "text-green-400 bg-green-500/10 font-medium"
+                                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-green-400"
+                                            )}
+                                            onClick={() => {
+                                              setShowSupplementsMenu(false);
+                                              setShowWellnessMenu(false);
+                                            }}
+                                          >
+                                            <span className="mr-3">{columnItem.icon}</span>
+                                            <span className="tracking-wide text-xs">{columnItem.label}</span>
+                                          </Link>
+                                        ))}
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  // Single column layout for Supplements
+                                  <>
+                                    <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 mb-2">
+                                      <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        {item.label === 'Supplements' ? 'Supplement Tools' : 'Wellness Tools'}
+                                      </h3>
+                                    </div>
+                                    {item.dropdownItems?.map((dropdownItem) => (
+                                      <Link
+                                        key={dropdownItem.href}
+                                        to={dropdownItem.href}
+                                        className={cn(
+                                          "flex items-center w-full px-4 py-3 text-sm transition-all duration-200 group",
+                                          isActive(dropdownItem.href)
+                                            ? "text-green-400 bg-green-500/10 font-medium border-l-2 border-green-400"
+                                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-green-400 hover:translate-x-1"
+                                        )}
+                                        onClick={() => {
+                                          setShowSupplementsMenu(false);
+                                          setShowWellnessMenu(false);
+                                        }}
+                                      >
+                                        <span className="mr-3">{dropdownItem.icon}</span>
+                                        <span className="tracking-wide">{dropdownItem.label}</span>
+                                        <ChevronDown className="w-3 h-3 ml-auto rotate-[-90deg] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                      </Link>
+                                    ))}
+                                  </>
+                                )}
                               </motion.div>
                             </>
                           )}
@@ -540,22 +607,45 @@ const MinimalNav: React.FC = () => {
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.2, ease: "easeOut" }}
                               >
-                                {item.dropdownItems?.map((dropdownItem) => (
-                                  <Link
-                                    key={dropdownItem.href}
-                                    to={dropdownItem.href}
-                                    className={cn(
-                                      "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                                      isActive(dropdownItem.href)
-                                        ? "text-green-400 bg-green-500/10 border-l-2 border-green-400"
-                                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    )}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                  >
-                                    <span className="mr-3">{dropdownItem.icon}</span>
-                                    <span className="tracking-wide">{dropdownItem.label}</span>
-                                  </Link>
-                                ))}
+                                {item.dropdownColumns ? (
+                                  // Mobile: Show all items in a single column for MyWellness
+                                  item.dropdownColumns.flatMap(column => 
+                                    column.items.map((columnItem) => (
+                                      <Link
+                                        key={columnItem.href}
+                                        to={columnItem.href}
+                                        className={cn(
+                                          "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                                          isActive(columnItem.href)
+                                            ? "text-green-400 bg-green-500/10 border-l-2 border-green-400"
+                                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                                        )}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                      >
+                                        <span className="mr-3">{columnItem.icon}</span>
+                                        <span className="tracking-wide">{columnItem.label}</span>
+                                      </Link>
+                                    ))
+                                  )
+                                ) : (
+                                  // Single column for Supplements
+                                  item.dropdownItems?.map((dropdownItem) => (
+                                    <Link
+                                      key={dropdownItem.href}
+                                      to={dropdownItem.href}
+                                      className={cn(
+                                        "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                                        isActive(dropdownItem.href)
+                                          ? "text-green-400 bg-green-500/10 border-l-2 border-green-400"
+                                          : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                                      )}
+                                      onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                      <span className="mr-3">{dropdownItem.icon}</span>
+                                      <span className="tracking-wide">{dropdownItem.label}</span>
+                                    </Link>
+                                  ))
+                                )}
                               </motion.div>
                             )}
                           </AnimatePresence>
