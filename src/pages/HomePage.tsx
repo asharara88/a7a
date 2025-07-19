@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
-import { Button } from '../../components/ui/Button'
+import { Button } from '../components/ui/Button'
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
