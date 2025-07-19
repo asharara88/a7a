@@ -14,12 +14,18 @@ let supabaseError: string | null = null;
 
 try {
   if (!supabaseUrl || !supabaseAnonKey) {
-    supabaseError = "Supabase environment variables are missing. Please check your .env file.";
+    supabaseError = "Supabase environment variables are missing. Please check your environment configuration.";
+    console.error('Missing Supabase environment variables:', {
+      VITE_SUPABASE_URL: !!supabaseUrl,
+      VITE_SUPABASE_ANON_KEY: !!supabaseAnonKey,
+      NODE_ENV: import.meta.env.MODE
+    });
   } else {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
   }
 } catch (error) {
   supabaseError = "Failed to initialize Supabase client. Please check your configuration.";
+  console.error('Supabase initialization error:', error);
 }
 
 const Layout: React.FC = () => {
