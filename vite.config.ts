@@ -24,9 +24,9 @@ export default defineConfig({
     // Ensure proper SPA routing
     rollupOptions: {
       input: 'index.html',
-    },
-    // Increase the chunk size warning limit
-    chunkSizeWarningLimit: 1200,
+      output: {
+        // Increase the chunk size warning limit
+        chunkSizeWarningLimit: 1200,
         manualChunks: {
           // Vendor chunks
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
