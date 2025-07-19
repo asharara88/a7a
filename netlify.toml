@@ -4,6 +4,11 @@
 
 [build.environment]
   NODE_VERSION = "18"
+ codex/remove-specified-lines-and-validate-toml
+=======
+
+ codex/clean-up-json-file-and-validate
+ main
 [[headers]]
   for = "/*"
   [headers.values]
@@ -11,16 +16,24 @@
     Referrer-Policy = "same-origin"
     X-Frame-Options = "DENY"
 
+=======
+ main
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+ codex/clean-up-json-file-and-validate
 
 # SPA routing fallback
+ codex/remove-specified-lines-and-validate-toml
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+=======
+=======
+ main
+ main
 
 [[headers]]
   for = "/*"
