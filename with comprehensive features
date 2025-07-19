@@ -1,0 +1,20 @@
+* [33m678d3037[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix App.tsx to show hero page instead of sign in
+* [33m3c71e27e[m Updated MinimalNav.tsx
+* [33m37b80035[m Restore proper App component with routing and hero page
+* [33mc35de754[m uap§ # This is a commit message template for Git.
+* [33m3c4e25a0[m Added 20250717092409_maroon_violet.sql
+* [33m6c2589c7[m Updated App.tsx
+* [33m701a3aae[m Updated App.tsx
+* [33m48433207[m Check environment variables setup
+* [33mbc40b111[m Updated Layout.tsx
+* [33m40356467[m Updated Layout.tsx
+* [33m754e33b7[m Updated Layout.tsx
+* [33mb4ba76e3[m Updated LoginPage.tsx
+* [33m1aee7c8a[m Updated SignupPage.tsx
+* [33mbdc5a467[m Add JWT_SECRET environment variable
+* [33m255962dd[m Update MyWellness menu to 3 columns
+* [33m4f7c636a[m Fix Invalid API Key error in login
+* [33md994a9f0[m Fix Supabase environment variables validation
+* [33m655fcbc5[m Fix Supabase environment variables validation
+* [33m0703b658[m Update codebase with external changes
+* [33mfd4affa8[m ch is ahead
