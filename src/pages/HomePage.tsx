@@ -94,16 +94,19 @@ const HomePage: React.FC = () => {
               
               {/* Main Headline */}
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-[1.1] tracking-tight">
-                Optimize Your Health with
+                Your Personal
                 <span className="block bg-gradient-to-r from-primary-600 via-secondary-600 to-tertiary-600 bg-clip-text text-transparent mt-2">
-                  AI-Powered Precision
+                  Wellness Coach
                 </span>
               </h1>
               
               {/* Subtitle */}
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Your personal AI wellness coach that combines cutting-edge biometric tracking, 
-                evidence-based supplements, and personalized optimization protocols.
+              <p className="text-2xl text-gray-600 dark:text-gray-300 mb-4 font-medium">
+                Optimize yourself everyday.
+              </p>
+              <p className="text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+                AI-powered wellness coaching with evidence-based supplements, 
+                real-time health tracking, and personalized optimization.
               </p>
               
               {/* CTA Buttons */}
