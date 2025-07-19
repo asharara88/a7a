@@ -1,138 +1,266 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, Activity, Brain, Heart, Zap, Shield, Users } from 'lucide-react'
-import { Button } from '../components/ui/Button'
-import { Card } from '../components/ui/Card'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Shield, Zap, Heart, Brain, Activity, Sparkles, Target, Award } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Button } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
 
 const HomePage: React.FC = () => {
   const features = [
     {
-      icon: <Brain className="w-8 h-8 text-blue-600" />,
-      title: "AI Health Coach",
-      description: "Personalized guidance powered by advanced AI to optimize your wellness journey."
+      icon: <Sparkles className="w-8 h-8" />,
+      title: 'AI Health Coach',
+      description: 'Get personalized health guidance powered by advanced AI and scientific research.',
+      gradient: 'from-primary-dark to-primary'
     },
     {
-      icon: <Activity className="w-8 h-8 text-blue-600" />,
-      title: "Real-time Tracking",
-      description: "Monitor your health metrics with seamless wearable device integration."
+      icon: <Shield className="w-8 h-8" />,
+      title: 'Evidence-Based Supplements',
+      description: 'Discover supplements backed by clinical studies and scientific evidence.',
+      gradient: 'from-secondary-dark to-secondary'
     },
     {
-      icon: <Heart className="w-8 h-8 text-blue-600" />,
-      title: "Holistic Wellness",
-      description: "Comprehensive approach covering nutrition, fitness, sleep, and mental health."
+      icon: <Activity className="w-8 h-8" />,
+      title: 'Fitness Tracking',
+      description: 'Monitor your workouts, recovery, and muscle group development.',
+      gradient: 'from-tertiary-dark to-tertiary'
     },
     {
-      icon: <Zap className="w-8 h-8 text-blue-600" />,
-      title: "Smart Recommendations",
-      description: "Evidence-based supplement and lifestyle recommendations tailored to you."
+      icon: <Brain className="w-8 h-8" />,
+      title: 'Cognitive Enhancement',
+      description: 'Optimize your mental performance with targeted nutrition and lifestyle changes.',
+      gradient: 'from-primary to-secondary'
     },
     {
-      icon: <Shield className="w-8 h-8 text-blue-600" />,
-      title: "Privacy First",
-      description: "Your health data is encrypted and secure with enterprise-grade protection."
+      icon: <Heart className="w-8 h-8" />,
+      title: 'Metabolic Health',
+      description: 'Track glucose levels, metabolic markers, and optimize your energy systems.',
+      gradient: 'from-secondary to-tertiary'
     },
     {
-      icon: <Users className="w-8 h-8 text-blue-600" />,
-      title: "Community Support",
-      description: "Connect with like-minded individuals on similar wellness journeys."
+      icon: <Target className="w-8 h-8" />,
+      title: 'Personalized Goals',
+      description: 'Set and achieve health goals with data-driven insights and recommendations.',
+      gradient: 'from-tertiary to-primary'
     }
-  ]
+  ];
+
+  const trustIndicators = [
+    'Science-backed recommendations',
+    'Personalized health insights',
+    'Secure data protection',
+    'Expert-reviewed content'
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white dark:from-gray-900 dark:via-blue-900/10 dark:to-gray-800">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-20 pb-32">
+      <section className="relative overflow-hidden pt-20 pb-16 sm:pt-24 sm:pb-20">
         {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-32 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl animate-float"></div>
-          <div className="absolute top-40 -left-32 w-80 h-80 bg-indigo-400/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }}></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 animate-fade-in-up">
-              Your <span className="text-gradient">Digital Wellness</span> Coach
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              Transform your health with AI-powered insights, personalized recommendations, and real-time tracking. 
-              Your journey to optimal wellness starts here.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <Link to="/signup">
-                <Button size="xl" className="group">
+        <motion.div 
+          className="absolute top-20 left-10 w-72 h-72 rounded-full bg-primary/10 blur-3xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            x: [0, 30, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-secondary/10 blur-3xl"
+          animate={{ 
+            scale: [1, 1.3, 1],
+            x: [0, -40, 0],
+            y: [0, 20, 0],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        <motion.div 
+          className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full bg-tertiary/10 blur-3xl"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            rotate: [0, 180, 360],
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+        />
+
+        <div className="mobile-container relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                <span className="text-gradient">Your Personal</span>
+                <br />
+                <span className="text-gray-900 dark:text-white">Health Coach</span>
+              </h1>
+              
+              <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+                Transform your wellness journey with AI-powered insights, evidence-based supplements, 
+                and personalized health optimization.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                <Button
+                  as={Link}
+                  to="/onboarding"
+                  size="xl"
+                  variant="accent"
+                  className="w-full sm:w-auto min-w-[200px]"
+                >
                   Start Your Journey
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="ml-3 w-6 h-6" />
                 </Button>
-              </Link>
-              <Link to="/login">
-                <Button variant="outline" size="xl">
-                  Sign In
+                
+                <Button
+                  as={Link}
+                  to="/about"
+                  size="xl"
+                  variant="outline"
+                  className="w-full sm:w-auto min-w-[200px]"
+                >
+                  Learn More
                 </Button>
-              </Link>
-            </div>
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                {trustIndicators.map((indicator, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
+                    className="flex items-center justify-center sm:justify-start text-sm text-gray-600 dark:text-gray-400"
+                  >
+                    <div className="w-2 h-2 bg-accent rounded-full mr-3 animate-pulse-glow" />
+                    {indicator}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-white/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Everything you need for <span className="text-gradient">optimal health</span>
+      <section className="py-16 sm:py-20 relative">
+        <div className="mobile-container">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+              <span className="text-gradient">Comprehensive</span>
+              <span className="text-gray-900 dark:text-white"> Health Platform</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Comprehensive tools and insights to help you achieve your wellness goals with science-backed recommendations.
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Everything you need to optimize your health, backed by science and powered by AI.
             </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {features.map((feature, index) => (
-              <Card 
-                key={index} 
-                variant="glass" 
-                className="p-8 hover:scale-105 transition-all duration-300 group animate-fade-in-up"
-                style={{ animationDelay: `${0.1 * index}s` }}
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <div className="mb-6 group-hover:scale-110 transition-transform duration-300">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {feature.description}
-                </p>
-              </Card>
+                <Card 
+                  variant="elevated"
+                  className={`feature-card bg-gradient-to-br ${feature.gradient} h-full cursor-pointer group`}
+                >
+                  <div className="relative z-10">
+                    <div className="p-3 rounded-2xl bg-white/20 inline-flex mb-6 group-hover:scale-110 transition-transform duration-300">
+                      {feature.icon}
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold mb-4 text-white">
+                      {feature.title}
+                    </h3>
+                    <p className="text-white/90 leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-indigo-600 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
-            Ready to transform your health?
-          </h2>
-          <p className="text-xl text-blue-100 mb-12 leading-relaxed">
-            Join thousands of users who have already started their wellness journey with Biowell.
-          </p>
-          <Link to="/signup">
-            <Button 
-              size="xl" 
-              variant="secondary"
-              className="bg-white text-blue-600 hover:bg-gray-50 shadow-2xl hover:shadow-3xl transform hover:scale-105"
-            >
-              Get Started Free
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </Link>
+      <section className="py-16 sm:py-20 relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-tertiary/5" />
+        <motion.div 
+          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-accent/10 blur-3xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{ duration: 6, repeat: Infinity }}
+        />
+
+        <div className="mobile-container relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl mx-auto text-center"
+          >
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-6">
+              <Award className="w-4 h-4 mr-2" />
+              Trusted by thousands of users
+            </div>
+            
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+              Ready to <span className="text-gradient">Transform</span> Your Health?
+            </h2>
+            
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
+              Join thousands of users who have already started their personalized wellness journey 
+              with science-backed recommendations.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button
+                as={Link}
+                to="/onboarding"
+                size="xl"
+                variant="accent"
+                className="w-full sm:w-auto min-w-[250px] group"
+              >
+                Get Started Free
+                <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              
+              <Button
+                as={Link}
+                to="/login"
+                size="xl"
+                variant="outline"
+                className="w-full sm:w-auto min-w-[200px]"
+              >
+                Sign In
+              </Button>
+            </div>
+
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-6">
+              No credit card required • Start your free assessment today
+            </p>
+          </motion.div>
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

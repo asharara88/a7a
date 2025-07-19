@@ -5,6 +5,22 @@
 [build.environment]
   NODE_VERSION = "18"
 
+ codex/audit-and-patch-pre-netlify-workflow
+=======
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "frame-ancestors 'self'"
+    Referrer-Policy = "same-origin"
+    X-Frame-Options = "DENY"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# SPA routing fallback
+ main
 [[redirects]]
   from = "/*"
   to = "/index.html"

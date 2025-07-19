@@ -1,43 +1,84 @@
-import React from 'react'
-import { cn } from '../../utils/cn'
+import React from 'react';
+import { cn } from '../../utils/cn';
+import { Slot } from '@radix-ui/react-slot';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive'
-  size?: 'sm' | 'md' | 'lg' | 'xl'
-  children: React.ReactNode
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'accent';
+  size?: 'default' | 'sm' | 'lg' | 'icon' | 'xs' | 'xl';
+  asChild?: boolean;
+  as?: React.ElementType;
+  to?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', children, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed'
+  ({ className, variant = 'default', size = 'default', asChild = false, as, to, ...props }, ref) => {
+    const Comp = asChild ? Slot : (as || 'button');
     
-    const variants = {
-      primary: 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600 focus:ring-blue-500 shadow-lg hover:shadow-xl transform hover:scale-105',
-      secondary: 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-900 hover:from-gray-200 hover:to-gray-100 focus:ring-gray-500 border border-gray-200',
-      outline: 'border-2 border-blue-500 text-blue-600 hover:bg-blue-50 focus:ring-blue-500',
-      ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:ring-gray-500',
-      destructive: 'bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 focus:ring-red-500'
+    const buttonProps = {
+      className: cn(
+        // Base styles
+        'inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium',
+        'transition-all duration-300 focus-visible:outline-none focus-visible:ring-2',
+        'focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none',
+        'disabled:opacity-50 touch-target transform-gpu',
+        
+        // Variants
+        {
+          // Default - Primary blue gradient
+          'bg-gradient-to-r from-primary via-secondary to-tertiary text-white shadow-lg hover:shadow-xl hover:scale-102 active:scale-98':
+            variant === 'default',
+          
+          // Destructive
+          'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg hover:shadow-xl hover:scale-102 active:scale-98':
+            variant === 'destructive',
+          
+          // Outline
+          'border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40 hover:scale-102 active:scale-98':
+            variant === 'outline',
+          
+          // Secondary
+          'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-900 shadow-md hover:shadow-lg hover:scale-102 active:scale-98 dark:from-gray-800 dark:to-gray-700 dark:text-gray-100':
+            variant === 'secondary',
+          
+          // Ghost
+          'text-primary hover:bg-primary/10 hover:scale-102 active:scale-98':
+            variant === 'ghost',
+          
+          // Link
+          'text-primary underline-offset-4 hover:underline hover:scale-102 active:scale-98':
+            variant === 'link',
+          
+          // Accent - Neon green
+          'bg-gradient-to-r from-accent to-accent-light text-white shadow-lg hover:shadow-xl hover:scale-102 active:scale-98 animate-pulse-glow':
+            variant === 'accent',
+        },
+        
+        // Sizes
+        {
+          'h-8 px-3 text-xs': size === 'xs',
+          'h-9 px-3': size === 'sm',
+          'h-12 px-6': size === 'default',
+          'h-14 px-8 text-base': size === 'lg',
+          'h-16 px-10 text-lg': size === 'xl',
+          'h-12 w-12': size === 'icon',
+        },
+        
+        className
+      ),
+      ref,
+      ...props,
+    };
+
+    // Handle Link component
+    if (to && as) {
+      return <Comp to={to} {...buttonProps} />;
     }
-    
-    const sizes = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-sm',
-      lg: 'px-6 py-3 text-base',
-      xl: 'px-8 py-4 text-lg'
-    }
-    
-    return (
-      <button
-        ref={ref}
-        className={cn(baseStyles, variants[variant], sizes[size], className)}
-        {...props}
-      >
-        {children}
-      </button>
-    )
+
+    return <Comp {...buttonProps} />;
   }
-)
+);
 
-Button.displayName = 'Button'
+Button.displayName = 'Button';
 
-export { Button }
+export { Button };
