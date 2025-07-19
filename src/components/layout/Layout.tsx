@@ -35,6 +35,7 @@ try {
 }
 
 const LoginPage: React.FC = () => {
+  // Using local state since no user context is available
   const [user, setUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
