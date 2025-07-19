@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
@@ -27,36 +27,34 @@ function App() {
   return (
     <HelmetProvider>
       <ErrorBoundary>
-        <Router>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<Layout />}>
-              <Route index element={<HomePage />} />
-              <Route path="about" element={<AboutPage />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="signup" element={<SignupPage />} />
-              <Route path="onboarding" element={<OnboardingPage />} />
-              
-              {/* Protected routes */}
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="mycoach" element={<MyCoachPage />} />
-              <Route path="fitness" element={<FitnessPage />} />
-              <Route path="nutrition" element={<NutritionPage />} />
-              <Route path="supplements" element={<SupplementsPage />} />
-              <Route path="supplements/:id" element={<SupplementDetailPage />} />
-              <Route path="supplements/recommendations" element={<SupplementRecommendationsPage />} />
-              <Route path="cart" element={<CartPage />} />
-              <Route path="my-stacks" element={<MyStacksPage />} />
-              <Route path="bioclock" element={<BioclockPage />} />
-              <Route path="mybio" element={<MyBioPage />} />
-              <Route path="metabolism" element={<MetabolismPage />} />
-              <Route path="sleep" element={<SleepPage />} />
-              
-              {/* 404 */}
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
-          </Routes>
-        </Router>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="signup" element={<SignupPage />} />
+            <Route path="onboarding" element={<OnboardingPage />} />
+            
+            {/* Protected routes */}
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="mycoach" element={<MyCoachPage />} />
+            <Route path="fitness" element={<FitnessPage />} />
+            <Route path="nutrition" element={<NutritionPage />} />
+            <Route path="supplements" element={<SupplementsPage />} />
+            <Route path="supplements/:id" element={<SupplementDetailPage />} />
+            <Route path="supplements/recommendations" element={<SupplementRecommendationsPage />} />
+            <Route path="cart" element={<CartPage />} />
+            <Route path="my-stacks" element={<MyStacksPage />} />
+            <Route path="bioclock" element={<BioclockPage />} />
+            <Route path="mybio" element={<MyBioPage />} />
+            <Route path="metabolism" element={<MetabolismPage />} />
+            <Route path="sleep" element={<SleepPage />} />
+            
+            {/* 404 */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
       </ErrorBoundary>
     </HelmetProvider>
   )
