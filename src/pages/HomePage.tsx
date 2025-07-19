@@ -63,8 +63,6 @@ const HomePage: React.FC = () => {
   ]
 
   const stats = [
-    { number: "10,000+", label: "Active Users" },
-    { number: "95%", label: "User Satisfaction" },
     { number: "50+", label: "Health Metrics" },
     { number: "24/7", label: "AI Support" }
   ]
@@ -108,7 +106,7 @@ const HomePage: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
                 <Button 
                   size="lg" 
-                  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
+                  className="w-full sm:w-auto bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white px-10 py-4 text-lg font-medium rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 border-0"
                   asChild
                 >
                   <Link to="/signup">
@@ -120,7 +118,7 @@ const HomePage: React.FC = () => {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="w-full sm:w-auto border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 px-8 py-4 text-lg font-semibold backdrop-blur-sm"
+                  className="w-full sm:w-auto border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 px-10 py-4 text-lg font-medium rounded-2xl backdrop-blur-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
                   asChild
                 >
                   <Link to="/login">
@@ -282,7 +280,7 @@ const HomePage: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-10 py-5 text-xl font-semibold shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300"
+                className="bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white px-12 py-5 text-xl font-medium rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 border-0"
                 asChild
               >
                 <Link to="/signup">
@@ -294,7 +292,7 @@ const HomePage: React.FC = () => {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 px-10 py-5 text-xl font-semibold backdrop-blur-sm"
+                className="border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 px-12 py-5 text-xl font-medium rounded-2xl backdrop-blur-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
                 asChild
               >
                 <Link to="/about">
