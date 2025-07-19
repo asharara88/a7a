@@ -39,7 +39,7 @@ function App() {
           <MinimalNav />
           <main>
             <Routes>
-              {/* Public routes */}
+              {/* Public routes - Hero page at root */}
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/login" element={<LoginPage />} />
