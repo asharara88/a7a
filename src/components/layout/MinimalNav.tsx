@@ -279,7 +279,7 @@ const MinimalNav: React.FC = () => {
                               />
                               <motion.div
                                 className={`absolute top-full left-0 mt-2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 py-4 z-50 ${
-                                  item.dropdownColumns ? 'w-[720px]' : 'w-64'
+                                  item.dropdownColumns ? 'w-[800px]' : 'w-64'
                                 }`}
                                 initial={{ opacity: 0, scale: 0.95, y: -10 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -288,7 +288,7 @@ const MinimalNav: React.FC = () => {
                               >
                                 {item.dropdownColumns ? (
                                   // Three-column layout for MyWellness
-                                  <div className="grid grid-cols-3 gap-6 px-6">
+                                  <div className="grid grid-cols-3 gap-8 px-6">
                                     {item.dropdownColumns.map((column, columnIndex) => (
                                       <div key={columnIndex} className="space-y-1">
                                         <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 mb-3">
@@ -312,7 +312,7 @@ const MinimalNav: React.FC = () => {
                                             }}
                                           >
                                             <span className="mr-3">{columnItem.icon}</span>
-                                            <span className="tracking-wide text-xs">{columnItem.label}</span>
+                                            <span className="tracking-wide text-sm">{columnItem.label}</span>
                                           </Link>
                                         ))}
                                       </div>
