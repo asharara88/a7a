@@ -1,244 +1,233 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, Heart, Shield, Zap, Brain, CheckCircle } from 'lucide-react'
-import EvidenceBasedHealthOptimization from '../components/health/EvidenceBasedHealthOptimization'
-import { motion } from 'framer-motion'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Eye, EyeOff } from 'lucide-react'
+import { createClient } from '@supabase/supabase-js'
+import { Button } from '../../components/ui/Button'
 
-// Features data
-const HomePage: React.FC = () => {
-  const features = [
-    {
-      icon: <Heart className="w-10 h-10 text-primary" />,
-      title: 'Personalized Health',
-      description: 'Get customized supplement recommendations based on your unique health profile.'
-    },
-    {
-      icon: <Shield className="w-10 h-10 text-secondary" />,
-      title: 'Science-Backed',
-      description: 'All recommendations are based on the latest scientific research and clinical studies.'
-    },
-    {
-      icon: <Zap className="w-10 h-10 text-tertiary" />,
-      title: 'Optimize Performance',
-      description: 'Enhance your energy, focus, and overall well-being with targeted nutrition.'
-    },
-    {
-      icon: <Brain className="w-10 h-10 text-secondary-light" />,
-      title: 'AI-Powered Coach',
-      description: 'Get personalized guidance from our AI health coach to help you reach your wellness goals.'
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Debug environment variables
+console.log('Environment check:', {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  urlPreview: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : 'missing',
+  keyPreview: supabaseAnonKey ? `${supabaseAnonKey.substring(0, 20)}...` : 'missing'
+});
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables:', {
+    url: !!supabaseUrl,
+    key: !!supabaseAnonKey
+  });
+}
+
+let supabase;
+try {
+  supabase = createClient(
+    supabaseUrl || 'https://placeholder.supabase.co', 
+    supabaseAnonKey || 'placeholder-key'
+  );
+  console.log('Supabase client created successfully');
+} catch (err) {
+  console.error('Failed to create Supabase client:', err);
+}
+
+const LoginPage: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Comprehensive validation
+    if (!supabaseUrl) {
+      setError('Missing Supabase URL. Please check environment variables.')
+      console.error('VITE_SUPABASE_URL is not set');
+      return
     }
-  ]
+    
+    if (!supabaseAnonKey) {
+      setError('Missing Supabase API key. Please check environment variables.')
+      console.error('VITE_SUPABASE_ANON_KEY is not set');
+      return
+    }
+
+    if (!supabase) {
+      setError('Supabase client initialization failed.')
+      return
+    }
+
+    if (!formData.email || !formData.password) {
+      setError('Please enter both email and password')
+      return
+    }
+    
+    setIsLoading(true)
+    setError(null)
+    
+    try {
+      console.log('Attempting to sign in with:', { email: formData.email });
+      
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password
+      })
+      
+      if (signInError) {
+        console.error('Supabase sign in error:', signInError);
+        throw signInError;
+      }
+      
+      if (data?.user) {
+        console.log('Sign in successful:', data.user.id);
+        // Successful login, redirect to dashboard
+        navigate('/dashboard')
+      } else {
+        console.warn('No user data returned from successful sign in');
+        setError('Login successful but no user data received. Please try again.');
+      }
+    } catch (err: any) {
+      console.error('Login error:', err)
+      
+      // More specific error messages
+      if (err.message?.includes('Invalid API key') || err.message?.includes('API key')) {
+        setError('Configuration error: Please check your Supabase API key configuration.')
+      } else if (err.message?.includes('Invalid login credentials')) {
+        setError('Invalid email or password. Please check your credentials.')
+      } else if (err.message?.includes('Email not confirmed')) {
+        setError('Please check your email and click the confirmation link.')
+      } else if (err.message?.includes('User not found')) {
+        setError('No account found with this email address. Please sign up first.')
+      } else if (err.message?.includes('Too many requests')) {
+        setError('Too many login attempts. Please wait a moment and try again.')
+      } else {
+        setError(err.message || 'Failed to sign in. Please try again.')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section with consistent styling */}
-      <section className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white py-28 sm:py-36 md:py-44 relative overflow-hidden">
-        
-        <div className="mobile-container max-w-6xl mx-auto">
-          <motion.div 
-            className="max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <a 
-              href="#evidence-based-health" 
-              className="inline-block bg-gray-100 dark:bg-gray-800 rounded-xl px-5 py-1.5 mb-8 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer shadow-sm"
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Sign in to your account
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Or{' '}
+            <Link
+              to="/signup"
+              className="font-medium text-blue-600 hover:text-blue-500"
             >
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 tracking-wider">Evidence-based health optimization</span>
-            </a>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight text-left leading-tight">
-              <span>Your Personal </span>
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
-                Health Coach
-              </span>
-            </h1>
-            <p className="text-xl sm:text-2xl mb-12 sm:mb-14 text-gray-700 dark:text-gray-300 max-w-3xl tracking-wide text-left leading-relaxed">
-              Optimize your everyday.
-            </p>
-            <motion.div 
-              className="flex flex-col items-start gap-6 mb-14"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-            >
-              {/* Primary CTA - Get Started */}
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                 to="/onboarding"
-                  className="bg-blue-700 dark:bg-blue-600 text-white px-12 sm:px-16 py-6 rounded-2xl font-bold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center shadow-2xl hover:shadow-3xl text-xl sm:text-2xl min-w-[280px] tracking-wide"
+              create a new account
+            </Link>
+          </p>
+        </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Enter your email"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                 Get Started
-                  <ArrowRight className="ml-4 w-6 h-6" />
-                </Link>
-              </motion.div>
-              
-              {/* Secondary action - Login link */}
-              <div className="mt-2">
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  Already have an account?{' '}
-                  <Link
-                    to="/login"
-                    className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium underline underline-offset-2 hover:underline-offset-4 transition-all duration-200"
-                  >
-                    Log in
-                  </Link>
-                </p>
-              </div>
-            </motion.div>
-            
-            <div className="flex flex-wrap gap-7 text-sm text-gray-600 dark:text-gray-400 tracking-wider">
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                <span>Personalized recommendations</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                <span>Science-backed approach</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                <span>AI-powered insights</span>
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
+                </button>
               </div>
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features Section with responsive spacing */}
-      <section className="py-20 sm:py-24 md:py-28 bg-white dark:bg-gray-900 transition-all duration-300 relative overflow-hidden">
-        {/* Background accent */}
-        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-blue-500/5 to-blue-300/5 rounded-bl-full"></div>
-        <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-gradient-to-tr from-blue-600/5 to-blue-400/5 rounded-tr-full"></div>
-        
-        <div className="mobile-container">
-          <motion.div 
-            className="mb-14 sm:mb-18 text-left"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5 sm:mb-7 tracking-tight leading-tight">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
-              Why Choose Biowell?
-              </span>
-            </h2>
-            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl tracking-wide leading-relaxed">
-              Experience the future of personalized wellness
-            </p>
-          </motion.div>
-
-          <motion.div 
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ staggerChildren: 0.1, delayChildren: 0.2 }}
-          >
-            {features.map((feature, index) => (
-              <motion.div 
-                key={index} 
-                className={`p-8 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 ${
-                  index % 4 === 0 ? 'bg-blue-700' : 
-                  index % 4 === 1 ? 'bg-blue-600' : 
-                  index % 4 === 2 ? 'bg-blue-500' :
-                  'bg-blue-600'
-                }`}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 }
-                }}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="flex mb-6">
-                  <div className="p-4 rounded-lg bg-white/20 inline-flex">
-                    {feature.icon}
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-5 text-left tracking-tight">
-                  {feature.title}
-                </h3>
-                <p className="text-white dark:text-white text-base text-left tracking-wide leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Logo Section */}
-      <section className="py-12 bg-white dark:bg-gray-900 text-center">
-        <div className="mobile-container">
-          <div className="flex justify-center">
-            <img 
-              src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_logo_light_theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9sb2dvX2xpZ2h0X3RoZW1lLnN2ZyIsImlhdCI6MTc1MjY2MzQ0NiwiZXhwIjoxNzg0MTk5NDQ2fQ.gypGnDpYXvYFyGCKWfeyCrH4fYBGEcNOKurPfcbUcWY"
-              alt="Biowell Logo" 
-              className="h-24 w-auto object-contain dark:hidden" 
-            />
-            <img 
-              src="https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/biowelllogos/Biowell_Logo_Dark_Theme.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJiaW93ZWxsbG9nb3MvQmlvd2VsbF9Mb2dvX0RhcmtfVGhlbWUuc3ZnIiwiaWF0IjoxNzUyNjYzNDE4LCJleHAiOjE3ODQxOTk0MTh9.itsGbwX4PiR9BYMO_jRyHY1KOGkDFiF-krdk2vW7cBE"
-              alt="Biowell Logo" 
-              className="h-24 w-auto object-contain hidden dark:block" 
-            />
           </div>
-        </div>
-      </section>
 
-      {/* Evidence-Based Health Optimization Section */}
-      <section id="evidence-based-health">
-        <EvidenceBasedHealthOptimization expanded={false} />
-      </section>
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
 
-      {/* CTA Section */}
-      <section className="py-20 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white transition-all duration-300 relative overflow-hidden">
-        {/* Animated background elements */}
-        
-        <div className="mobile-container">
-          <motion.h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-7 sm:mb-9 tracking-tight text-left leading-tight"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-400 dark:from-blue-500 dark:to-blue-300">
-              Ready to optimize your health?
-            </span>
-          </motion.h2>
-          <motion.p 
-            className="text-xl sm:text-2xl mb-12 sm:mb-14 text-gray-700 dark:text-gray-300 max-w-3xl tracking-wide text-left leading-relaxed"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Join thousands of users who have transformed their wellness journey
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Link
-             to="/signup" 
-              className="bg-blue-700 dark:bg-blue-600 text-white px-9 sm:px-11 py-4.5 rounded-xl font-semibold hover:bg-blue-800 dark:hover:bg-blue-700 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl text-lg tracking-wide"
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                Remember me
+              </label>
+            </div>
+
+            <div className="text-sm">
+              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                Forgot your password?
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading}
             >
-             Create Account
-              <ArrowRight className="ml-3 w-6 h-6" />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+              {isLoading ? 'Signing in...' : 'Sign in'}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
 
-export default HomePage
+export default LoginPage
