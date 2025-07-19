@@ -74,3 +74,4 @@ next-env.d.ts
 *.temp
 tmp/
 temp/
+.bolt/
