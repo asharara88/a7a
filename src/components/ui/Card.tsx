@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '../../utils/cn';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'glass' | 'elevated' | 'mobile';
+  variant?: 'default' | 'glass' | 'elevated' | 'premium' | 'mobile';
   as?: React.ElementType;
   to?: string;
 }
@@ -13,25 +13,29 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     
     const cardProps = {
       className: cn(
-        // Base styles
-        'rounded-2xl border transition-all duration-300',
+        // Base styles - sophisticated and modern
+        'rounded-3xl border transition-all duration-500 ease-out relative overflow-hidden',
         
-        // Variants
+        // Variants with premium styling
         {
-          // Default
-          'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg':
+          // Default - Clean with subtle elevation
+          'bg-white/95 backdrop-blur-sm dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-700/50 shadow-soft hover:shadow-elegant':
             variant === 'default',
           
-          // Glass effect
-          'glass-surface border-white/20 shadow-xl backdrop-blur-glass':
+          // Glass - Premium glass morphism
+          'bg-white/8 backdrop-blur-2xl border-white/12 shadow-premium-xl dark:bg-white/4 dark:border-white/8':
             variant === 'glass',
           
-          // Elevated
-          'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transform hover:-translate-y-1':
+          // Elevated - Sophisticated floating effect
+          'bg-white dark:bg-gray-900 border-gray-200/50 dark:border-gray-700/50 shadow-premium hover:shadow-premium-xl transform hover:-translate-y-2 hover:scale-[1.01]':
             variant === 'elevated',
           
-          // Mobile optimized
-          'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl p-4 sm:p-6':
+          // Premium - Ultra-sophisticated with multiple layers
+          'bg-gradient-to-br from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/50 dark:to-gray-900 border-gradient-to-r border-gray-200/60 dark:border-gray-700/60 shadow-premium-xl hover:shadow-glow relative before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500':
+            variant === 'premium',
+          
+          // Mobile - Optimized for mobile with larger touch targets
+          'bg-white/95 backdrop-blur-sm dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-700/50 shadow-soft hover:shadow-elegant p-5 sm:p-6 rounded-2xl sm:rounded-3xl':
             variant === 'mobile',
         },
         
@@ -56,7 +60,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col space-y-1.5 p-6', className)}
+      className={cn('flex flex-col space-y-2 p-6 pb-4', className)}
       {...props}
     />
   )
@@ -67,7 +71,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('text-2xl font-semibold leading-none tracking-tight', className)}
+      className={cn('text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white', className)}
       {...props}
     />
   )
@@ -78,7 +82,7 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttribu
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn('text-sm text-gray-600 dark:text-gray-400', className)}
+      className={cn('text-base text-gray-600 dark:text-gray-400 leading-relaxed', className)}
       {...props}
     />
   )
