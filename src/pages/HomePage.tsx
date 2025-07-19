@@ -1,265 +1,246 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, Shield, Zap, Heart, Brain, Activity, Sparkles, Target, Award, CheckCircle } from 'lucide-react';
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Eye, EyeOff } from 'lucide-react'
+import { createClient } from '@supabase/supabase-js'
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import EvidenceBasedHealthOptimization from '../components/health/EvidenceBasedHealthOptimization';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Debug environment variables
+console.log('Environment check:', {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  urlPreview: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : 'missing',
+  keyPreview: supabaseAnonKey ? `${supabaseAnonKey.substring(0, 20)}...` : 'missing'
+});
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables:', {
+    url: !!supabaseUrl,
+    key: !!supabaseAnonKey
+  });
+}
+
+let supabase;
+try {
+  supabase = createClient(
+    supabaseUrl || 'https://placeholder.supabase.co', 
+    supabaseAnonKey || 'placeholder-key'
+  );
+  console.log('Supabase client created successfully');
+} catch (err) {
+  console.error('Failed to create Supabase client:', err);
+}
 
 const HomePage: React.FC = () => {
   const features = [
-    {
-      icon: <Sparkles className="w-8 h-8" />,
-      title: 'AI Health Coach',
-      description: 'Get personalized health guidance powered by advanced AI and scientific research.',
-      gradient: 'from-primary-600 via-primary-500 to-primary-400'
-    },
-    {
-      icon: <Shield className="w-8 h-8" />,
-      title: 'Evidence-Based Supplements',
-      description: 'Discover supplements backed by clinical studies and scientific evidence.',
-      gradient: 'from-secondary-600 via-secondary-500 to-secondary-400'
-    },
-    {
-      icon: <Activity className="w-8 h-8" />,
-      title: 'Fitness Tracking',
-      description: 'Monitor your workouts, recovery, and muscle group development.',
-      gradient: 'from-tertiary-600 via-tertiary-500 to-tertiary-400'
-    },
-    {
-      icon: <Brain className="w-8 h-8" />,
-      title: 'Cognitive Enhancement',
-      description: 'Optimize your mental performance with targeted nutrition and lifestyle changes.',
-      gradient: 'from-primary-600 via-secondary-600 to-tertiary-600'
-    },
-    {
-      icon: <Heart className="w-8 h-8" />,
-      title: 'Metabolic Health',
-      description: 'Track glucose levels, metabolic markers, and optimize your energy systems.',
-      gradient: 'from-secondary-600 via-tertiary-600 to-primary-600'
-    },
-    {
-      icon: <Target className="w-8 h-8" />,
-      title: 'Personalized Goals',
-      description: 'Set and achieve health goals with data-driven insights and recommendations.',
-      gradient: 'from-tertiary-600 via-primary-600 to-secondary-600'
-    }
-  ];
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  const navigate = useNavigate()
 
-  const trustIndicators = [
-    'Science-backed recommendations',
-    'Personalized health insights',
-    'Secure data protection',
-    'Expert-reviewed content'
-  ];
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Comprehensive validation
+    if (!supabaseUrl) {
+      setError('Missing Supabase URL. Please check environment variables.')
+      console.error('VITE_SUPABASE_URL is not set');
+      return
+    }
+    
+    if (!supabaseAnonKey) {
+      setError('Missing Supabase API key. Please check environment variables.')
+      console.error('VITE_SUPABASE_ANON_KEY is not set');
+      return
+    }
+
+    if (!supabase) {
+      setError('Supabase client initialization failed.')
+      return
+    }
+
+    if (!formData.email || !formData.password) {
+      setError('Please enter both email and password')
+      return
+    }
+    
+    setIsLoading(true)
+    setError(null)
+    
+    try {
+      console.log('Attempting to sign in with:', { email: formData.email });
+      
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password
+      })
+      
+      if (signInError) {
+        console.error('Supabase sign in error:', signInError);
+        throw signInError;
+      }
+      
+      if (data?.user) {
+        console.log('Sign in successful:', data.user.id);
+        // Successful login, redirect to dashboard
+        navigate('/dashboard')
+      } else {
+        console.warn('No user data returned from successful sign in');
+        setError('Login successful but no user data received. Please try again.');
+      }
+    } catch (err: any) {
+      console.error('Login error:', err)
+      
+      // More specific error messages
+      if (err.message?.includes('Invalid API key') || err.message?.includes('API key')) {
+        setError('Configuration error: Please check your Supabase API key configuration.')
+      } else if (err.message?.includes('Invalid login credentials')) {
+        setError('Invalid email or password. Please check your credentials.')
+      } else if (err.message?.includes('Email not confirmed')) {
+        setError('Please check your email and click the confirmation link.')
+      } else if (err.message?.includes('User not found')) {
+        setError('No account found with this email address. Please sign up first.')
+      } else if (err.message?.includes('Too many requests')) {
+        setError('Too many login attempts. Please wait a moment and try again.')
+      } else {
+        setError(err.message || 'Failed to sign in. Please try again.')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white dark:from-gray-900 dark:via-blue-950/10 dark:to-gray-800 overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-16 sm:pt-24 sm:pb-20 lg:pt-32 lg:pb-24">
-        {/* Animated Background Elements */}
-        <motion.div 
-          className="absolute top-20 left-10 w-96 h-96 rounded-full bg-gradient-to-br from-primary-500/20 to-secondary-500/20 blur-3xl"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            x: [0, 30, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-gradient-to-br from-tertiary-500/20 to-accent-500/20 blur-3xl"
-          animate={{ 
-            scale: [1, 1.3, 1],
-            x: [0, -40, 0],
-            y: [0, 20, 0],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-        <motion.div 
-          className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full bg-gradient-to-br from-accent-500/15 to-primary-500/15 blur-3xl"
-          animate={{ 
-            scale: [1, 1.1, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        />
-
-        <div className="mobile-container relative z-10">
-          <div className="max-w-5xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Sign in to your account
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Or{' '}
+            <Link
+              to="/signup"
+              className="font-medium text-blue-600 hover:text-blue-500"
             >
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-8 leading-[0.9] tracking-tight">
-                <span className="text-gradient block mb-2">Your Personal</span>
-                <span className="text-gray-900 dark:text-white block">Health Coach</span>
-              </h1>
-              
-              <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 dark:text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
-                Transform your wellness journey with AI-powered insights, evidence-based supplements, 
-                and personalized health optimization.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-                <Button
-                  as={Link}
-                  to="/onboarding"
-                  variant="accent"
-                  size="xl"
-                  className="w-full sm:w-auto min-w-[280px] group"
+              create a new account
+            </Link>
+          </p>
+        </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Enter your email"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                  Start Your Journey
-                  <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-                
-                <Button
-                  as={Link}
-                  to="/about"
-                  variant="outline"
-                  size="xl"
-                  className="w-full sm:w-auto min-w-[200px]"
-                >
-                  Learn More
-                </Button>
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
+                </button>
               </div>
+            </div>
+          </div>
 
-              {/* Trust Indicators */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-                {trustIndicators.map((indicator, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1 + index * 0.1, ease: "easeOut" }}
-                    className="flex items-center justify-center sm:justify-start text-base text-gray-600 dark:text-gray-400 font-medium"
-                  >
-                    <div className="w-3 h-3 bg-gradient-to-r from-accent-500 to-accent-400 rounded-full mr-3 animate-pulse-glow" />
-                    {indicator}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                Remember me
+              </label>
+            </div>
+
+            <div className="text-sm">
+              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                Forgot your password?
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing in...' : 'Sign in'}
+            </Button>
+          </div>
+        </form>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 sm:py-24 lg:py-32 relative">
-        <div className="mobile-container">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center mb-20"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-tight">
-              <span className="text-gradient block mb-2">Comprehensive</span>
-              <span className="text-gray-900 dark:text-white block">Health Platform</span>
-            </h2>
-            <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed font-medium">
-              Everything you need to optimize your health, backed by science and powered by AI.
-            </p>
-          </motion.div>
+      {/* Evidence-Based Health Optimization Section */}
+      <EvidenceBasedHealthOptimization />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-              >
-                <Card 
-                  variant="premium"
-                  className={`h-full cursor-pointer group bg-gradient-to-br ${feature.gradient} text-white border-0 hover:scale-[1.02] hover:-translate-y-2 transition-all duration-700`}
-                >
-                  <div className="relative z-10 p-8">
-                    <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm inline-flex mb-6 group-hover:scale-110 transition-transform duration-500">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 text-white leading-tight">
-                      {feature.title}
-                    </h3>
-                    <p className="text-white/90 leading-relaxed text-base lg:text-lg font-medium">
-                      {feature.description}
-                    </p>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 sm:py-24 lg:py-32 relative overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-secondary-500/5 to-tertiary-500/5" />
-        <motion.div 
-          className="absolute top-0 right-0 w-96 h-96 rounded-full bg-gradient-to-br from-accent-500/20 to-primary-500/20 blur-3xl"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-
-        <div className="mobile-container relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="max-w-5xl mx-auto text-center"
-          >
-            <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-accent-500/10 to-accent-400/10 backdrop-blur-sm text-accent-700 dark:text-accent-300 text-base font-semibold mb-8 border border-accent-500/20">
-              <Award className="w-5 h-5 mr-2" />
-              Trusted by thousands of users
-            </div>
-            
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-tight">
-              Ready to <span className="text-gradient">Transform</span> Your Health?
-            </h2>
-            
-            <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
-              Join thousands of users who have already started their personalized wellness journey 
-              with science-backed recommendations.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8">
-              <Button
-                as={Link}
-                to="/onboarding"
-                variant="accent"
-                size="xl"
-                className="w-full sm:w-auto min-w-[300px] group"
-              >
-                Get Started Free
-                <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
-              </Button>
-              
-              <Button
-                as={Link}
-                to="/login"
-                variant="outline"
-                size="xl"
-                className="w-full sm:w-auto min-w-[200px]"
-              >
-                Sign In
-              </Button>
-            </div>
-
-            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-              No credit card required • Start your free assessment today
-            </p>
-          </motion.div>
-        </div>
-      </section>
+       {/* CTA Section */}
+       <section className="py-20 sm:py-24 lg:py-32 relative overflow-hidden">
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage
