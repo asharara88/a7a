@@ -35,10 +35,10 @@ try {
 }
 
 const LoginPage: React.FC = () => {
+  const [user, setUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [user, setUser] = useState<any>(null)
   const [connectionError, setConnectionError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     email: '',
@@ -100,12 +100,16 @@ const LoginPage: React.FC = () => {
       console.error('Login error:', err)
       
       // More specific error messages
-      if (err.message?.includes('Invalid API key')) {
-        setError('Configuration error: Invalid Supabase API key. Please contact support.')
+      if (err.message?.includes('Invalid API key') || err.message?.includes('API key')) {
+        setError('Configuration error: Please check your Supabase API key configuration.')
       } else if (err.message?.includes('Invalid login credentials')) {
         setError('Invalid email or password. Please check your credentials.')
       } else if (err.message?.includes('Email not confirmed')) {
         setError('Please check your email and click the confirmation link.')
+      } else if (err.message?.includes('User not found')) {
+        setError('No account found with this email address. Please sign up first.')
+      } else if (err.message?.includes('Too many requests')) {
+        setError('Too many login attempts. Please wait a moment and try again.')
       } else {
         setError(err.message || 'Failed to sign in. Please try again.')
       }
