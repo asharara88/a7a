@@ -134,8 +134,8 @@ const MinimalNav: React.FC = () => {
             <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
               <img 
                 src={isDarkMode 
-                  ? import.meta.env.VITE_SUPABASE_LOGO_DARK
-                  : import.meta.env.VITE_SUPABASE_LOGO_LIGHT
+                  ? "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/white%20Log%20trnspt%20bg.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy93aGl0ZSBMb2cgdHJuc3B0IGJnLnN2ZyIsImlhdCI6MTc1MjkyMTM3MCwiZXhwIjoxNzg0NDU3MzcwfQ.23D78SivsYLfYE8IqxSVeFJ9HsQUN7aCKXQEPgFhIWw"
+                  : "https://leznzqfezoofngumpiqf.supabase.co/storage/v1/object/sign/logos/logo-light.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjcyOGVhMS1jMTdjLTQ2MTYtOWFlYS1mZmI3MmEyM2U5Y2EiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9sb2dvLWxpZ2h0LnN2ZyIsImlhdCI6MTc1MjkyMTQwNywiZXhwIjoxNzg0NDU3NDA3fQ.ewygSP0lnwBhGGl4ZMn0dDWYMgsz3VJzIMc-pcTG6i8"
                 }
                 alt="Biowell" 
                 className="h-12 w-auto object-contain" 
