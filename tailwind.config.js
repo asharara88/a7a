@@ -1,233 +1,172 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff } from 'lucide-react'
-import { createClient } from '@supabase/supabase-js'
-import { Button } from '../../components/ui/Button'
-
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// Debug environment variables
-console.log('Environment check:', {
-  hasUrl: !!supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  urlPreview: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : 'missing',
-  keyPreview: supabaseAnonKey ? `${supabaseAnonKey.substring(0, 20)}...` : 'missing'
-});
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables:', {
-    url: !!supabaseUrl,
-    key: !!supabaseAnonKey
-  });
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Brand colors from logo - 3 blue gradients
+        'brand-blue-1': 'hsl(210, 100%, 50%)', // Primary blue
+        'brand-blue-2': 'hsl(190, 100%, 45%)', // Secondary blue  
+        'brand-blue-3': 'hsl(183, 100%, 40%)', // Tertiary blue
+        // Neon green accent for selections and buttons
+        'accent': 'hsl(142, 76%, 36%)',
+        'accent-light': 'hsl(142, 76%, 46%)',
+        'accent-dark': 'hsl(142, 76%, 26%)',
+        // Enhanced color system
+        primary: {
+          50: 'hsl(210, 100%, 97%)',
+          100: 'hsl(210, 100%, 94%)',
+          200: 'hsl(210, 100%, 87%)',
+          300: 'hsl(210, 100%, 78%)',
+          400: 'hsl(210, 100%, 66%)',
+          500: 'hsl(210, 100%, 50%)',
+          600: 'hsl(210, 100%, 45%)',
+          700: 'hsl(210, 100%, 40%)',
+          800: 'hsl(210, 100%, 35%)',
+          900: 'hsl(210, 100%, 30%)',
+          950: 'hsl(210, 100%, 20%)',
+        },
+        secondary: {
+          50: 'hsl(190, 100%, 97%)',
+          100: 'hsl(190, 100%, 94%)',
+          200: 'hsl(190, 100%, 87%)',
+          300: 'hsl(190, 100%, 78%)',
+          400: 'hsl(190, 100%, 66%)',
+          500: 'hsl(190, 100%, 45%)',
+          600: 'hsl(190, 100%, 40%)',
+          700: 'hsl(190, 100%, 35%)',
+          800: 'hsl(190, 100%, 30%)',
+          900: 'hsl(190, 100%, 25%)',
+          950: 'hsl(190, 100%, 15%)',
+        },
+        tertiary: {
+          50: 'hsl(183, 100%, 97%)',
+          100: 'hsl(183, 100%, 94%)',
+          200: 'hsl(183, 100%, 87%)',
+          300: 'hsl(183, 100%, 78%)',
+          400: 'hsl(183, 100%, 66%)',
+          500: 'hsl(183, 100%, 40%)',
+          600: 'hsl(183, 100%, 35%)',
+          700: 'hsl(183, 100%, 30%)',
+          800: 'hsl(183, 100%, 25%)',
+          900: 'hsl(183, 100%, 20%)',
+          950: 'hsl(183, 100%, 10%)',
+        },
+        gray: {
+          50: 'hsl(220, 20%, 98%)',
+          100: 'hsl(220, 14%, 96%)',
+          200: 'hsl(220, 13%, 91%)',
+          300: 'hsl(220, 9%, 78%)',
+          400: 'hsl(220, 9%, 46%)',
+          500: 'hsl(220, 9%, 26%)',
+          600: 'hsl(220, 12%, 17%)',
+          700: 'hsl(220, 13%, 13%)',
+          800: 'hsl(220, 15%, 9%)',
+          900: 'hsl(220, 18%, 6%)',
+          950: 'hsl(220, 23%, 4%)',
+        },
+        surface: {
+          50: 'hsl(220, 20%, 99%)',
+          100: 'hsl(220, 20%, 97%)',
+          200: 'hsl(220, 20%, 94%)',
+          300: 'hsl(220, 20%, 88%)',
+          400: 'hsl(220, 20%, 82%)',
+          500: 'hsl(220, 20%, 76%)',
+          600: 'hsl(220, 20%, 70%)',
+          700: 'hsl(220, 20%, 64%)',
+          800: 'hsl(220, 20%, 58%)',
+          900: 'hsl(220, 20%, 52%)',
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        'xs': ['0.75rem', { lineHeight: '1rem' }],
+        'sm': ['0.875rem', { lineHeight: '1.25rem' }],
+        'base': ['1rem', { lineHeight: '1.5rem' }],
+        'lg': ['1.125rem', { lineHeight: '1.75rem' }],
+        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],
+        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+        '5xl': ['3rem', { lineHeight: '1' }],
+        '6xl': ['3.75rem', { lineHeight: '1' }],
+        '7xl': ['4.5rem', { lineHeight: '1' }],
+        '8xl': ['6rem', { lineHeight: '1' }],
+        '9xl': ['8rem', { lineHeight: '1' }],
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '128': '32rem',
+      },
+      borderRadius: {
+        '4xl': '2rem',
+        '5xl': '2.5rem',
+      },
+      boxShadow: {
+        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+        'elegant': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 30px -5px rgba(0, 0, 0, 0.04)',
+        'premium': '0 8px 40px -12px rgba(0, 0, 0, 0.25)',
+        'glow': '0 0 20px rgba(142, 76, 36, 0.3)',
+        'glow-lg': '0 0 30px rgba(142, 76, 36, 0.4)',
+      },
+      backdropBlur: {
+        'xs': '2px',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-out',
+        'slide-up': 'slideUp 0.5s ease-out',
+        'slide-down': 'slideDown 0.5s ease-out',
+        'scale-in': 'scaleIn 0.3s ease-out',
+        'bounce-gentle': 'bounceGentle 2s ease-in-out infinite',
+        'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'shimmer': 'shimmer 2s linear infinite',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        slideDown: {
+          '0%': { transform: 'translateY(-20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        scaleIn: {
+          '0%': { transform: 'scale(0.9)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        bounceGentle: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
+        },
+        pulseSoft: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.8' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+      },
+      transitionTimingFunction: {
+        'bounce-in': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+      },
+    },
+  },
+  plugins: [],
 }
-
-let supabase;
-try {
-  supabase = createClient(
-    supabaseUrl || 'https://placeholder.supabase.co', 
-    supabaseAnonKey || 'placeholder-key'
-  );
-  console.log('Supabase client created successfully');
-} catch (err) {
-  console.error('Failed to create Supabase client:', err);
-}
-
-const LoginPage: React.FC = () => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-  const navigate = useNavigate()
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    // Comprehensive validation
-    if (!supabaseUrl) {
-      setError('Missing Supabase URL. Please check environment variables.')
-      console.error('VITE_SUPABASE_URL is not set');
-      return
-    }
-    
-    if (!supabaseAnonKey) {
-      setError('Missing Supabase API key. Please check environment variables.')
-      console.error('VITE_SUPABASE_ANON_KEY is not set');
-      return
-    }
-
-    if (!supabase) {
-      setError('Supabase client initialization failed.')
-      return
-    }
-
-    if (!formData.email || !formData.password) {
-      setError('Please enter both email and password')
-      return
-    }
-    
-    setIsLoading(true)
-    setError(null)
-    
-    try {
-      console.log('Attempting to sign in with:', { email: formData.email });
-      
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password
-      })
-      
-      if (signInError) {
-        console.error('Supabase sign in error:', signInError);
-        throw signInError;
-      }
-      
-      if (data?.user) {
-        console.log('Sign in successful:', data.user.id);
-        // Successful login, redirect to dashboard
-        navigate('/dashboard')
-      } else {
-        console.warn('No user data returned from successful sign in');
-        setError('Login successful but no user data received. Please try again.');
-      }
-    } catch (err: any) {
-      console.error('Login error:', err)
-      
-      // More specific error messages
-      if (err.message?.includes('Invalid API key') || err.message?.includes('API key')) {
-        setError('Configuration error: Please check your Supabase API key configuration.')
-      } else if (err.message?.includes('Invalid login credentials')) {
-        setError('Invalid email or password. Please check your credentials.')
-      } else if (err.message?.includes('Email not confirmed')) {
-        setError('Please check your email and click the confirmation link.')
-      } else if (err.message?.includes('User not found')) {
-        setError('No account found with this email address. Please sign up first.')
-      } else if (err.message?.includes('Too many requests')) {
-        setError('Too many login attempts. Please wait a moment and try again.')
-      } else {
-        setError(err.message || 'Failed to sign in. Please try again.')
-      }
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link
-              to="/signup"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              create a new account
-            </Link>
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter your email"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1 relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {error && (
-            <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                Forgot your password?
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Signing in...' : 'Sign in'}
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
-  )
-}
-
-export default LoginPage
