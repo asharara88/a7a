@@ -38,46 +38,13 @@ const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [user, setUser] = useState<any>(null)
+  const [connectionError, setConnectionError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
   const navigate = useNavigate()
-
-  // Check for user session on mount
-  React.useEffect(() => {
-    if (!supabase) {
-      setConnectionError(supabaseError);
-      return;
-    }
-
-    const checkUser = async () => {
-      try {
-        console.log('Checking user authentication status...');
-        const { data } = await supabase.auth.getUser();
-        console.log('Auth check result:', { hasUser: !!data.user, userId: data.user?.id });
-        setUser(data.user);
-        setConnectionError(null);
-      } catch (error) {
-        console.error('Error checking auth status:', error);
-        setConnectionError('Unable to connect to Supabase. Please check your internet connection and try again.');
-      }
-    };
-    
-    checkUser();
-    
-    // Set up auth state listener only if supabase is available
-    if (supabase) {
-      const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-        console.log('Auth state changed:', { event: _event, hasSession: !!session });
-        setUser(session?.user || null);
-      });
-      
-      return () => {
-        authListener.subscription.unsubscribe();
-      };
-    }
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
