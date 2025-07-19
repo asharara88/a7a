@@ -21,11 +21,12 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false,
     minify: true,
-    // Increase the chunk size warning limit
-    chunkSizeWarningLimit: 1200,
+    // Ensure proper SPA routing
     rollupOptions: {
       input: 'index.html',
-      output: {
+    },
+    // Increase the chunk size warning limit
+    chunkSizeWarningLimit: 1200,
         manualChunks: {
           // Vendor chunks
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
