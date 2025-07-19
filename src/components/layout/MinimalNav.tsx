@@ -1,3 +1,4 @@
+ codex/ensure-app-launches-on-welcome-page
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -124,8 +125,14 @@ const MinimalNav: React.FC = () => {
     { href: '/nutrition', label: 'Nutrition', icon: <Utensils className="w-4 h-4" /> },
     { href: '/supplements', label: 'Supplements', icon: <Pill className="w-4 h-4" /> },
   ];
+=======
+import React from 'react';
+import { Link } from 'react-router-dom';
+ main
 
+const MinimalNav: React.FC = () => {
   return (
+ codex/ensure-app-launches-on-welcome-page
     <>
       <nav className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 transition-all duration-300 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -434,6 +441,33 @@ const MinimalNav: React.FC = () => {
         )}
       </AnimatePresence>
     </>
+
+    <nav className="bg-white shadow-sm border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link to="/" className="text-xl font-bold text-gray-900">
+              Biowell
+            </Link>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Link
+              to="/login"
+              className="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Sign In
+            </Link>
+            <Link
+              to="/signup"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              Get Started
+            </Link>
+          </div>
+        </div>
+      </div>
+    </nav>
+ main
   );
 };
 
