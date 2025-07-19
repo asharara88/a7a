@@ -1,15 +1,10 @@
 [build]
   command = "npm run build"
   publish = "dist"
- codex/prepare-for-netlify-deployment
-  functions = "netlify/functions"
-
- main
 
 [build.environment]
   NODE_VERSION = "18"
 
- codex/prepare-for-netlify-deployment
 [[headers]]
   for = "/*"
   [headers.values]
@@ -44,4 +39,3 @@
   to = "https://biowell.ai/:splat"
   status = 301
   force = true
- main
