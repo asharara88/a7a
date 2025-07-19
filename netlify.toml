@@ -5,6 +5,7 @@
 [build.environment]
   NODE_VERSION = "18"
 
+ codex/clean-up-json-file-and-validate
 [[headers]]
   for = "/*"
   [headers.values]
@@ -12,12 +13,17 @@
     Referrer-Policy = "same-origin"
     X-Frame-Options = "DENY"
 
+=======
+ main
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+ codex/clean-up-json-file-and-validate
 
 # SPA routing fallback
+=======
+ main
 
 [[headers]]
   for = "/*"

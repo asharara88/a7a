@@ -92,12 +92,19 @@
 
 3. **Environment Setup:**
 
+   Copy `.env.example` to `.env` and provide values for the required variables.
+
    ```env
+   # Required
    VITE_SUPABASE_URL=your-supabase-url
    VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+   JWT_SECRET=your-jwt-secret
+
+   # Optional
    VITE_OPENAI_API_KEY=your-openai-api-key
    VITE_ELEVENLABS_API_KEY=your-elevenlabs-api-key
-   VITE_STRIPE_PUBLISHABLE_KEY=your-stripe-key
+   VITE_STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key
+   VITE_CAPTCHA_SECRET_KEY=optional-captcha-key
    ```
 
 4. **Database Setup:**
@@ -259,7 +266,11 @@ npm run deploy          # Deploy to Netlify
 2. **Environment Variables** (set in Netlify dashboard):
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
-   - `VITE_OPENAI_API_KEY` (optional for local dev)
+   - `JWT_SECRET`
+   - `VITE_OPENAI_API_KEY` *(optional)*
+   - `VITE_ELEVENLABS_API_KEY` *(optional)*
+   - `VITE_STRIPE_PUBLISHABLE_KEY` *(optional)*
+   - `VITE_CAPTCHA_SECRET_KEY` *(optional)*
 
 3. **Deploy:**
 
