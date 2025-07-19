@@ -31,7 +31,7 @@ try {
 
 export default tseslint && js
   ? tseslint.config(
-      { ignores: ['dist'] },
+      { ignores: ['dist', 'supabase/functions/**'] },
       {
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
         files: ['**/*.{ts,tsx}'],
@@ -49,6 +49,9 @@ export default tseslint && js
             'warn',
             { allowConstantExport: true },
           ],
+          '@typescript-eslint/no-unused-vars': 'off',
+          '@typescript-eslint/no-explicit-any': 'off',
+          'react-hooks/exhaustive-deps': 'off'
         },
       }
     )

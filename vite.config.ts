@@ -25,15 +25,12 @@ export default defineConfig({
     rollupOptions: {
       input: 'index.html',
       output: {
-        // Increase the chunk size warning limit
-        chunkSizeWarningLimit: 1200,
         manualChunks: {
           // Vendor chunks
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['framer-motion', 'lucide-react', '@radix-ui/react-dialog', '@radix-ui/react-tabs'],
+          'ui-vendor': ['framer-motion', 'lucide-react'],
           'chart-vendor': ['chart.js', 'react-chartjs-2'],
-          'supabase': ['@supabase/supabase-js', '@supabase/auth-helpers-react'],
-          'supplements': ['./src/components/supplements/SupplementCard.tsx', './src/components/supplements/SupplementGrid.tsx'],
+          'supabase': ['@supabase/supabase-js'],
           'chat': ['./src/components/chat/MyCoach.tsx', './src/components/chat/ChatMessage.tsx'],
         },
         // Optimize chunk names

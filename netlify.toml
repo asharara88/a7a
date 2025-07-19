@@ -5,6 +5,8 @@
 [build.environment]
   NODE_VERSION = "18"
 
+ codex/audit-and-patch-pre-netlify-workflow
+=======
 [[headers]]
   for = "/*"
   [headers.values]
@@ -18,12 +20,12 @@
   status = 200
 
 # SPA routing fallback
+ main
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Security headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -33,7 +35,6 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co"
 
-# Redirect default Netlify subdomain to primary domain
 [[redirects]]
   from = "https://biowell-app.netlify.app/*"
   to = "https://biowell.ai/:splat"
